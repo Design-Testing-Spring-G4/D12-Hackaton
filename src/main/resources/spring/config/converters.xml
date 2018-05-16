@@ -18,10 +18,109 @@
 	">
 
 	<util:list id="converters">
-		<!-- 
-			Add your own converters using entries of the following form: 
-			<bean class="converters.Class1ToClass2" /> 
-		-->
+	
+		<bean class="converters.ActivityToStringConverter" />
+		<bean class="converters.StringToActivityConverter" />
+		
+		<bean class="converters.ActorToStringConverter" />
+		<bean class="converters.StringToActorConverter" />
+		
+		<bean class="converters.AdministratorToStringConverter" />
+		<bean class="converters.StringToAdministratorConverter" />
+		
+		<bean class="converters.AuditorToStringConverter" />
+		<bean class="converters.StringToAuditorConverter" />
+		
+		<bean class="converters.AuditToStringConverter" />
+		<bean class="converters.StringToAuditConverter" />
+		
+		<bean class="converters.AuthorityToStringConverter" />
+		<bean class="converters.StringToAuthorityConverter" />
+		
+		<bean class="converters.CategoryToStringConverter" />
+		<bean class="converters.StringToCategoryConverter" />
+		
+		<bean class="converters.CompetitionToStringConverter" />
+		<bean class="converters.StringToCompetitionConverter" />
+		
+		<bean class="converters.ConfigurationToStringConverter" />
+		<bean class="converters.StringToConfigurationConverter" />
+		
+		<bean class="converters.CreditCardToStringConverter" />
+		<bean class="converters.StringToCreditCardConverter" />
+		
+		<bean class="converters.CurriculumToStringConverter" />
+		<bean class="converters.StringToCurriculumConverter" />
+		
+		<bean class="converters.EducationRecordToStringConverter" />
+		<bean class="converters.StringToEducationRecordConverter" />
+		
+		<bean class="converters.EndorserRecordToStringConverter" />
+		<bean class="converters.StringToEndorserRecordConverter" />
+		
+		<bean class="converters.FolderToStringConverter" />
+		<bean class="converters.StringToFolderConverter" />
+		
+		<bean class="converters.InstructorToStringConverter" />
+		<bean class="converters.StringToInstructorConverter" />
+		
+		<bean class="converters.LegalTextToStringConverter" />
+		<bean class="converters.StringToLegalTextConverter" />
+		
+		<bean class="converters.LessonToStringConverter" />
+		<bean class="converters.StringToLessonConverter" />
+		
+		<bean class="converters.LocationToStringConverter" />
+		<bean class="converters.StringToLocationConverter" />
+		
+		<bean class="converters.MailMessageToStringConverter" />
+		<bean class="converters.StringToMailMessageConverter" />
+		
+		<bean class="converters.ManagerToStringConverter" />
+		<bean class="converters.StringToManagerConverter" />
+		
+		<bean class="converters.MiscellaneousRecordToStringConverter" />
+		<bean class="converters.StringToMiscellaneousRecordConverter" />
+		
+		<bean class="converters.NoteToStringConverter" />
+		<bean class="converters.StringToNoteConverter" />
+		
+		<bean class="converters.ParticipationToStringConverter" />
+		<bean class="converters.StringToParticipationConverter" />
+		
+		<bean class="converters.PersonalRecordToStringConverter" />
+		<bean class="converters.StringToPersonalRecordConverter" />
+		
+		<bean class="converters.ProfessionalRecordToStringConverter" />
+		<bean class="converters.StringToProfessionalRecordConverter" />
+		
+		<bean class="converters.ReservationToStringConverter" />
+		<bean class="converters.StringToReservationConverter" />
+		
+		<bean class="converters.ResortToStringConverter" />
+		<bean class="converters.StringToResortConverter" />
+		
+		<bean class="converters.SocialIdentityToStringConverter" />
+		<bean class="converters.StringToSocialIdentityConverter" />
+		
+		<bean class="converters.SponsorToStringConverter" />
+		<bean class="converters.StringToSponsorConverter" />
+		
+		<bean class="converters.SuggestionToStringConverter" />
+		<bean class="converters.StringToSuggestionConverter" />
+		
+		<bean class="converters.TagToStringConverter" />
+		<bean class="converters.StringToTagConverter" />
+		
+		<bean class="converters.TagValueToStringConverter" />
+		<bean class="converters.StringToTagValueConverter" />
+		
+		<bean class="converters.UserToStringConverter" />
+		<bean class="converters.StringToUserConverter" />
+		
+		<bean class="converters.UserAccountToStringConverter" />
+		<bean class="converters.StringToUserAccountConverter" />
+		
 	</util:list>
 	
 </beans>

@@ -30,6 +30,7 @@ public class Curriculum extends DomainEntity {
 	private Collection<MiscellaneousRecord>	miscellaneousRecord;
 	private PersonalRecord					personalRecord;
 	private Collection<ProfessionalRecord>	professionalRecord;
+	private Instructor						instructor;
 
 
 	//Getters
@@ -75,6 +76,13 @@ public class Curriculum extends DomainEntity {
 		return this.professionalRecord;
 	}
 
+	@NotNull
+	@Valid
+	@OneToOne(optional = false)
+	public Instructor getInstructor() {
+		return this.instructor;
+	}
+
 	//Setters
 
 	public void setTicker(final String ticker) {
@@ -99,5 +107,9 @@ public class Curriculum extends DomainEntity {
 
 	public void setProfessionalRecord(final Collection<ProfessionalRecord> professionalRecord) {
 		this.professionalRecord = professionalRecord;
+	}
+
+	public void setInstructor(final Instructor instructor) {
+		this.instructor = instructor;
 	}
 }

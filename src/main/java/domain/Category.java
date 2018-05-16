@@ -26,7 +26,7 @@ public class Category extends DomainEntity {
 
 	private Category				parent;
 	private Collection<Category>	children;
-	private Resort					resort;
+	private Collection<Resort>		resorts;
 
 
 	//Getters
@@ -49,8 +49,8 @@ public class Category extends DomainEntity {
 	@NotNull
 	@Valid
 	@OneToMany
-	public Resort getResort() {
-		return this.resort;
+	public Collection<Resort> getResorts() {
+		return this.resorts;
 	}
 
 	//Setters
@@ -67,7 +67,7 @@ public class Category extends DomainEntity {
 		this.children = children;
 	}
 
-	public void setResort(final Resort resort) {
-		this.resort = resort;
+	public void setResorts(final Collection<Resort> resorts) {
+		this.resorts = resorts;
 	}
 }

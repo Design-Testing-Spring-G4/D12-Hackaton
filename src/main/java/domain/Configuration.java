@@ -19,7 +19,7 @@ public class Configuration extends DomainEntity {
 	private String	banner;
 	private double	vat;
 	private String	countryCode;
-	private String	spamWord;
+	private String	spamWords;
 	private String	welcomeEN;
 	private String	welcomeES;
 
@@ -43,8 +43,8 @@ public class Configuration extends DomainEntity {
 	}
 
 	@NotBlank
-	public String getSpamWord() {
-		return this.spamWord;
+	public String getSpamWords() {
+		return this.spamWords;
 	}
 
 	@NotNull
@@ -71,8 +71,8 @@ public class Configuration extends DomainEntity {
 		this.countryCode = countryCode;
 	}
 
-	public void setSpamWord(final String spamWord) {
-		this.spamWord = spamWord;
+	public void setSpamWords(final String spamWords) {
+		this.spamWords = spamWords;
 	}
 
 	public void setWelcomeEN(final String welcomeEN) {

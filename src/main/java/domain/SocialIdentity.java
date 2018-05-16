@@ -4,6 +4,9 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
@@ -18,6 +21,10 @@ public class SocialIdentity extends DomainEntity {
 	private String	network;
 	private String	profile;
 	private String	photo;
+
+	//Relationships
+
+	private Actor	actor;
 
 
 	//Getters
@@ -43,6 +50,13 @@ public class SocialIdentity extends DomainEntity {
 		return this.photo;
 	}
 
+	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
+	public Actor getActor() {
+		return this.actor;
+	}
+
 	//Setters
 
 	public void setNick(final String nick) {
@@ -59,5 +73,9 @@ public class SocialIdentity extends DomainEntity {
 
 	public void setPhoto(final String photo) {
 		this.photo = photo;
+	}
+
+	public void setActor(final Actor actor) {
+		this.actor = actor;
 	}
 }

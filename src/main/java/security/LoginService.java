@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import domain.Actor;
+
 @Service
 @Transactional
 public class LoginService implements UserDetailsService {
@@ -28,7 +30,7 @@ public class LoginService implements UserDetailsService {
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
-	UserAccountRepository	userRepository;
+	UserAccountRepository	userAccountRepository;
 
 
 	// Business methods -------------------------------------------------------
@@ -39,7 +41,7 @@ public class LoginService implements UserDetailsService {
 
 		UserDetails result;
 
-		result = this.userRepository.findByUsername(username);
+		result = this.userAccountRepository.findByUsername(username);
 		Assert.notNull(result);
 		// WARNING: The following sentences prevent lazy initialisation problems!
 		Assert.notNull(result.getAuthorities());
@@ -72,6 +74,14 @@ public class LoginService implements UserDetailsService {
 		Assert.isTrue(result.getId() != 0);
 
 		return result;
+	}
+
+	public Actor findActorByUsername(final String username) {
+		return this.userAccountRepository.findActorByUsername(username);
+	}
+
+	public UserAccount findOne(final Integer id) {
+		return this.userAccountRepository.findOne(id);
 	}
 
 }
