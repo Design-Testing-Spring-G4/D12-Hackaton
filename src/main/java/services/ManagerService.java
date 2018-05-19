@@ -93,4 +93,10 @@ public class ManagerService {
 
 		this.managerRepository.delete(manager);
 	}
+
+	//Other methods
+
+	public Double[] avgMinMaxStddevResortsPerManager() {
+		return this.managerRepository.avgMinMaxStddevResortsPerManager();
+	}
 }

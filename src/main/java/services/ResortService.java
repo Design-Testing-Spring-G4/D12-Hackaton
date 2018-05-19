@@ -60,6 +60,12 @@ public class ResortService {
 	public Resort save(final Resort resort) {
 		Assert.notNull(resort);
 
+		//Assertion that the user modifying this miscellaneous record has the correct privilege.
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == resort.getManager().getId());
+
+		//Business rule: the end date must be after the start date.
+		Assert.isTrue(resort.getEndDate().after(resort.getStartDate()));
+
 		final Resort saved = this.resortRepository.save(resort);
 
 		return saved;
@@ -68,6 +74,19 @@ public class ResortService {
 	public void delete(final Resort resort) {
 		Assert.notNull(resort);
 
+		//Assertion that the user modifying this miscellaneous record has the correct privilege.
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == resort.getManager().getId());
+
 		this.resortRepository.delete(resort);
+	}
+
+	//Other methods
+
+	public Double[] avgMinMaxStddevReservationsPerResort() {
+		return this.resortRepository.avgMinMaxStddevReservationsPerResort();
+	}
+
+	public Double[] avgMinMaxStddevActivitiesPerResort() {
+		return this.resortRepository.avgMinMaxStddevActivitiesPerResort();
 	}
 }

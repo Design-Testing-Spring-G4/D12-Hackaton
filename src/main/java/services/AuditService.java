@@ -88,7 +88,7 @@ public class AuditService {
 		this.auditRepository.delete(audit);
 	}
 
-	//Other methods --------------------------------
+	//Other methods
 
 	public boolean isValidURLCollection(final String attachments) {
 		boolean result = false;

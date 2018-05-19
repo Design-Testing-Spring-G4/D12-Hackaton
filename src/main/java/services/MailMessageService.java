@@ -41,10 +41,9 @@ public class MailMessageService {
 	//Simple CRUD methods --------------------------------
 
 	public MailMessage create() {
-
 		final MailMessage mailMessage = new MailMessage();
-		mailMessage.setPriority(Priority.NEUTRAL);
 
+		mailMessage.setPriority(Priority.NEUTRAL);
 		mailMessage.setSender(this.actorService.findByPrincipal());
 
 		return mailMessage;
@@ -65,7 +64,7 @@ public class MailMessageService {
 		Assert.notNull(mailMessage);
 
 		//Assertion that the user modifying this mail message has the correct privilege, that is, he or she is the sender or receiver.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == mailMessage.getSender().getId() || this.actorService.findByPrincipal().getId() == mailMessage.getReceiver().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == mailMessage.getFolder().getActor().getId());
 
 		mailMessage.setSent(new Date(System.currentTimeMillis() - 1));
 

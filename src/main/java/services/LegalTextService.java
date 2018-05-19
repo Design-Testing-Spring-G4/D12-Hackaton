@@ -25,11 +25,11 @@ public class LegalTextService {
 	//Simple CRUD methods
 
 	public LegalText create() {
-		final LegalText l = new LegalText();
+		final LegalText legalText = new LegalText();
 
-		l.setRegistered(new Date());
+		legalText.setRegistered(new Date());
 
-		return l;
+		return legalText;
 	}
 
 	public LegalText findOne(final int id) {
@@ -42,23 +42,23 @@ public class LegalTextService {
 		return this.legalRepository.findAll();
 	}
 
-	public LegalText save(final LegalText l) {
-		Assert.notNull(l);
+	public LegalText save(final LegalText legalText) {
+		Assert.notNull(legalText);
 		//Draft/final mode assertion is done via controller.
 
-		l.setRegistered(new Date(System.currentTimeMillis() - 1));
+		legalText.setRegistered(new Date(System.currentTimeMillis() - 1));
 
-		final LegalText saved = this.legalRepository.save(l);
+		final LegalText saved = this.legalRepository.save(legalText);
 
 		return saved;
 	}
 
-	public void delete(final LegalText l) {
-		Assert.notNull(l);
+	public void delete(final LegalText legalText) {
+		Assert.notNull(legalText);
 		//A legal text cannot be deleted outside of draft mode.
-		Assert.isTrue(!l.isFinalMode());
+		Assert.isTrue(!legalText.isFinalMode());
 
-		this.legalRepository.delete(l);
+		this.legalRepository.delete(legalText);
 	}
 
 	//Other methods
