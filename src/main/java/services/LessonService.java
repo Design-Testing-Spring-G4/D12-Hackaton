@@ -71,4 +71,9 @@ public class LessonService {
 		this.lessonRepository.delete(lesson);
 	}
 
+	//Other methods
+
+	public Double[] minMaxAvgStddevNotesPerLesson() {
+		return this.lessonRepository.minMaxAvgStddevNotesPerLesson();
+	}
 }

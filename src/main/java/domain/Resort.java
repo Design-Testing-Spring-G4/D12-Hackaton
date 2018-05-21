@@ -41,7 +41,7 @@ public class Resort extends DomainEntity {
 
 	private Manager					manager;
 	private LegalText				legalText;
-	private Collection<Tag>			tags;
+	private Collection<TagValue>	tags;
 	private Collection<Activity>	activities;
 	private Collection<Reservation>	reservations;
 	private Collection<Audit>		audits;
@@ -121,7 +121,7 @@ public class Resort extends DomainEntity {
 	@NotNull
 	@Valid
 	@ManyToMany
-	public Collection<Tag> getTags() {
+	public Collection<TagValue> getTags() {
 		return this.tags;
 	}
 
@@ -196,7 +196,7 @@ public class Resort extends DomainEntity {
 		this.legalText = legalText;
 	}
 
-	public void setTags(final Collection<Tag> tags) {
+	public void setTags(final Collection<TagValue> tags) {
 		this.tags = tags;
 	}
 

@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,7 +78,7 @@ public class ReservationService {
 		Assert.isTrue(reservation.getStartDate().after(reservation.getResort().getStartDate()));
 		Assert.isTrue(reservation.getEndDate().before(reservation.getResort().getEndDate()));
 
-		reservation.setPrice(this.computePrice(reservation));
+		reservation.setPrice(this.computePrice(reservation, TimeUnit.DAYS));
 
 		final Reservation saved = this.reservationRepository.save(reservation);
 		return saved;
@@ -94,21 +95,46 @@ public class ReservationService {
 
 	//Other methods
 
-	public Double[] avgMinMaxStddevPricePerReservation() {
-		return this.reservationRepository.avgMinMaxStddevPricePerReservation();
-	}
-
 	//Automatically compute the reservation's price from the number of adults and children, activities and lessons, plus the system's VAT tax.
-	public Double computePrice(final Reservation reservation) {
-		final Double adultCost = reservation.getAdults() * reservation.getResort().getPriceAdult();
-		final Double childrenCost = reservation.getChildren() * reservation.getResort().getPriceChild();
+	public Double computePrice(final Reservation reservation, final TimeUnit timeUnit) {
+		//Calculate the amount of days in the reservation, using concurrent TimeUnit class.
+		final long diffInMillies = reservation.getEndDate().getTime() - reservation.getStartDate().getTime();
+		final long diffInDays = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+		//The cost for all adults and children during the allotted number of days
+		final Double adultCost = reservation.getAdults() * reservation.getResort().getPriceAdult() * diffInDays;
+		final Double childrenCost = reservation.getChildren() * reservation.getResort().getPriceChild() * diffInDays;
 		Double price = adultCost + childrenCost;
+
+		//Add the price of all activities and lessons included in the reservation.
 		for (final Activity a : reservation.getActivities())
 			price += a.getPrice();
 		for (final Lesson l : reservation.getLessons())
 			price += l.getPrice();
+
+		//Total price plus VAT tax.
 		final Double vat = this.configurationService.findAll().iterator().next().getVat();
 
-		return price + (price * vat);
+		return price + (price * (vat / 100));
+	}
+
+	public Double[] avgMinMaxStddevPricePerReservation() {
+		return this.reservationRepository.avgMinMaxStddevPricePerReservation();
+	}
+
+	public Double ratioPendingReservations() {
+		return this.reservationRepository.ratioPendingReservations();
+	}
+
+	public Double ratioDueReservations() {
+		return this.reservationRepository.ratioDueReservations();
+	}
+
+	public Double ratioAcceptedReservations() {
+		return this.reservationRepository.ratioAcceptedReservations();
+	}
+
+	public Double ratioRejectedReservations() {
+		return this.reservationRepository.ratioRejectedReservations();
 	}
 }

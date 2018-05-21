@@ -71,4 +71,9 @@ public class NoteService {
 		this.noteRepository.delete(note);
 	}
 
+	//Other methods
+
+	public Double[] minMaxAvgStddevNotes() {
+		return this.noteRepository.minMaxAvgStddevNotes();
+	}
 }

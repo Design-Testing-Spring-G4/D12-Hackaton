@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import repositories.LegalTextRepository;
 import domain.LegalText;
+import domain.LegalTextTable;
 
 @Service
 @Transactional
@@ -64,7 +65,7 @@ public class LegalTextService {
 	//Other methods
 
 	//A table with the number of times that each legal text has been referenced.
-	//	public Collection<LegalTextTable> legalTextTable() {
-	//		return this.legalRepository.legalTextTable();
-	//	}
+	public Collection<LegalTextTable> legalTextTable() {
+		return this.legalRepository.legalTextTable();
+	}
 }

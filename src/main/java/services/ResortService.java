@@ -15,7 +15,7 @@ import domain.Audit;
 import domain.Manager;
 import domain.Reservation;
 import domain.Resort;
-import domain.Tag;
+import domain.TagValue;
 
 @Service
 @Transactional
@@ -39,7 +39,7 @@ public class ResortService {
 
 		final Manager manager = (Manager) this.actorService.findByPrincipal();
 		resort.setManager(manager);
-		resort.setTags(new ArrayList<Tag>());
+		resort.setTags(new ArrayList<TagValue>());
 		resort.setActivities(new ArrayList<Activity>());
 		resort.setReservations(new ArrayList<Reservation>());
 		resort.setAudits(new ArrayList<Audit>());
@@ -88,5 +88,21 @@ public class ResortService {
 
 	public Double[] avgMinMaxStddevActivitiesPerResort() {
 		return this.resortRepository.avgMinMaxStddevActivitiesPerResort();
+	}
+
+	public Collection<Resort> resortsWithAboveAverageReservations() {
+		return this.resortRepository.resortsWithAboveAverageReservations();
+	}
+
+	public Double ratioFullResorts() {
+		return this.resortRepository.ratioFullResorts();
+	}
+
+	public Double[] minMaxAvgStddevAuditsPerResort() {
+		return this.resortRepository.minMaxAvgStddevAuditsPerResort();
+	}
+
+	public Double ratioResortsWithAudit() {
+		return this.resortRepository.ratioResortsWithAudit();
 	}
 }

@@ -23,7 +23,7 @@ public class LocationToStringConverter implements Converter<Location, String> {
 		else
 			try {
 				builder = new StringBuilder();
-				builder.append(URLEncoder.encode(l.getName(), "UTF-8"));
+				builder.append(URLEncoder.encode(l.getLocation(), "UTF-8"));
 				builder.append("|");
 				builder.append(URLEncoder.encode(l.getGpsCoordinates(), "UTF-8"));
 				builder.append("|");

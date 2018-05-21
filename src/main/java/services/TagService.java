@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.TagRepository;
-import domain.Resort;
 import domain.Tag;
 import domain.TagValue;
 
@@ -28,17 +27,13 @@ public class TagService {
 	@Autowired
 	private TagValueService	tagValueService;
 
-	@Autowired
-	private ResortService	resortService;
-
 
 	//Simple CRUD methods
 
 	public Tag create() {
 		final Tag t = new Tag();
 
-		t.setTagValue(new ArrayList<TagValue>());
-		t.setResorts(new ArrayList<Resort>());
+		t.setTagValues(new ArrayList<TagValue>());
 
 		return t;
 	}
@@ -56,24 +51,14 @@ public class TagService {
 	public Tag save(final Tag t) {
 		Assert.notNull(t);
 
-		//Business rule: a tag can only be modified if no trip is using it.
-		Assert.isTrue(!t.getResorts().isEmpty());
-
 		return this.tagRepository.save(t);
 	}
 
 	public void delete(final Tag t) {
 		Assert.notNull(t);
 
-		for (final TagValue tv : t.getTagValue())
+		for (final TagValue tv : t.getTagValues())
 			this.tagValueService.delete(tv);
-
-		for (final Resort r : t.getResorts()) {
-			final Collection<Tag> tags = r.getTags();
-			tags.remove(t);
-			r.setTags(tags);
-			this.resortService.save(r);
-		}
 
 		this.tagRepository.delete(t);
 	}

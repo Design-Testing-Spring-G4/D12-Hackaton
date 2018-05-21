@@ -82,4 +82,23 @@ public class ActivityService {
 		return this.activityRepository.ratioEntertainmentActivities();
 	}
 
+	public Double ratioSportActivitiesWithInstructor() {
+		return this.activityRepository.ratioSportActivitiesWithInstructor();
+	}
+
+	public Double ratioSportActivitiesWithoutInstructor() {
+		return this.activityRepository.ratioSportActivitiesWithoutInstructor();
+	}
+
+	public Double ratioSportActivities() {
+		return this.activityRepository.ratioSportActivities();
+	}
+
+	public Double ratioTourismActivities() {
+		return this.activityRepository.ratioTourismActivities();
+	}
+
+	public Double[] minMaxAvgStddevNotesPerActivity() {
+		return this.activityRepository.minMaxAvgStddevNotesPerActivity();
+	}
 }

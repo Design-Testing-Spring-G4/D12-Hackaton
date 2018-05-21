@@ -93,4 +93,14 @@ public class InstructorService {
 
 		this.instructorRepository.delete(instructor);
 	}
+
+	//Other methods
+
+	public Double ratioInstructorsWithCurriculum() {
+		return this.instructorRepository.ratioInstructorsWithCurriculum();
+	}
+
+	public Double ratioInstructorsEndorsed() {
+		return this.instructorRepository.ratioInstructorsEndorsed();
+	}
 }

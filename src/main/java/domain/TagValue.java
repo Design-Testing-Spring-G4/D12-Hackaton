@@ -1,9 +1,12 @@
 
 package domain;
 
+import java.util.Collection;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -16,11 +19,12 @@ public class TagValue extends DomainEntity {
 
 	//Attributes
 
-	private String	value;
+	private String				value;
 
 	//Relationships
 
-	private Tag		tag;
+	private Tag					tag;
+	private Collection<Resort>	resorts;
 
 
 	//Getters
@@ -37,6 +41,13 @@ public class TagValue extends DomainEntity {
 		return this.tag;
 	}
 
+	@NotNull
+	@Valid
+	@ManyToMany
+	public Collection<Resort> getResorts() {
+		return this.resorts;
+	}
+
 	//Setters
 
 	public void setValue(final String value) {
@@ -45,5 +56,9 @@ public class TagValue extends DomainEntity {
 
 	public void setTag(final Tag tag) {
 		this.tag = tag;
+	}
+
+	public void setResorts(final Collection<Resort> resorts) {
+		this.resorts = resorts;
 	}
 }

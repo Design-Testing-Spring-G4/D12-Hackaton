@@ -24,7 +24,7 @@ public class StringToLocationConverter implements Converter<String, Location> {
 			try {
 				parts = s.split("\\|");
 				result = new Location();
-				result.setName(URLDecoder.decode(parts[0], "UTF-8"));
+				result.setLocation(URLDecoder.decode(parts[0], "UTF-8"));
 				result.setGpsCoordinates(URLDecoder.decode(parts[1], "UTF-8"));
 			} catch (final Throwable oops) {
 				throw new RuntimeException(oops);
