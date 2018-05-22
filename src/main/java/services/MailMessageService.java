@@ -21,12 +21,12 @@ import domain.Priority;
 @Transactional
 public class MailMessageService {
 
-	//Managed repository --------------------------------
+	//Managed repository
 
 	@Autowired
 	private MailMessageRepository	mailMessageRepository;
 
-	//Supporting services  ----------------------------
+	//Supporting services
 
 	@Autowired
 	private ActorService			actorService;
@@ -38,7 +38,7 @@ public class MailMessageService {
 	private Validator				validator;
 
 
-	//Simple CRUD methods --------------------------------
+	//Simple CRUD methods
 
 	public MailMessage create() {
 		final MailMessage mailMessage = new MailMessage();
@@ -80,7 +80,7 @@ public class MailMessageService {
 		this.mailMessageRepository.delete(mailMessage);
 	}
 
-	//Ancillary methods
+	//Other methods
 
 	public MailMessage reconstruct(final MailMessage mailMessage, final BindingResult binding) {
 		MailMessage result;

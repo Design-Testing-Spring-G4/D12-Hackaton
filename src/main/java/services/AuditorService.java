@@ -72,7 +72,7 @@ public class AuditorService {
 		Assert.notNull(auditor);
 
 		final Auditor saved2;
-		//Assertion that the final user modifying this final explorer has the final correct privilege.
+		//For new actors, generate the default system folders.
 		if (auditor.getId() != 0) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == auditor.getId());
 			saved2 = this.auditorRepository.save(auditor);

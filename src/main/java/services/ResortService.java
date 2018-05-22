@@ -60,7 +60,7 @@ public class ResortService {
 	public Resort save(final Resort resort) {
 		Assert.notNull(resort);
 
-		//Assertion that the user modifying this miscellaneous record has the correct privilege.
+		//Assertion that the user modifying this resort has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == resort.getManager().getId());
 
 		//Business rule: the end date must be after the start date.

@@ -70,12 +70,12 @@ public class FolderService {
 		}
 
 		final Folder saved = this.folderRepository.save(f);
-		if (f.getId() == 0) {
-			final Actor actor = f.getActor();
-			actor.getFolders().add(saved);
-			this.actorService.save(actor);
+		if (f.getId() == 0 && f.getActor().getId() != 0)
+			//			final Actor actor = f.getActor();
+			//			actor.getFolders().add(saved);
+			//			this.actorService.save(actor);
 			saved2 = this.folderRepository.save(saved);
-		} else
+		else
 			saved2 = this.folderRepository.save(saved);
 		return saved2;
 	}
@@ -119,10 +119,8 @@ public class FolderService {
 
 			final Folder save = this.save(f);
 			cf.add(save);
-			this.actorService.save(actor);
-
 		}
-		//	this.save(cf);
+
 		return cf;
 	}
 

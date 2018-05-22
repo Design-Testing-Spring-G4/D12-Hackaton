@@ -14,6 +14,7 @@ import repositories.SponsorRepository;
 import security.Authority;
 import security.UserAccount;
 import domain.Competition;
+import domain.Folder;
 import domain.Participation;
 import domain.SocialIdentity;
 import domain.Sponsor;
@@ -40,7 +41,7 @@ public class SponsorService {
 
 	public Sponsor create() {
 		final Authority a = new Authority();
-		a.setAuthority(Authority.ADMIN);
+		a.setAuthority(Authority.SPONSOR);
 		final UserAccount account = new UserAccount();
 		account.setAuthorities(Arrays.asList(a));
 
@@ -48,7 +49,7 @@ public class SponsorService {
 		sponsor.setSuspicious(false);
 		sponsor.setSocialIdentities(new ArrayList<SocialIdentity>());
 		sponsor.setUserAccount(account);
-		sponsor.setFolders(this.folderService.generateDefaultFolders(sponsor));
+		sponsor.setFolders(new ArrayList<Folder>());
 		sponsor.setParticipations(new ArrayList<Participation>());
 		sponsor.setCompetitions(new ArrayList<Competition>());
 
@@ -68,11 +69,8 @@ public class SponsorService {
 	public Sponsor save(final Sponsor sponsor) {
 		Assert.notNull(sponsor);
 
-		//Assertion that the user modifying this sponsor has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == sponsor.getId());
-
 		final Sponsor saved2;
-		//Assertion that the final user modifying this final explorer has the final correct privilege.
+		//For new actors, generate the default system folders.
 		if (sponsor.getId() != 0) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == sponsor.getId());
 			saved2 = this.sponsorRepository.save(sponsor);
@@ -92,5 +90,11 @@ public class SponsorService {
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == sponsor.getId());
 
 		this.sponsorRepository.delete(sponsor);
+	}
+
+	//Other methods
+
+	public Double[] minMaxAvgStdddevCompetitionsPerSponsor() {
+		return this.sponsorRepository.minMaxAvgStdddevCompetitionsPerSponsor();
 	}
 }

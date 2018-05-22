@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import repositories.InstructorRepository;
 import security.Authority;
 import security.UserAccount;
+import domain.Folder;
 import domain.Instructor;
 import domain.Participation;
 import domain.Resort;
@@ -48,7 +49,7 @@ public class InstructorService {
 		instructor.setSuspicious(false);
 		instructor.setSocialIdentities(new ArrayList<SocialIdentity>());
 		instructor.setUserAccount(account);
-		instructor.setFolders(this.folderService.generateDefaultFolders(instructor));
+		instructor.setFolders(new ArrayList<Folder>());
 		instructor.setParticipations(new ArrayList<Participation>());
 		instructor.setResorts(new ArrayList<Resort>());
 
@@ -68,11 +69,8 @@ public class InstructorService {
 	public Instructor save(final Instructor instructor) {
 		Assert.notNull(instructor);
 
-		//Assertion that the user modifying this instructor has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == instructor.getId());
-
 		final Instructor saved2;
-		//Assertion that the final user modifying this final explorer has the final correct privilege.
+		//For new actors, generate the default system folders.
 		if (instructor.getId() != 0) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == instructor.getId());
 			saved2 = this.instructorRepository.save(instructor);
@@ -102,5 +100,9 @@ public class InstructorService {
 
 	public Double ratioInstructorsEndorsed() {
 		return this.instructorRepository.ratioInstructorsEndorsed();
+	}
+
+	public Double ratioSuspiciousInstructors() {
+		return this.instructorRepository.ratioSuspiciousInstructors();
 	}
 }

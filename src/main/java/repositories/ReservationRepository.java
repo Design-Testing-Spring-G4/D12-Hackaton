@@ -15,18 +15,18 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	Double[] avgMinMaxStddevPricePerReservation();
 
 	//The ratio of "PENDING" reservations.
-	@Query("select (select r from Reservation r where r.status = 'PENDING')*1.0/r from Reservation r")
+	@Query("select (select count(r) from Reservation r where r.status = 1)*1.0/count(r) from Reservation r")
 	Double ratioPendingReservations();
 
 	//The ratio of "DUE" reservations.
-	@Query("select (select r from Reservation r where r.status = 'DUE')*1.0/r from Reservation r")
+	@Query("select (select count(r) from Reservation r where r.status = 3)*1.0/count(r) from Reservation r")
 	Double ratioDueReservations();
 
 	//The ratio of "ACCEPTED" reservations.
-	@Query("select (select r from Reservation r where r.status = 'ACCEPTED')*1.0/r from Reservation r")
+	@Query("select (select count(r) from Reservation r where r.status = 4)*1.0/count(r) from Reservation r")
 	Double ratioAcceptedReservations();
 
 	//The ratio of "REJECTED" reservations.
-	@Query("select (select r from Reservation r where r.status = 'REJECTED')*1.0/r from Reservation r")
+	@Query("select (select count(r) from Reservation r where r.status = 2)*1.0/count(r) from Reservation r")
 	Double ratioRejectedReservations();
 }

@@ -14,6 +14,7 @@ import repositories.AdministratorRepository;
 import security.Authority;
 import security.UserAccount;
 import domain.Administrator;
+import domain.Folder;
 import domain.Participation;
 import domain.SocialIdentity;
 
@@ -47,7 +48,7 @@ public class AdministratorService {
 		administrator.setSuspicious(false);
 		administrator.setSocialIdentities(new ArrayList<SocialIdentity>());
 		administrator.setUserAccount(account);
-		administrator.setFolders(this.folderService.generateDefaultFolders(administrator));
+		administrator.setFolders(new ArrayList<Folder>());
 		administrator.setParticipations(new ArrayList<Participation>());
 
 		return administrator;
@@ -66,11 +67,8 @@ public class AdministratorService {
 	public Administrator save(final Administrator administrator) {
 		Assert.notNull(administrator);
 
-		//Assertion that the user modifying this administrator has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == administrator.getId());
-
 		final Administrator saved2;
-		//Assertion that the final user modifying this final explorer has the final correct privilege.
+		//For new actors, generate the default system folders.
 		if (administrator.getId() != 0) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == administrator.getId());
 			saved2 = this.administratorRepository.save(administrator);

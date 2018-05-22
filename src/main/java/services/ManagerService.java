@@ -9,14 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.ManagerRepository;
 import security.Authority;
 import security.UserAccount;
+import domain.Folder;
 import domain.Manager;
 import domain.Participation;
 import domain.Resort;
 import domain.SocialIdentity;
+import forms.ActorRegisterForm;
 
 @Service
 @Transactional
@@ -35,12 +39,15 @@ public class ManagerService {
 	@Autowired
 	private ActorService		actorService;
 
+	@Autowired
+	private Validator			validator;
+
 
 	//Simple CRUD Methods
 
 	public Manager create() {
 		final Authority a = new Authority();
-		a.setAuthority(Authority.ADMIN);
+		a.setAuthority(Authority.MANAGER);
 		final UserAccount account = new UserAccount();
 		account.setAuthorities(Arrays.asList(a));
 
@@ -48,7 +55,7 @@ public class ManagerService {
 		manager.setSuspicious(false);
 		manager.setSocialIdentities(new ArrayList<SocialIdentity>());
 		manager.setUserAccount(account);
-		manager.setFolders(this.folderService.generateDefaultFolders(manager));
+		manager.setFolders(new ArrayList<Folder>());
 		manager.setParticipations(new ArrayList<Participation>());
 		manager.setResorts(new ArrayList<Resort>());
 
@@ -68,11 +75,8 @@ public class ManagerService {
 	public Manager save(final Manager manager) {
 		Assert.notNull(manager);
 
-		//Assertion that the user modifying this manager has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == manager.getId());
-
 		final Manager saved2;
-		//Assertion that the final user modifying this final explorer has the final correct privilege.
+		//For new actors, generate the default system folders.
 		if (manager.getId() != 0) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == manager.getId());
 			saved2 = this.managerRepository.save(manager);
@@ -96,7 +100,30 @@ public class ManagerService {
 
 	//Other methods
 
+	public Manager reconstruct(final ActorRegisterForm arf, final BindingResult binding) {
+		Manager manager;
+		Assert.isTrue(arf.isAcceptedTerms());
+		Assert.isTrue(arf.getPassword().equals(arf.getRepeatPassword()));
+
+		manager = this.create();
+		manager.getUserAccount().setUsername(arf.getUsername());
+		manager.getUserAccount().setPassword(arf.getPassword());
+		manager.setName(arf.getName());
+		manager.setSurname(arf.getSurname());
+		manager.setEmail(arf.getEmail());
+		manager.setPhone(arf.getPhone());
+		manager.setAddress(arf.getAddress());
+
+		this.validator.validate(manager, binding);
+
+		return manager;
+	}
+
 	public Double[] avgMinMaxStddevResortsPerManager() {
 		return this.managerRepository.avgMinMaxStddevResortsPerManager();
+	}
+
+	public Double ratioSuspiciousManagers() {
+		return this.managerRepository.ratioSuspiciousManagers();
 	}
 }

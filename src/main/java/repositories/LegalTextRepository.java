@@ -14,6 +14,6 @@ import domain.LegalTextTable;
 public interface LegalTextRepository extends JpaRepository<LegalText, Integer> {
 
 	//A table with the number of times that each legal text has been referenced.
-	@Query("select new domain.LegalTextTable(t.legalText, count(t)) from Trip t group by t.legalText")
+	@Query("select new domain.LegalTextTable(r.legalText, count(r)) from Resort r group by r.legalText")
 	Collection<LegalTextTable> legalTextTable();
 }

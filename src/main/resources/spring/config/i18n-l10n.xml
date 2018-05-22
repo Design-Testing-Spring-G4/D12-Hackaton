@@ -23,6 +23,10 @@
 		<value>/views/security/messages</value>		
 		<value>/views/welcome/messages</value>
 		<value>/views/legislation/messages</value>
+		
+		<value>/views/user/messages</value>
+		<value>/views/manager/messages</value>
+		<value>/views/resort/messages</value>
 	</util:list>
 
 </beans>

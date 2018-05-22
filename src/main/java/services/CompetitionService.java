@@ -3,8 +3,11 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -76,4 +79,15 @@ public class CompetitionService {
 		this.competitionRepository.delete(competition);
 	}
 
+	//Other methods
+
+	public List<Competition> topFiveCompetitionsPrizePool() {
+		final Pageable top = new PageRequest(0, 5);
+		return this.competitionRepository.topFiveCompetitionsPrizePool(top);
+	}
+
+	public List<Competition> topFiveCompetitionsMaxParticipants() {
+		final Pageable top = new PageRequest(0, 5);
+		return this.competitionRepository.topFiveCompetitionsMaxParticipants(top);
+	}
 }

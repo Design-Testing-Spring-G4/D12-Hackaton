@@ -17,4 +17,8 @@ public interface InstructorRepository extends JpaRepository<Instructor, Integer>
 	//The ratio of instructors whose curriculum's been endorsed.
 	@Query("select (select count(i) from Instructor i join i.curriculum c where c.endorserRecord is not empty)*1.0/count(i) from Instructor i")
 	Double ratioInstructorsEndorsed();
+
+	//The ratio of suspicious instructors.
+	@Query("select (select count(i) from Instructor i where i.suspicious = true)*1.0/count(i) from Instructor i")
+	Double ratioSuspiciousInstructors();
 }
