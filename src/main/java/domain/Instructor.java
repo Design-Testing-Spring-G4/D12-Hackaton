@@ -4,12 +4,17 @@ package domain;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(indexes = {
+	@Index(columnList = "curriculum_id")
+})
 public class Instructor extends Actor {
 
 	//Relationships

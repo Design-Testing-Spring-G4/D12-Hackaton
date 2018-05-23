@@ -27,6 +27,13 @@
 		<value>/views/user/tiles.xml</value>
 		<value>/views/manager/tiles.xml</value>
 		<value>/views/resort/tiles.xml</value>
+		<value>/views/legalText/tiles.xml</value>
+		<value>/views/activity/tiles.xml</value>
+		<value>/views/actor/tiles.xml</value>
+		<value>/views/socialIdentity/tiles.xml</value>
+		<value>/views/instructor/tiles.xml</value>
+		<value>/views/curriculum/tiles.xml</value>
+		<value>/views/lesson/tiles.xml</value>
 	</util:list>
 
 </beans>

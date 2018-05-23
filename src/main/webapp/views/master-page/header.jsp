@@ -51,6 +51,8 @@
 				</ul>
 			</li>
 			<li><a class="fNiv" href="resort/list.do"><spring:message code="master.page.resort.list" /></a></li>
+			<li><a class="fNiv" href="resort/listCategory.do?varId=0"><spring:message code="master.page.resort.listCategory" /></a></li>
+			<li><a class="fNiv" href="instructor/list.do"><spring:message code="master.page.instructor.list" /></a></li>
 		</security:authorize>
 		
 		<security:authorize access="isAuthenticated()">

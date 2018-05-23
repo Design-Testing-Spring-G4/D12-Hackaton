@@ -40,6 +40,13 @@
 		<security:intercept-url pattern="/welcome/*" access="permitAll" />
 		<security:intercept-url pattern="/legislation/*" access="permitAll" />
 		<security:intercept-url pattern="/resort/*" access="permitAll" />
+		<security:intercept-url pattern="/legalText/*" access="permitAll" />
+		<security:intercept-url pattern="/activity/*" access="permitAll" />
+		<security:intercept-url pattern="/actor/display.do" access="permitAll" />
+		<security:intercept-url pattern="/socialIdentity/*" access="permitAll" />
+		<security:intercept-url pattern="/instructor/*" access="permitAll" />
+		<security:intercept-url pattern="/curriculum/*" access="permitAll" />
+		<security:intercept-url pattern="/lesson/*" access="permitAll" />
 		
 		<security:intercept-url pattern="/user/*" access="isAnonymous()" />
 		<security:intercept-url pattern="/manager/*" access="isAnonymous()" />

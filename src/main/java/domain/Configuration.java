@@ -8,6 +8,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.hibernate.validator.constraints.URL;
 
 @Entity
@@ -38,21 +40,25 @@ public class Configuration extends DomainEntity {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getCountryCode() {
 		return this.countryCode;
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getSpamWords() {
 		return this.spamWords;
 	}
 
 	@NotNull
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getWelcomeEN() {
 		return this.welcomeEN;
 	}
 
 	@NotNull
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getWelcomeES() {
 		return this.welcomeES;
 	}

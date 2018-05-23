@@ -27,6 +27,7 @@
 
 <%-- Stored message variables --%>
 
+<spring:message code="resort.search" var="search" />
 <spring:message code="resort.name" var="name" />
 <spring:message code="resort.description" var="description" />
 <spring:message code="resort.startDate" var="startDate" />
@@ -34,6 +35,58 @@
 <spring:message code="resort.spots" var="spots" />
 <spring:message code="resort.full" var="full" />
 <spring:message code="resort.dateInt" var="formatDate" />
+<spring:message code="resort.parent" var="parent" />
+<spring:message code="resort.negative" var="negative" />
+<spring:message code="resort.children" var="children" />
+<spring:message code="resort.allCategory" var="allCategory" />
+
+<%-- Conditional to display category list in the appropriate view --%>
+
+<jstl:if test="${requestURI == 'resort/listCategory.do'}" >
+	<jstl:out value="${category.name}" />.&nbsp;
+	<jstl:out value="${parent}" />:&nbsp;
+	<jstl:choose>
+		<jstl:when test="${category.parent != null}">
+			<spring:url var="parentUrl" value="resort/listCategory.do">
+				<spring:param name="varId" value="${category.parent.id}" />
+			</spring:url>
+			<a href="${parentUrl}"><jstl:out value="${category.parent.name}" /></a>&nbsp;
+		</jstl:when>
+		<jstl:otherwise>
+			<jstl:out value="${negative}"/>.&nbsp;
+		</jstl:otherwise>
+	</jstl:choose>
+	<jstl:out value="${children}" />:&nbsp;
+	<jstl:choose>
+		<jstl:when test="${fn:length(category.children) != 0}">
+			<jstl:forEach var="child" items="${childrenCategories}">
+				<spring:url var="childUrl" value="resort/listCategory.do">
+					<spring:param name="varId" value="${child.id}" />
+				</spring:url>
+				<a href="${childUrl}"><jstl:out value="${child.name}" /></a>&nbsp;
+			</jstl:forEach>
+		</jstl:when>
+		<jstl:otherwise>
+			<jstl:out value="${negative}"/>.&nbsp;
+		</jstl:otherwise>
+	</jstl:choose>
+	<br/>
+	<jstl:out value="${allCategory}" />:&nbsp;
+	<jstl:forEach var="cat" items="${categories}">
+		<spring:url var="catUrl" value="resort/listCategory.do">
+			<spring:param name="varId" value="${cat.id}" />
+		</spring:url>
+		<a href="${catUrl}"><jstl:out value="${cat.name}" /></a>&nbsp;
+	</jstl:forEach>
+</jstl:if>
+<br/>
+
+<%-- Search box --%>
+
+<form method="get" action="resort/search.do">
+	<input type="text" name="keyword" placeholder="Search using a keyword"> 
+	<input type="submit" value="${search}">
+</form>
 
 	<%-- Listing grid --%>
 
@@ -68,6 +121,8 @@
 		<%-- Links towards edition, display and others --%>
 		
 		<acme:link code="resort.display" url="resort/display.do" id="${row.id}" />
+		
+		<acme:link code="resort.activities" url="activity/list.do" id="${row.id}" />
 
 	</display:table>
 

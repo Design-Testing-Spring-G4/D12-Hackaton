@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -38,6 +40,7 @@ public class EducationRecord extends DomainEntity {
 	//Getters
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getDiploma() {
 		return this.diploma;
 	}
@@ -58,6 +61,7 @@ public class EducationRecord extends DomainEntity {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getInstitution() {
 		return this.institution;
 	}
@@ -67,6 +71,7 @@ public class EducationRecord extends DomainEntity {
 		return this.attachment;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getComments() {
 		return this.comments;
 	}

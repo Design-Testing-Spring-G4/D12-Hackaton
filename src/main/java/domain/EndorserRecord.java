@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.hibernate.validator.constraints.URL;
 
 @Entity
@@ -32,6 +34,7 @@ public class EndorserRecord extends DomainEntity {
 	//Getters
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getName() {
 		return this.name;
 	}
@@ -43,6 +46,7 @@ public class EndorserRecord extends DomainEntity {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getPhone() {
 		return this.phone;
 	}
@@ -53,6 +57,7 @@ public class EndorserRecord extends DomainEntity {
 		return this.profile;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getComments() {
 		return this.comments;
 	}

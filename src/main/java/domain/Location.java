@@ -4,8 +4,11 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
@@ -20,12 +23,13 @@ public class Location {
 	//Getters
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getLocation() {
 		return this.location;
 	}
 
 	@NotBlank
-	//@Pattern(regexp = "^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$")
+	@Pattern(regexp = "^[-+]?\\d{1,2}\\.\\d{1,2}\\,\\ [-+]?\\d{1,2}\\.\\d{1,2}$")
 	public String getGpsCoordinates() {
 		return this.gpsCoordinates;
 	}

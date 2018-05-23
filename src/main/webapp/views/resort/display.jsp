@@ -26,11 +26,12 @@
 
 <spring:message code="resort.startDate" var="startDate" />
 <spring:message code="resort.endDate" var="endDate" />
+<spring:message code="resort.legalText" var="legalText" />
+<spring:message code="resort.tags" var="tags" />
 <spring:message code="resort.dateInt" var="formatDate" />
 
-<%-- For the selected resort in the list received as model, display the following information: --%>
-	
-	<%--<jstl:if test="${resort.picture != ''}"> --%>
+<%-- For the selected resort received as model, display the following information: --%>
+
 	<img src="${resort.picture}" height="150" width="550">
 	<hr/>
 
@@ -53,6 +54,19 @@
 	<acme:displayField code="resort.priceAdult" path="${resort.priceAdult}" />
 	<br/>
 	<acme:displayField code="resort.priceChild" path="${resort.priceChild}" />
+	<br/>
+	
+	<spring:url var="displayLegal" value="legalText/display.do">
+			<spring:param name="varId" value="${resort.legalText.id}" />
+	</spring:url>
+	<jstl:out value="${legalText}" />:
+	<a href="${displayLegal}"><jstl:out value="${resort.legalText.title}" /></a>
+	<br/>
+	
+	<jstl:out value="${tags}" />:
+	<jstl:forEach var="tagVs" items="${resort.tags}">
+		<jstl:out value="${tagVs.tag.name}: ${tagVs.value}" />
+	</jstl:forEach>
 	<br/>
 	
 	<acme:cancel code="resort.return" url="resort/list.do" />

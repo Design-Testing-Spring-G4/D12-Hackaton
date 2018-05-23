@@ -1,6 +1,7 @@
 
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.CategoryService;
 import services.ResortService;
+import domain.Category;
 import domain.Resort;
 
 @Controller
@@ -21,6 +24,9 @@ public class ResortController extends AbstractController {
 
 	@Autowired
 	private ResortService	resortService;
+
+	@Autowired
+	private CategoryService	categoryService;
 
 
 	//Listing
@@ -37,6 +43,32 @@ public class ResortController extends AbstractController {
 		return result;
 	}
 
+	@RequestMapping(value = "/listCategory", method = RequestMethod.GET)
+	public ModelAndView listCategory(@RequestParam final int varId) {
+		final ModelAndView result;
+		final Collection<Resort> resorts;
+		final Category category;
+		final Collection<Category> children = new ArrayList<Category>();
+
+		if (varId == 0)
+			category = this.categoryService.findAll().iterator().next();
+		else
+			category = this.categoryService.findOne(varId);
+
+		resorts = category.getResorts();
+		for (final Category c : category.getChildren())
+			children.add(c);
+
+		result = new ModelAndView("resort/list");
+		result.addObject("resorts", resorts);
+		result.addObject("category", category);
+		result.addObject("categories", this.categoryService.findAll());
+		result.addObject("childrenCategories", children);
+		result.addObject("requestURI", "resort/listCategory.do");
+
+		return result;
+	}
+
 	//Display
 
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
@@ -47,6 +79,20 @@ public class ResortController extends AbstractController {
 		result = new ModelAndView("resort/display");
 		result.addObject("resort", resort);
 		result.addObject("requestURI", "resort/display.do");
+
+		return result;
+	}
+
+	//Searching via keyword
+
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public ModelAndView search(@RequestParam final String keyword) {
+		final ModelAndView result;
+		final Collection<Resort> resorts = this.resortService.searchByKeyword(keyword);
+
+		result = new ModelAndView("resort/list");
+		result.addObject("resorts", resorts);
+		result.addObject("requestURI", "resort/list.do");
 
 		return result;
 	}

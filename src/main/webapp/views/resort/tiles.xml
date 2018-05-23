@@ -9,7 +9,7 @@
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 
 <tiles-definitions>
-
+		
 	<definition name="resort/list" extends="master.page">
 		<put-attribute name="title" value="Resort list" />
 		<put-attribute name="body" value="/views/resort/list.jsp" />

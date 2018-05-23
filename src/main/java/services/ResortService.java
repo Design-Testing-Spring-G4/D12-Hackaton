@@ -82,6 +82,17 @@ public class ResortService {
 
 	//Other methods
 
+	//Search the list of resorts and retrieve only those matching the keyword.
+	public Collection<Resort> searchByKeyword(final String keyword) {
+		final Collection<Resort> result = new ArrayList<Resort>();
+
+		for (final Resort r : this.findAll())
+			if (r.getName().toLowerCase().contains(keyword.toLowerCase()) || r.getDescription().toLowerCase().contains(keyword.toLowerCase()) || r.getLocation().getLocation().toLowerCase().contains(keyword.toLowerCase()))
+				result.add(r);
+
+		return result;
+	}
+
 	public Double[] avgMinMaxStddevReservationsPerResort() {
 		return this.resortRepository.avgMinMaxStddevReservationsPerResort();
 	}

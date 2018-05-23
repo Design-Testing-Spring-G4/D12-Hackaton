@@ -7,18 +7,25 @@ import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(indexes = {
+	@Index(columnList = "status")
+})
 public class Reservation extends DomainEntity {
 
 	//Attributes
@@ -76,6 +83,7 @@ public class Reservation extends DomainEntity {
 		return this.status;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getComments() {
 		return this.comments;
 	}
@@ -85,6 +93,7 @@ public class Reservation extends DomainEntity {
 		return this.creditCard;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getReason() {
 		return this.reason;
 	}

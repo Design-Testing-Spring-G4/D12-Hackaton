@@ -27,6 +27,13 @@
 		<value>/views/user/messages</value>
 		<value>/views/manager/messages</value>
 		<value>/views/resort/messages</value>
+		<value>/views/legalText/messages</value>
+		<value>/views/activity/messages</value>
+		<value>/views/actor/messages</value>
+		<value>/views/socialIdentity/messages</value>
+		<value>/views/instructor/messages</value>
+		<value>/views/curriculum/messages</value>
+		<value>/views/lesson/messages</value>
 	</util:list>
 
 </beans>

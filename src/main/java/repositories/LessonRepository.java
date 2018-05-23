@@ -1,6 +1,8 @@
 
 package repositories;
 
+import java.util.Collection;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 	//The minimum, the maximum, the average, and the standard deviation	of the number of notes per lesson.
 	@Query("select min(l.notes.size), max(l.notes.size), avg(l.notes.size), stddev(l.notes.size) from Lesson l")
 	Double[] minMaxAvgStddevNotesPerLesson();
+
+	@Query("select l from Lesson l where l.instructor.id = ?1")
+	Collection<Lesson> lessonsByInstructor(int id);
 }

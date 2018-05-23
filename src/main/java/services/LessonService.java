@@ -76,4 +76,8 @@ public class LessonService {
 	public Double[] minMaxAvgStddevNotesPerLesson() {
 		return this.lessonRepository.minMaxAvgStddevNotesPerLesson();
 	}
+
+	public Collection<Lesson> lessonsByInstructor(final int id) {
+		return this.lessonRepository.lessonsByInstructor(id);
+	}
 }
