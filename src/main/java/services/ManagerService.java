@@ -86,6 +86,12 @@ public class ManagerService {
 			saved2 = this.managerRepository.save(saved);
 		}
 
+		this.actorService.isSpam(saved2.getAddress());
+		this.actorService.isSpam(saved2.getEmail());
+		this.actorService.isSpam(saved2.getName());
+		this.actorService.isSpam(saved2.getPhone());
+		this.actorService.isSpam(saved2.getSurname());
+
 		return saved2;
 	}
 

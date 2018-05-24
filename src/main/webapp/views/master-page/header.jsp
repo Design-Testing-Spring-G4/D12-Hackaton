@@ -22,23 +22,24 @@
 <div>
 	<ul id="jMenu">
 		<!-- Do not forget the "fNiv" class for the first level links !! -->
-		<security:authorize access="hasRole('ADMIN')">
-			<li><a class="fNiv"><spring:message	code="master.page.administrator" /></a>
+	
+		<security:authorize access="isAuthenticated()">
+			<li>
+				<a class="fNiv"> 
+					<spring:message code="master.page.profile" /> 
+			        (<security:authentication property="principal.username" />)
+				</a>
 				<ul>
-					<li class="arrow"></li>
+					<li class="arrow"></li>				
+					<li><a href="actor/edit.do"><spring:message code="master.page.actor.edit" /> </a></li>
+					<li><a href="socialIdentity/actor/list.do"><spring:message code="master.page.socialIdentity.list" /> </a></li>
+					<li><a href="folder/list.do"><spring:message code="master.page.folder.list" /> </a></li>
+					<li><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
 				</ul>
 			</li>
 		</security:authorize>
 		
-		<security:authorize access="hasRole('USER')">
-			<li><a class="fNiv"><spring:message	code="master.page.user" /></a>
-				<ul>
-					<li class="arrow"></li>
-				</ul>
-			</li>
-		</security:authorize>
-		
-		<security:authorize access="isAnonymous()">
+				<security:authorize access="isAnonymous()">
 			<li><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
 			<li>
 				<a class="fNiv">
@@ -50,23 +51,14 @@
 					<li><a href="manager/create.do"><spring:message code="master.page.register.manager" /></a></li>
 				</ul>
 			</li>
+		</security:authorize>
+		
+		<security:authorize access="permitAll()">
 			<li><a class="fNiv" href="resort/list.do"><spring:message code="master.page.resort.list" /></a></li>
 			<li><a class="fNiv" href="resort/listCategory.do?varId=0"><spring:message code="master.page.resort.listCategory" /></a></li>
 			<li><a class="fNiv" href="instructor/list.do"><spring:message code="master.page.instructor.list" /></a></li>
 		</security:authorize>
 		
-		<security:authorize access="isAuthenticated()">
-			<li>
-				<a class="fNiv"> 
-					<spring:message code="master.page.profile" /> 
-			        (<security:authentication property="principal.username" />)
-				</a>
-				<ul>
-					<li class="arrow"></li>				
-					<li><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
-				</ul>
-			</li>
-		</security:authorize>
 	</ul>
 </div>
 

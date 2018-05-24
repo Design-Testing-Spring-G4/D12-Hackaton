@@ -67,6 +67,14 @@ public class CompetitionService {
 		Assert.isTrue(competition.getEndDate().after(competition.getStartDate()));
 
 		final Competition saved = this.competitionRepository.save(competition);
+
+		this.actorService.isSpam(saved.getBanner());
+		this.actorService.isSpam(saved.getDescription());
+		this.actorService.isSpam(saved.getLink());
+		this.actorService.isSpam(saved.getRules());
+		this.actorService.isSpam(saved.getSports());
+		this.actorService.isSpam(saved.getTitle());
+
 		return saved;
 	}
 

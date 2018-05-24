@@ -16,12 +16,12 @@ import domain.ProfessionalRecord;
 @Transactional
 public class ProfessionalRecordService {
 
-	// Managed repository
+	//Managed repository
 
 	@Autowired
 	private ProfessionalRecordRepository	professionalRecordRepository;
 
-	// Supporting services
+	//Supporting services
 
 	@Autowired
 	private CurriculumService				curriculumService;
@@ -30,7 +30,7 @@ public class ProfessionalRecordService {
 	private ActorService					actorService;
 
 
-	// Simple CRUD methods
+	//Simple CRUD methods
 
 	public ProfessionalRecord create(final int curriculumId) {
 		final ProfessionalRecord pr = new ProfessionalRecord();

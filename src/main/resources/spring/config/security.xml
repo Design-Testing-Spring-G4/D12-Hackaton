@@ -43,14 +43,25 @@
 		<security:intercept-url pattern="/legalText/*" access="permitAll" />
 		<security:intercept-url pattern="/activity/*" access="permitAll" />
 		<security:intercept-url pattern="/actor/display.do" access="permitAll" />
+		<security:intercept-url pattern="/actor/list.do" access="permitAll" />
 		<security:intercept-url pattern="/socialIdentity/*" access="permitAll" />
 		<security:intercept-url pattern="/instructor/*" access="permitAll" />
 		<security:intercept-url pattern="/curriculum/*" access="permitAll" />
 		<security:intercept-url pattern="/lesson/*" access="permitAll" />
+		<security:intercept-url pattern="/audit/*" access="permitAll" />
+		<security:intercept-url pattern="/competition/*" access="permitAll" />
 		
 		<security:intercept-url pattern="/user/*" access="isAnonymous()" />
 		<security:intercept-url pattern="/manager/*" access="isAnonymous()" />
-	
+		
+		<security:intercept-url pattern="/actor/*" access="isAuthenticated()" />
+		<security:intercept-url pattern="/folder/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/mailMessage/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/socialIdentity/actor/*" access="isAuthenticated()" />
+		<security:intercept-url pattern="/suggestion/actor/*" access="isAuthenticated()" />
+		
+		<security:intercept-url pattern="/mailMessage/administrator/*" access="hasRole('ADMIN')" />
+		
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />
 
 		<security:form-login 

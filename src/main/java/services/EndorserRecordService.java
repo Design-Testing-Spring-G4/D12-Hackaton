@@ -32,12 +32,12 @@ public class EndorserRecordService {
 	//Simple CRUD methods
 
 	public EndorserRecord create(final int curriculumId) {
-		final EndorserRecord en = new EndorserRecord();
+		final EndorserRecord endorserRecord = new EndorserRecord();
 
 		final Curriculum c = this.curriculumService.findOne(curriculumId);
-		en.setCurriculum(c);
+		endorserRecord.setCurriculum(c);
 
-		return en;
+		return endorserRecord;
 	}
 
 	public EndorserRecord findOne(final int id) {
@@ -50,13 +50,13 @@ public class EndorserRecordService {
 		return this.endorserRecordRepository.findAll();
 	}
 
-	public EndorserRecord save(final EndorserRecord er) {
-		Assert.notNull(er);
+	public EndorserRecord save(final EndorserRecord endorserRecord) {
+		Assert.notNull(endorserRecord);
 
 		//Assertion that the user modifying this endorser record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == er.getCurriculum().getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == endorserRecord.getCurriculum().getInstructor().getId());
 
-		final EndorserRecord saved = this.endorserRecordRepository.save(er);
+		final EndorserRecord saved = this.endorserRecordRepository.save(endorserRecord);
 
 		this.actorService.isSpam(saved.getComments());
 		this.actorService.isSpam(saved.getEmail());
@@ -67,13 +67,13 @@ public class EndorserRecordService {
 		return saved;
 	}
 
-	public void delete(final EndorserRecord er) {
-		Assert.notNull(er);
+	public void delete(final EndorserRecord endorserRecord) {
+		Assert.notNull(endorserRecord);
 
 		//Assertion that the user deleting this endorser record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == er.getCurriculum().getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == endorserRecord.getCurriculum().getInstructor().getId());
 
-		this.endorserRecordRepository.delete(er);
+		this.endorserRecordRepository.delete(endorserRecord);
 	}
 
 }

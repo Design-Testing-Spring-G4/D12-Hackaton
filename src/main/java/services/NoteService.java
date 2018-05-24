@@ -59,6 +59,11 @@ public class NoteService {
 		note.setMoment(new Date(System.currentTimeMillis() - 1));
 
 		final Note saved = this.noteRepository.save(note);
+
+		this.actorService.isSpam(saved.getRemark());
+		if (saved.getReply() != null)
+			this.actorService.isSpam(saved.getReply());
+
 		return saved;
 	}
 

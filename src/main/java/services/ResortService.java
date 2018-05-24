@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 import repositories.ResortRepository;
 import domain.Activity;
 import domain.Audit;
+import domain.Competition;
 import domain.Manager;
 import domain.Reservation;
 import domain.Resort;
@@ -43,6 +44,7 @@ public class ResortService {
 		resort.setActivities(new ArrayList<Activity>());
 		resort.setReservations(new ArrayList<Reservation>());
 		resort.setAudits(new ArrayList<Audit>());
+		resort.setCompetitions(new ArrayList<Competition>());
 
 		return resort;
 	}
@@ -67,6 +69,11 @@ public class ResortService {
 		Assert.isTrue(resort.getEndDate().after(resort.getStartDate()));
 
 		final Resort saved = this.resortRepository.save(resort);
+
+		this.actorService.isSpam(saved.getDescription());
+		this.actorService.isSpam(saved.getFeatures());
+		this.actorService.isSpam(saved.getName());
+		this.actorService.isSpam(saved.getPicture());
 
 		return saved;
 	}

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 
 import repositories.ActorRepository;
 import security.LoginService;
@@ -85,9 +86,25 @@ public class ActorService {
 		boolean isSpam = false;
 
 		for (final String e : words)
-			if (s.contains(e))
+			if (s.contains(e)) {
 				isSpam = true;
+				final Actor a = this.findByPrincipal();
+				a.setSuspicious(true);
+				this.actorRepository.save(a);
+			}
 
 		return isSpam;
+	}
+
+	public Actor reconstruct(final Actor actor, final BindingResult binding) {
+		final Actor result = this.findByPrincipal();
+
+		result.setAddress(actor.getAddress());
+		result.setEmail(actor.getEmail());
+		result.setName(actor.getName());
+		result.setPhone(actor.getPhone());
+		result.setSurname(actor.getSurname());
+
+		return result;
 	}
 }

@@ -54,7 +54,6 @@ public class ManagerController extends AbstractController {
 				this.managerService.save(manager);
 				result = new ModelAndView("redirect:/welcome/index.do");
 			} catch (final Throwable oops) {
-				System.out.println(oops.getMessage());
 				result = this.createEditModelAndView(arf, "user.commit.error");
 			}
 		return result;

@@ -82,6 +82,12 @@ public class AuditorService {
 			saved2 = this.auditorRepository.save(saved);
 		}
 
+		this.actorService.isSpam(saved2.getAddress());
+		this.actorService.isSpam(saved2.getEmail());
+		this.actorService.isSpam(saved2.getName());
+		this.actorService.isSpam(saved2.getPhone());
+		this.actorService.isSpam(saved2.getSurname());
+
 		return saved2;
 	}
 

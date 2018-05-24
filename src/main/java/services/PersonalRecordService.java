@@ -17,10 +17,12 @@ import domain.PersonalRecord;
 public class PersonalRecordService {
 
 	//Managed service
+
 	@Autowired
 	private PersonalRecordRepository	personalRecordRepository;
 
-	//Supporting service
+	//Supporting services
+
 	@Autowired
 	private CurriculumService			curriculumService;
 

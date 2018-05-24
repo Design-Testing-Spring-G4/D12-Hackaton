@@ -37,14 +37,14 @@ public class FolderService {
 	//Simple CRUD methods
 
 	public Folder create(final Actor actor) {
-		final Folder f = new Folder();
+		final Folder folder = new Folder();
 
-		f.setMailMessage(new ArrayList<MailMessage>());
-		f.setActor(actor);
-		f.setChildren(new ArrayList<Folder>());
-		f.setSystem(false);
+		folder.setMailMessage(new ArrayList<MailMessage>());
+		folder.setActor(actor);
+		folder.setChildren(new ArrayList<Folder>());
+		folder.setSystem(false);
 
-		return f;
+		return folder;
 	}
 
 	public Folder findOne(final int id) {
@@ -57,43 +57,34 @@ public class FolderService {
 		return this.folderRepository.findAll();
 	}
 
-	public Folder save(final Folder f) {
-		Assert.notNull(f);
-		Folder saved2 = null;
+	public Folder save(final Folder folder) {
+		Assert.notNull(folder);
 
-		if (f.getActor().getId() != 0 && f.getId() != 0) {
+		if (folder.getActor().getId() != 0 && folder.getId() != 0) {
 			//The five default folders cannot be modified or moved.
-			Assert.isTrue(!f.isSystem());
+			Assert.isTrue(!folder.isSystem());
 
 			//Assertion that the user modifying this folder has the correct privilege.
-			Assert.isTrue(this.actorService.findByPrincipal().getId() == f.getActor().getId());
+			Assert.isTrue(this.actorService.findByPrincipal().getId() == folder.getActor().getId());
 		}
 
-		final Folder saved = this.folderRepository.save(f);
-		if (f.getId() == 0 && f.getActor().getId() != 0)
-			//			final Actor actor = f.getActor();
-			//			actor.getFolders().add(saved);
-			//			this.actorService.save(actor);
-			saved2 = this.folderRepository.save(saved);
-		else
-			saved2 = this.folderRepository.save(saved);
-		return saved2;
+		final Folder saved = this.folderRepository.save(folder);
+
+		this.actorService.isSpam(saved.getName());
+
+		return saved;
 	}
 
-	public void delete(final Folder f) {
-		Assert.notNull(f);
+	public void delete(final Folder folder) {
+		Assert.notNull(folder);
 
 		//The five default folders cannot be deleted.
-		Assert.isTrue(!f.isSystem());
+		Assert.isTrue(!folder.isSystem());
 
 		//Assertion that the user deleting this folder has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == f.getActor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == folder.getActor().getId());
 
-		final Actor actor = f.getActor();
-		actor.getFolders().remove(f);
-		this.actorService.save(actor);
-
-		this.folderRepository.delete(f);
+		this.folderRepository.delete(folder);
 	}
 
 	//Other methods

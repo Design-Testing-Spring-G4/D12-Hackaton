@@ -81,6 +81,11 @@ public class ReservationService {
 		reservation.setPrice(this.computePrice(reservation, TimeUnit.DAYS));
 
 		final Reservation saved = this.reservationRepository.save(reservation);
+
+		this.actorService.isSpam(saved.getComments());
+		if (saved.getReason() != null)
+			this.actorService.isSpam(saved.getReason());
+
 		return saved;
 	}
 

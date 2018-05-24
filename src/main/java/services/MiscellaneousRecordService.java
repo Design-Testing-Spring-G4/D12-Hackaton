@@ -20,9 +20,11 @@ public class MiscellaneousRecordService {
 	@Autowired
 	private MiscellaneousRecordRepository	miscellaneousRecordRepository;
 
-	//Supporting service
+	//Supporting services
+
 	@Autowired
 	private CurriculumService				curriculumService;
+
 	@Autowired
 	private ActorService					actorService;
 
@@ -56,6 +58,11 @@ public class MiscellaneousRecordService {
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == mr.getCurriculum().getInstructor().getId());
 
 		final MiscellaneousRecord saved = this.miscellaneousRecordRepository.save(mr);
+
+		this.actorService.isSpam(saved.getComments());
+		this.actorService.isSpam(saved.getLink());
+		this.actorService.isSpam(saved.getTitle());
+
 		return saved;
 	}
 

@@ -71,8 +71,8 @@ public class SocialIdentity extends DomainEntity {
 		this.network = network;
 	}
 
-	public void setProfile(final String link) {
-		this.profile = link;
+	public void setProfile(final String profile) {
+		this.profile = profile;
 	}
 
 	public void setPhoto(final String photo) {

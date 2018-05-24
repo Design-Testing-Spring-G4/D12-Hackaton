@@ -64,13 +64,17 @@ public class MailMessageService {
 		Assert.notNull(mailMessage);
 
 		//Assertion that the user modifying this mail message has the correct privilege, that is, he or she is the sender or receiver.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == mailMessage.getFolder().getActor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == mailMessage.getSender().getId() || this.actorService.findByPrincipal().getId() == mailMessage.getReceiver().getId());
 
 		mailMessage.setSent(new Date(System.currentTimeMillis() - 1));
 
-		return this.mailMessageRepository.save(mailMessage);
-	}
+		final MailMessage saved = this.mailMessageRepository.save(mailMessage);
 
+		this.actorService.isSpam(saved.getBody());
+		this.actorService.isSpam(saved.getSubject());
+
+		return saved;
+	}
 	public void delete(final MailMessage mailMessage) {
 		Assert.notNull(mailMessage);
 
@@ -103,9 +107,9 @@ public class MailMessageService {
 		//Parsing the message's subject and body for spam words.
 		final boolean isSpamSubject = this.actorService.isSpam(m.getSubject());
 		final boolean isSpamBody = this.actorService.isSpam(m.getBody());
-		String folderName = "in box";
+		String folderName = "In box";
 		if (isSpamSubject == true || isSpamBody == true)
-			folderName = "spam box";
+			folderName = "Spam box";
 
 		//Finds the system folder where the message must be sent to.
 		final Folder f = this.folderService.getSystemFolderByName(m.getReceiver().getId(), folderName);

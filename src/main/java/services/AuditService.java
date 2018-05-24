@@ -71,11 +71,13 @@ public class AuditService {
 		//Assertion that the user modifying this audit has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == audit.getAuditor().getId());
 
-		this.actorService.isSpam(audit.getAttachments());
-		this.actorService.isSpam(audit.getDescription());
-		this.actorService.isSpam(audit.getTitle());
+		final Audit saved = this.auditRepository.save(audit);
 
-		return this.auditRepository.save(audit);
+		this.actorService.isSpam(saved.getAttachments());
+		this.actorService.isSpam(saved.getDescription());
+		this.actorService.isSpam(saved.getTitle());
+
+		return saved;
 	}
 
 	public void delete(final Audit audit) {

@@ -56,7 +56,7 @@ public class ActivityService {
 	public Activity save(final Activity activity) {
 		Assert.notNull(activity);
 
-		//Assertion that the user modifying this miscellaneous record has the correct privilege.
+		//Assertion that the user modifying this activity has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == activity.getInstructor().getId());
 
 		//Business rule: only activities in the SPORT category may have an instructor assigned.
@@ -64,13 +64,17 @@ public class ActivityService {
 			Assert.isTrue(activity.getCategory() == ActivityCategory.SPORT);
 
 		final Activity saved = this.activityRepository.save(activity);
+
+		this.actorService.isSpam(saved.getDescription());
+		this.actorService.isSpam(saved.getTitle());
+
 		return saved;
 	}
 
 	public void delete(final Activity activity) {
 		Assert.notNull(activity);
 
-		//Assertion that the user deleting this miscellaneous record has the correct privilege.
+		//Assertion that the user deleting this activity has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == activity.getInstructor().getId());
 
 		this.activityRepository.delete(activity);

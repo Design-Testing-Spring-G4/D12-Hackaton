@@ -33,12 +33,12 @@ public class EducationRecordService {
 	//Simple CRUD methods
 
 	public EducationRecord create(final int curriculumId) {
-		final EducationRecord er = new EducationRecord();
+		final EducationRecord educationRecord = new EducationRecord();
 
 		final Curriculum c = this.curriculumService.findOne(curriculumId);
-		er.setCurriculum(c);
+		educationRecord.setCurriculum(c);
 
-		return er;
+		return educationRecord;
 	}
 
 	public EducationRecord findOne(final int id) {
@@ -51,16 +51,16 @@ public class EducationRecordService {
 		return this.educationRecordRepository.findAll();
 	}
 
-	public EducationRecord save(final EducationRecord er) {
-		Assert.notNull(er);
+	public EducationRecord save(final EducationRecord educationRecord) {
+		Assert.notNull(educationRecord);
 
 		//Assertion that the user modifying this education record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == er.getCurriculum().getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == educationRecord.getCurriculum().getInstructor().getId());
 
 		//Business rule: periodStart must be earlier than periodEnd.
-		Assert.isTrue(er.getPeriodEnd().after(er.getPeriodStart()));
+		Assert.isTrue(educationRecord.getPeriodEnd().after(educationRecord.getPeriodStart()));
 
-		final EducationRecord saved = this.educationRecordRepository.save(er);
+		final EducationRecord saved = this.educationRecordRepository.save(educationRecord);
 
 		this.actorService.isSpam(saved.getAttachment());
 		this.actorService.isSpam(saved.getComments());
@@ -70,13 +70,13 @@ public class EducationRecordService {
 		return saved;
 	}
 
-	public void delete(final EducationRecord er) {
-		Assert.notNull(er);
+	public void delete(final EducationRecord educationRecord) {
+		Assert.notNull(educationRecord);
 
 		//Assertion that the user deleting this education record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == er.getCurriculum().getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == educationRecord.getCurriculum().getInstructor().getId());
 
-		this.educationRecordRepository.delete(er);
+		this.educationRecordRepository.delete(educationRecord);
 	}
 
 }

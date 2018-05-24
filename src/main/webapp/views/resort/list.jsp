@@ -123,6 +123,10 @@
 		<acme:link code="resort.display" url="resort/display.do" id="${row.id}" />
 		
 		<acme:link code="resort.activities" url="activity/list.do" id="${row.id}" />
+		
+		<acme:link code="resort.audits" url="audit/list.do" id="${row.id}" />
+		
+		<acme:link code="resort.competitions" url="competition/list.do" id="${row.id}" />
 
 	</display:table>
 

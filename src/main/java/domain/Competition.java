@@ -120,7 +120,7 @@ public class Competition extends DomainEntity {
 
 	@NotNull
 	@Valid
-	@OneToMany
+	@OneToMany(mappedBy = "competition")
 	public Collection<Suggestion> getSuggestions() {
 		return this.suggestions;
 	}

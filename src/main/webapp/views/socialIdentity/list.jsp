@@ -31,6 +31,7 @@
 <spring:message code="socialIdentity.network" var="network" />
 <spring:message code="socialIdentity.profile" var="profile" />
 <spring:message code="socialIdentity.photo" var="photo" />
+<spring:message code="socialIdentity.create" var="create" />
 
 	<%-- Listing grid --%>
 
@@ -46,17 +47,27 @@
 		<display:column property="profile" title="${profile}" sortable="true" />
 		
 		<display:column title="${photo}">
-			<a href="${row.photo}">
-				<img src="${row.photo}" height=100 width=50 />
-			</a>
+			<jstl:if test="${fn:length(socialIdentity.photo) != 0}">
+				<a href="${row.photo}">
+					<img src="${row.photo}" height=100 width=50 />
+				</a>
+			</jstl:if>
 		</display:column>
+		
+		<acme:link code="socialIdentity.edit" url="socialIdentity/actor/edit.do" id="${row.id}"/>
 
 	</display:table>
 	
-	<spring:url var="returnUrl" value="actor/display.do">
-		<spring:param name="varId" value="${varId}" />
-	</spring:url>
+	<spring:url var="createUrl" value="socialIdentity/actor/create.do" />
+	<a href="${createUrl}"><jstl:out value="${create}"/></a>
 	
-	<acme:cancel code="socialIdentity.return" url="${returnUrl}" />
+	<jstl:if test="${requestURI == 'socialIdentity/list.do'}">
+		<spring:url var="returnUrl" value="actor/display.do">
+			<spring:param name="varId" value="${varId}" />
+		</spring:url>
+	
+		<acme:cancel code="socialIdentity.return" url="${returnUrl}" />
+	</jstl:if>
+
 
 </security:authorize>

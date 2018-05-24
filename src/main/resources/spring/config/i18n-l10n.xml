@@ -34,6 +34,11 @@
 		<value>/views/instructor/messages</value>
 		<value>/views/curriculum/messages</value>
 		<value>/views/lesson/messages</value>
+		<value>/views/audit/messages</value>
+		<value>/views/competition/messages</value>
+		<value>/views/folder/messages</value>
+		<value>/views/mailMessage/messages</value>
+		<value>/views/suggestion/messages</value>
 	</util:list>
 
 </beans>

@@ -59,6 +59,10 @@ public class LessonService {
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == lesson.getInstructor().getId());
 
 		final Lesson saved = this.lessonRepository.save(lesson);
+
+		this.actorService.isSpam(saved.getDescription());
+		this.actorService.isSpam(saved.getName());
+
 		return saved;
 	}
 

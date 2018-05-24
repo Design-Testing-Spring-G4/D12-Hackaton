@@ -507,6 +507,11 @@
 				<ref bean="audit1" />
 			</list>
 		</property>
+		<property name="competitions">
+			<list>
+				<ref bean="competition1" />
+			</list>
+		</property>
 	</bean>
 	
 	<bean id="resort2" class="domain.Resort">
@@ -540,6 +545,11 @@
 		</property>
 		<property name="audits">
 			<list></list>
+		</property>
+		<property name="competitions">
+			<list>
+				<ref bean="competition2" />
+			</list>
 		</property>
 	</bean>
 	

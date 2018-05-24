@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.SocialIdentityRepository;
 import domain.Actor;
@@ -17,14 +19,18 @@ import domain.SocialIdentity;
 @Transactional
 public class SocialIdentityService {
 
-	// Managed service
+	// Managed repository
+
 	@Autowired
 	private SocialIdentityRepository	socialIdentityRepository;
 
-	// Supporting service
+	// Supporting services
 
 	@Autowired
 	private ActorService				actorService;
+
+	@Autowired
+	private Validator					validator;
 
 
 	// Simple CRUD methods
@@ -63,13 +69,38 @@ public class SocialIdentityService {
 		return saved;
 	}
 
-	public void delete(final SocialIdentity si) {
-		Assert.notNull(si);
+	public void delete(final SocialIdentity socialIdentity) {
+		Assert.notNull(socialIdentity);
 
 		//Assertion that the user deleting this social identity has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == si.getActor().getId());
+		final SocialIdentity validator = this.findOne(socialIdentity.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getActor().getId());
 
-		this.socialIdentityRepository.delete(si);
+		this.socialIdentityRepository.delete(socialIdentity);
 
+	}
+
+	//Other methods
+
+	public SocialIdentity reconstruct(final SocialIdentity socialIdentity, final BindingResult binding) {
+		SocialIdentity result;
+
+		if (socialIdentity.getId() == 0) {
+			result = this.create();
+			result.setNetwork(socialIdentity.getNetwork());
+			result.setNick(socialIdentity.getNick());
+			result.setPhoto(socialIdentity.getPhoto());
+			result.setProfile(socialIdentity.getProfile());
+		} else {
+			result = this.findOne(socialIdentity.getId());
+			result.setNetwork(socialIdentity.getNetwork());
+			result.setNick(socialIdentity.getNick());
+			result.setPhoto(socialIdentity.getPhoto());
+			result.setProfile(socialIdentity.getProfile());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
 	}
 }

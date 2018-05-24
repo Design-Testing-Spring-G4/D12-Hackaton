@@ -18,14 +18,15 @@ public class Suggestion extends DomainEntity {
 
 	//Attributes
 
-	private String	title;
-	private String	comments;
-	private String	attachments;
-	private boolean	anonymous;
+	private String		title;
+	private String		comments;
+	private String		attachments;
+	private boolean		anonymous;
 
 	//Relationships
 
-	private Actor	actor;
+	private Actor		actor;
+	private Competition	competition;
 
 
 	//Getters
@@ -58,6 +59,13 @@ public class Suggestion extends DomainEntity {
 		return this.actor;
 	}
 
+	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
+	public Competition getCompetition() {
+		return this.competition;
+	}
+
 	//Setters
 
 	public void setTitle(final String title) {
@@ -78,5 +86,9 @@ public class Suggestion extends DomainEntity {
 
 	public void setActor(final Actor actor) {
 		this.actor = actor;
+	}
+
+	public void setCompetition(final Competition competition) {
+		this.competition = competition;
 	}
 }

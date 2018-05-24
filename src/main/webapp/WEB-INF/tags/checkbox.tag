@@ -27,9 +27,14 @@
 <%@ attribute name="requiredC" required="false" %>
 <%@ attribute name="id" required="false" %>
 
-<jstl:if test="${requiredC == null}">
-	<jstl:set var="requiredC" value="false" />
-</jstl:if>
+<jstl:choose>
+	<jstl:when test="${requiredC == null}">
+		<jstl:set var="required" value="false" />
+	</jstl:when>
+	<jstl:otherwise>
+		<jstl:set var="required" value="${requiredC}" />
+	</jstl:otherwise>
+</jstl:choose>
 
 <%-- Definition --%>
 
@@ -37,6 +42,6 @@
 	<form:label path="${path}">
 		<spring:message code="${code}"></spring:message>
 	</form:label>
-	<form:checkbox path="${path}" required="${requiredC}" id="${id}"/>
+	<form:checkbox path="${path}" required="${required}" id="${id}"/>
 </div>	
 

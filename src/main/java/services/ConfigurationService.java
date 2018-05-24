@@ -4,6 +4,8 @@ package services;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -19,6 +21,11 @@ public class ConfigurationService {
 
 	@Autowired
 	private ConfigurationRepository	configurationRepository;
+
+	//Supporting services
+
+	@Autowired
+	private ActorService			actorService;
 
 
 	//Simple CRUD methods
@@ -49,11 +56,26 @@ public class ConfigurationService {
 	public Configuration save(final Configuration configuration) {
 		Assert.notNull(configuration);
 
-		return this.configurationRepository.save(configuration);
+		//Assertion that the user modifying this configuration has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
+
+		final Configuration saved = this.configurationRepository.save(configuration);
+
+		this.actorService.isSpam(saved.getBanner());
+		this.actorService.isSpam(saved.getCountryCode());
+		this.actorService.isSpam(saved.getWelcomeEN());
+		this.actorService.isSpam(saved.getWelcomeES());
+
+		return saved;
 	}
 
 	public void delete(final Configuration configuration) {
 		Assert.notNull(configuration);
+
+		//Assertion that the user modifying this configuration has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		this.configurationRepository.delete(configuration);
 	}

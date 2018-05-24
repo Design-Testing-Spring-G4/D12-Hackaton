@@ -14,5 +14,10 @@
 		<put-attribute name="title" value="Mostrar perfiles sociales" />
 		<put-attribute name="body" value="/views/socialIdentity/list.jsp" />
 	</definition>
+	
+	<definition name="socialIdentity/edit" extends="master.page">
+		<put-attribute name="title" value="Editar perfil social" />
+		<put-attribute name="body" value="/views/socialIdentity/edit.jsp" />
+	</definition>
 
 </tiles-definitions>

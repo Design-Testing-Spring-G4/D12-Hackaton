@@ -52,6 +52,7 @@ public class Resort extends DomainEntity {
 	private Collection<Activity>	activities;
 	private Collection<Reservation>	reservations;
 	private Collection<Audit>		audits;
+	private Collection<Competition>	competitions;
 
 
 	//Getters
@@ -156,6 +157,13 @@ public class Resort extends DomainEntity {
 		return this.audits;
 	}
 
+	@NotNull
+	@Valid
+	@OneToMany
+	public Collection<Competition> getCompetitions() {
+		return this.competitions;
+	}
+
 	//Setters
 
 	public void setName(final String name) {
@@ -220,5 +228,9 @@ public class Resort extends DomainEntity {
 
 	public void setAudits(final Collection<Audit> audits) {
 		this.audits = audits;
+	}
+
+	public void setCompetitions(final Collection<Competition> competitions) {
+		this.competitions = competitions;
 	}
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -30,6 +32,9 @@ public class TagValueService {
 	@Autowired
 	private ResortService		resortService;
 
+	@Autowired
+	private ActorService		actorService;
+
 
 	//Simple CRUD methods
 
@@ -52,25 +57,37 @@ public class TagValueService {
 		return this.valueRepository.findAll();
 	}
 
-	public TagValue save(final TagValue t) {
-		Assert.notNull(t);
+	public TagValue save(final TagValue tagValue) {
+		Assert.notNull(tagValue);
+
+		//Assertion that the user modifying this tag has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		//Business rule: a tag can only be modified if no trip is using it.
-		Assert.isTrue(!t.getResorts().isEmpty());
+		Assert.isTrue(!tagValue.getResorts().isEmpty());
 
-		return this.valueRepository.save(t);
+		final TagValue saved = this.valueRepository.save(tagValue);
+
+		this.actorService.isSpam(saved.getValue());
+
+		return saved;
 	}
 
-	public void delete(final TagValue tv) {
-		Assert.notNull(tv);
+	public void delete(final TagValue tagValue) {
+		Assert.notNull(tagValue);
 
-		for (final Resort r : tv.getResorts()) {
+		//Assertion that the user modifying this tag has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
+
+		for (final Resort r : tagValue.getResorts()) {
 			final Collection<TagValue> tags = r.getTags();
-			tags.remove(tv);
+			tags.remove(tagValue);
 			r.setTags(tags);
 			this.resortService.save(r);
 		}
 
-		this.valueRepository.delete(tv);
+		this.valueRepository.delete(tagValue);
 	}
 }

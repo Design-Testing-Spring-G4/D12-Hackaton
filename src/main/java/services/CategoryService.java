@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -22,16 +24,21 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository	categoryRepository;
 
+	//Supporting services
+
+	@Autowired
+	private ActorService		actorService;
+
 
 	//Simple CRUD methods
 
 	public Category create() {
-		final Category c = new Category();
+		final Category category = new Category();
 
-		c.setChildren(new ArrayList<Category>());
-		c.setResorts(new ArrayList<Resort>());
+		category.setChildren(new ArrayList<Category>());
+		category.setResorts(new ArrayList<Resort>());
 
-		return c;
+		return category;
 	}
 
 	public Category findOne(final int id) {
@@ -44,37 +51,47 @@ public class CategoryService {
 		return this.categoryRepository.findAll();
 	}
 
-	public Category save(final Category c) {
-		Assert.notNull(c);
+	public Category save(final Category category) {
+		Assert.notNull(category);
 
 		//Business rule: since the only category without parent must be the root, all others must have a parent ID.
-		Assert.notNull(c.getParent());
+		Assert.notNull(category.getParent());
 
 		//Business rule: two categories with the same parent cannot have the same name.
-		if (c.getId() == 0)
+		if (category.getId() == 0)
 			for (final Category a : this.findAll())
-				Assert.isTrue(!(a.getParent() == (c.getParent()) && a.getName().equals(c.getName())));
+				Assert.isTrue(!(a.getParent() == (category.getParent()) && a.getName().equals(category.getName())));
 
-		final Category saved = this.categoryRepository.save(c);
+		//Assertion that the user modifying this category has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
-		if (c.getId() == 0) {
-			Category parent = this.categoryRepository.findOne(c.getParent().getId());
+		final Category saved = this.categoryRepository.save(category);
+
+		if (category.getId() == 0) {
+			Category parent = this.categoryRepository.findOne(category.getParent().getId());
 			parent.getChildren().add(saved);
 			parent = this.categoryRepository.save(parent);
 		}
 
+		this.actorService.isSpam(saved.getName());
+
 		return saved;
 	}
-	public void delete(final Category c) {
-		Assert.notNull(c);
+	public void delete(final Category category) {
+		Assert.notNull(category);
 
 		//The root category should not be deleted.
-		Assert.isTrue(!(c.getParent() == null));
+		Assert.isTrue(!(category.getParent() == null));
 
-		this.categoryRepository.delete(c);
+		//Assertion that the user modifying this category has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
-		final Category parent = c.getParent();
-		parent.getChildren().remove(c);
+		this.categoryRepository.delete(category);
+
+		final Category parent = category.getParent();
+		parent.getChildren().remove(category);
 		this.categoryRepository.save(parent);
 
 	}

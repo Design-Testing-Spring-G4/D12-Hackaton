@@ -61,6 +61,9 @@ public class ParticipationService {
 		participation.setMoment(new Date(System.currentTimeMillis() - 1));
 
 		final Participation saved = this.participationRepository.save(participation);
+
+		this.actorService.isSpam(saved.getComments());
+
 		return saved;
 	}
 
