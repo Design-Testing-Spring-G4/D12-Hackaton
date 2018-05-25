@@ -33,12 +33,12 @@ public class ProfessionalRecordService {
 	//Simple CRUD methods
 
 	public ProfessionalRecord create(final int curriculumId) {
-		final ProfessionalRecord pr = new ProfessionalRecord();
+		final ProfessionalRecord professionalRecord = new ProfessionalRecord();
 
 		final Curriculum c = this.curriculumService.findOne(curriculumId);
-		pr.setCurriculum(c);
+		professionalRecord.setCurriculum(c);
 
-		return pr;
+		return professionalRecord;
 	}
 
 	public ProfessionalRecord findOne(final int id) {
@@ -51,16 +51,16 @@ public class ProfessionalRecordService {
 		return this.professionalRecordRepository.findAll();
 	}
 
-	public ProfessionalRecord save(final ProfessionalRecord pr) {
-		Assert.notNull(pr);
+	public ProfessionalRecord save(final ProfessionalRecord professionalRecord) {
+		Assert.notNull(professionalRecord);
 
 		//Assertion that the user modifying this professional record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == pr.getCurriculum().getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == professionalRecord.getCurriculum().getInstructor().getId());
 
 		//Business rule: periodStart must be earlier than periodEnd.
-		Assert.isTrue(pr.getPeriodEnd().after(pr.getPeriodStart()));
+		Assert.isTrue(professionalRecord.getPeriodEnd().after(professionalRecord.getPeriodStart()));
 
-		final ProfessionalRecord saved = this.professionalRecordRepository.save(pr);
+		final ProfessionalRecord saved = this.professionalRecordRepository.save(professionalRecord);
 
 		this.actorService.isSpam(saved.getAttachment());
 		this.actorService.isSpam(saved.getComments());
@@ -70,12 +70,13 @@ public class ProfessionalRecordService {
 		return saved;
 	}
 
-	public void delete(final ProfessionalRecord pr) {
-		Assert.notNull(pr);
+	public void delete(final ProfessionalRecord professionalRecord) {
+		Assert.notNull(professionalRecord);
 
 		//Assertion that the user deleting this professional record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == pr.getCurriculum().getInstructor().getId());
+		final ProfessionalRecord validator = this.findOne(professionalRecord.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getCurriculum().getInstructor().getId());
 
-		this.professionalRecordRepository.delete(pr);
+		this.professionalRecordRepository.delete(professionalRecord);
 	}
 }

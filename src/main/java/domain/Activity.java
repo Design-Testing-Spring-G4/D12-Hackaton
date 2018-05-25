@@ -36,6 +36,7 @@ public class Activity extends DomainEntity {
 
 	private Instructor			instructor;
 	private Collection<Note>	notes;
+	private Resort				resort;
 
 
 	//Getters
@@ -76,6 +77,13 @@ public class Activity extends DomainEntity {
 		return this.notes;
 	}
 
+	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
+	public Resort getResort() {
+		return this.resort;
+	}
+
 	//Setters
 
 	public void setTitle(final String title) {
@@ -100,5 +108,9 @@ public class Activity extends DomainEntity {
 
 	public void setNotes(final Collection<Note> notes) {
 		this.notes = notes;
+	}
+
+	public void setResort(final Resort resort) {
+		this.resort = resort;
 	}
 }

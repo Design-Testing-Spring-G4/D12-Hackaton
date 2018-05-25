@@ -23,7 +23,16 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<security:authorize access="permitAll()">
+<jstl:choose>
+	<jstl:when test="${requestURI == 'resort/manager/list.do'}">
+		<jstl:set var="access" value="hasRole('MANAGER')"/>
+	</jstl:when>
+	<jstl:otherwise>
+		<jstl:set var="access" value="permitAll()"/>
+	</jstl:otherwise>
+</jstl:choose>
+
+<security:authorize access="${access}">
 
 <%-- Stored message variables --%>
 
@@ -39,6 +48,7 @@
 <spring:message code="resort.negative" var="negative" />
 <spring:message code="resort.children" var="children" />
 <spring:message code="resort.allCategory" var="allCategory" />
+<spring:message code="resort.create" var="create" />
 
 <%-- Conditional to display category list in the appropriate view --%>
 
@@ -122,12 +132,26 @@
 		
 		<acme:link code="resort.display" url="resort/display.do" id="${row.id}" />
 		
+		<jstl:if test="${requestURI == 'resort/manager/list.do'}">
+			<acme:link code="resort.edit" url="resort/manager/edit.do" id="${row.id}" />
+		</jstl:if>
+		
 		<acme:link code="resort.activities" url="activity/list.do" id="${row.id}" />
 		
 		<acme:link code="resort.audits" url="audit/list.do" id="${row.id}" />
 		
 		<acme:link code="resort.competitions" url="competition/list.do" id="${row.id}" />
+		
+		<security:authorize access="hasRole('USER')">
+			<acme:link code="resort.reservation" url="reservation/user/create.do" id="${row.id}" />
+		</security:authorize>
 
 	</display:table>
+	
+	<jstl:if test="${requestURI == 'resort/manager/list.do'}">
+		<spring:url var="createUrl" value="resort/manager/create.do" />
+		
+		<a href="${createUrl}"><jstl:out value="${create}" /></a>
+	</jstl:if>
 
 </security:authorize>

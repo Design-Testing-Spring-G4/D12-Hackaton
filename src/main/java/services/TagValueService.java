@@ -64,13 +64,20 @@ public class TagValueService {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
-		//Business rule: a tag can only be modified if no trip is using it.
+		//Business rule: a tag can only be modified if no resort is using it.
 		Assert.isTrue(!tagValue.getResorts().isEmpty());
 
 		final TagValue saved = this.valueRepository.save(tagValue);
 
 		this.actorService.isSpam(saved.getValue());
 
+		return saved;
+	}
+
+	//Save for internal operations such as cross-authorized requests.
+	public TagValue saveInternal(final TagValue tagValue) {
+		Assert.notNull(tagValue);
+		final TagValue saved = this.valueRepository.save(tagValue);
 		return saved;
 	}
 

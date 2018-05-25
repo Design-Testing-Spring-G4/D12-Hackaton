@@ -82,7 +82,8 @@ public class CompetitionService {
 		Assert.notNull(competition);
 
 		//Assertion that the user deleting this miscellaneous record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == competition.getSponsor().getId());
+		final Competition validator = this.findOne(competition.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getSponsor().getId());
 
 		this.competitionRepository.delete(competition);
 	}

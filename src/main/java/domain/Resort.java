@@ -138,7 +138,7 @@ public class Resort extends DomainEntity {
 
 	@NotNull
 	@Valid
-	@OneToMany
+	@OneToMany(mappedBy = "resort")
 	public Collection<Activity> getActivities() {
 		return this.activities;
 	}

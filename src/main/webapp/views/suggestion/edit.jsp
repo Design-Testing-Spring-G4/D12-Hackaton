@@ -34,9 +34,9 @@
 		
 		<acme:textbox code="suggestion.title" path="title"/>
 		<br/>
-		<acme:textbox code="suggestion.comments" path="comments"/>
+		<acme:textarea code="suggestion.comments" path="comments"/>
 		<br/>
-		<acme:textbox code="suggestion.attachments" path="attachments"/>
+		<acme:textarea code="suggestion.attachments" path="attachments"/>
 		<br/>
 		
 		<form:label path="anonymous">

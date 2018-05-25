@@ -8,11 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.ResortRepository;
 import domain.Activity;
 import domain.Audit;
+import domain.Category;
 import domain.Competition;
+import domain.Instructor;
 import domain.Manager;
 import domain.Reservation;
 import domain.Resort;
@@ -31,6 +35,24 @@ public class ResortService {
 
 	@Autowired
 	private ActorService		actorService;
+
+	@Autowired
+	private Validator			validator;
+
+	@Autowired
+	private InstructorService	instructorService;
+
+	@Autowired
+	private ReservationService	reservationService;
+
+	@Autowired
+	private AuditService		auditService;
+
+	@Autowired
+	private CategoryService		categoryService;
+
+	@Autowired
+	private TagValueService		tagValueService;
 
 
 	//Simple CRUD Methods
@@ -82,12 +104,70 @@ public class ResortService {
 		Assert.notNull(resort);
 
 		//Assertion that the user modifying this miscellaneous record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == resort.getManager().getId());
+		final Resort validator = this.findOne(resort.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getManager().getId());
+
+		for (final Instructor i : this.instructorService.findAll())
+			if (i.getResorts().contains(resort)) {
+				i.getResorts().remove(resort);
+				this.instructorService.saveInternal(i);
+			}
+		for (final Reservation r : this.reservationService.findAll())
+			if (r.getResort().equals(resort))
+				this.reservationService.deleteInternal(r);
+		for (final Audit a : this.auditService.findAll())
+			if (a.getResort().equals(resort))
+				this.auditService.deleteInternal(a);
+		for (final Category c : this.categoryService.findAll())
+			if (c.getResorts().contains(resort)) {
+				c.getResorts().remove(resort);
+				this.categoryService.saveInternal(c);
+			}
+		for (final TagValue tv : this.tagValueService.findAll())
+			if (tv.getResorts().contains(resort)) {
+				tv.getResorts().remove(resort);
+				this.tagValueService.saveInternal(tv);
+			}
 
 		this.resortRepository.delete(resort);
 	}
-
 	//Other methods
+
+	public Resort reconstruct(final Resort resort, final BindingResult binding) {
+		Resort result;
+
+		if (resort.getId() == 0) {
+			result = this.create();
+			result.setDescription(resort.getDescription());
+			result.setEndDate(resort.getEndDate());
+			result.setFeatures(resort.getFeatures());
+			result.setLegalText(resort.getLegalText());
+			result.setLocation(resort.getLocation());
+			result.setName(resort.getName());
+			result.setPicture(resort.getPicture());
+			result.setPriceAdult(resort.getPriceAdult());
+			result.setPriceChild(resort.getPriceChild());
+			result.setSpots(resort.getSpots());
+			result.setStartDate(resort.getStartDate());
+		} else {
+			result = this.findOne(resort.getId());
+			result.setDescription(resort.getDescription());
+			result.setEndDate(resort.getEndDate());
+			result.setFeatures(resort.getFeatures());
+			result.setLegalText(resort.getLegalText());
+			result.setLocation(resort.getLocation());
+			result.setName(resort.getName());
+			result.setPicture(resort.getPicture());
+			result.setPriceAdult(resort.getPriceAdult());
+			result.setPriceChild(resort.getPriceChild());
+			result.setSpots(resort.getSpots());
+			result.setStartDate(resort.getStartDate());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
+	}
 
 	//Search the list of resorts and retrieve only those matching the keyword.
 	public Collection<Resort> searchByKeyword(final String keyword) {

@@ -31,6 +31,7 @@
 <spring:message code="lesson.description" var="description" />
 <spring:message code="lesson.schedule" var="schedule" />
 <spring:message code="lesson.price" var="price" />
+<spring:message code="lesson.create" var="create" />
 
 	<%-- Listing grid --%>
 	
@@ -55,8 +56,24 @@
 		
 		<acme:link code="lesson.instructor.display" url="${instructorDisplay}" />
 		
+		<security:authorize access="hasRole('INSTRUCTOR')">
+			<jstl:if test="${requestURI == 'lesson/instructor/list.do'}">
+				<acme:link code="lesson.edit" url="lesson/instructor/edit.do" id="${row.id}" />
+			</jstl:if>
+		</security:authorize>
+		
 	</display:table>
 	
-	<acme:cancel code="lesson.return" url="instructor/list.do" />
+	<security:authorize access="hasRole('INSTRUCTOR')">
+		<jstl:if test="${requestURI == 'lesson/instructor/list.do'}">
+			<spring:url var="createUrl" value="lesson/instructor/create.do" />
+			
+			<a href="${createUrl}"><jstl:out value="${create}"/></a>
+		</jstl:if>
+	</security:authorize>
+	
+	<jstl:if test="${requestURI == 'lesson/list.do'}">
+		<acme:cancel code="lesson.return" url="instructor/list.do" />
+	</jstl:if>
 
 </security:authorize>

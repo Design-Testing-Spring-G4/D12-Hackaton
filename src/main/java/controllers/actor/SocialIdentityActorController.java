@@ -101,7 +101,6 @@ public class SocialIdentityActorController extends AbstractController {
 				this.socialIdentityService.delete(socialIdentity);
 				result = new ModelAndView("redirect:/socialIdentity/actor/list.do");
 			} catch (final Throwable oops) {
-				oops.printStackTrace();
 				result = this.createEditModelAndView(socialIdentity, "socialIdentity.commit.error");
 			}
 		return result;

@@ -15,6 +15,7 @@ import org.springframework.validation.Validator;
 import repositories.UserRepository;
 import security.Authority;
 import security.UserAccount;
+import domain.Configuration;
 import domain.Folder;
 import domain.Participation;
 import domain.Reservation;
@@ -29,18 +30,21 @@ public class UserService {
 	//Managed repository
 
 	@Autowired
-	private UserRepository	userRepository;
+	private UserRepository			userRepository;
 
 	//Supporting services
 
 	@Autowired
-	private FolderService	folderService;
+	private FolderService			folderService;
 
 	@Autowired
-	private ActorService	actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private Validator		validator;
+	private Validator				validator;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	//Simple CRUD Methods
@@ -75,6 +79,12 @@ public class UserService {
 	public User save(final User user) {
 		Assert.notNull(user);
 
+		if (!user.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + user.getPhone();
+			user.setPhone(newphone);
+		}
+
 		final User saved2;
 		//For new actors, generate the default system folders.
 		if (user.getId() != 0) {
@@ -95,12 +105,12 @@ public class UserService {
 
 		return saved2;
 	}
-
 	public void delete(final User user) {
 		Assert.notNull(user);
 
 		//Assertion that the user deleting this user has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == user.getId());
+		final User validator = this.findOne(user.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getId());
 
 		this.userRepository.delete(user);
 	}

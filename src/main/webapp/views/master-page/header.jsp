@@ -34,6 +34,21 @@
 					<li><a href="actor/edit.do"><spring:message code="master.page.actor.edit" /> </a></li>
 					<li><a href="socialIdentity/actor/list.do"><spring:message code="master.page.socialIdentity.list" /> </a></li>
 					<li><a href="folder/list.do"><spring:message code="master.page.folder.list" /> </a></li>
+					
+					<security:authorize access="hasRole('MANAGER')">
+						<li><a href="resort/manager/list.do"><spring:message code="master.page.resort.manager" /> </a></li>
+						<li><a href="reservation/manager/list.do"><spring:message code="master.page.reservation.manager" /> </a></li>
+						<li><a href="activity/manager/list.do"><spring:message code="master.page.activity.manager" /> </a></li>
+					</security:authorize>
+					
+					<security:authorize access="hasRole('USER')">
+						<li><a href="reservation/user/list.do"><spring:message code="master.page.reservation.user" /> </a></li>
+					</security:authorize>
+					
+					<security:authorize access="hasRole('INSTRUCTOR')">
+						<li><a href="lesson/instructor/list.do"><spring:message code="master.page.lesson.instructor" /> </a></li>
+					</security:authorize>
+					
 					<li><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
 				</ul>
 			</li>

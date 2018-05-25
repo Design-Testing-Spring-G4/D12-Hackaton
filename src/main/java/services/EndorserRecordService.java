@@ -71,7 +71,8 @@ public class EndorserRecordService {
 		Assert.notNull(endorserRecord);
 
 		//Assertion that the user deleting this endorser record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == endorserRecord.getCurriculum().getInstructor().getId());
+		final EndorserRecord validator = this.findOne(endorserRecord.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getCurriculum().getInstructor().getId());
 
 		this.endorserRecordRepository.delete(endorserRecord);
 	}

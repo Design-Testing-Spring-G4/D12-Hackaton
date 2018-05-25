@@ -74,7 +74,8 @@ public class EducationRecordService {
 		Assert.notNull(educationRecord);
 
 		//Assertion that the user deleting this education record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == educationRecord.getCurriculum().getInstructor().getId());
+		final EducationRecord validator = this.findOne(educationRecord.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getCurriculum().getInstructor().getId());
 
 		this.educationRecordRepository.delete(educationRecord);
 	}

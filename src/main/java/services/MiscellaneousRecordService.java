@@ -33,12 +33,12 @@ public class MiscellaneousRecordService {
 
 	public MiscellaneousRecord create(final int curriculumId) {
 
-		final MiscellaneousRecord mr = new MiscellaneousRecord();
+		final MiscellaneousRecord miscellaneousRecord = new MiscellaneousRecord();
 
 		final Curriculum c = this.curriculumService.findOne(curriculumId);
-		mr.setCurriculum(c);
+		miscellaneousRecord.setCurriculum(c);
 
-		return mr;
+		return miscellaneousRecord;
 	}
 
 	public MiscellaneousRecord findOne(final int id) {
@@ -51,13 +51,13 @@ public class MiscellaneousRecordService {
 		return this.miscellaneousRecordRepository.findAll();
 	}
 
-	public MiscellaneousRecord save(final MiscellaneousRecord mr) {
-		Assert.notNull(mr);
+	public MiscellaneousRecord save(final MiscellaneousRecord miscellaneousRecord) {
+		Assert.notNull(miscellaneousRecord);
 
 		//Assertion that the user modifying this miscellaneous record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == mr.getCurriculum().getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == miscellaneousRecord.getCurriculum().getInstructor().getId());
 
-		final MiscellaneousRecord saved = this.miscellaneousRecordRepository.save(mr);
+		final MiscellaneousRecord saved = this.miscellaneousRecordRepository.save(miscellaneousRecord);
 
 		this.actorService.isSpam(saved.getComments());
 		this.actorService.isSpam(saved.getLink());
@@ -66,13 +66,14 @@ public class MiscellaneousRecordService {
 		return saved;
 	}
 
-	public void delete(final MiscellaneousRecord mr) {
-		Assert.notNull(mr);
+	public void delete(final MiscellaneousRecord miscellaneousRecord) {
+		Assert.notNull(miscellaneousRecord);
 
 		//Assertion that the user deleting this miscellaneous record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == mr.getCurriculum().getInstructor().getId());
+		final MiscellaneousRecord validator = this.findOne(miscellaneousRecord.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getCurriculum().getInstructor().getId());
 
-		this.miscellaneousRecordRepository.delete(mr);
+		this.miscellaneousRecordRepository.delete(miscellaneousRecord);
 	}
 
 }

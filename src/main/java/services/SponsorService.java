@@ -14,6 +14,7 @@ import repositories.SponsorRepository;
 import security.Authority;
 import security.UserAccount;
 import domain.Competition;
+import domain.Configuration;
 import domain.Folder;
 import domain.Participation;
 import domain.SocialIdentity;
@@ -26,15 +27,18 @@ public class SponsorService {
 	//Managed repository
 
 	@Autowired
-	private SponsorRepository	sponsorRepository;
+	private SponsorRepository		sponsorRepository;
 
 	//Supporting services
 
 	@Autowired
-	private FolderService		folderService;
+	private FolderService			folderService;
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService			actorService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	//Simple CRUD Methods
@@ -69,6 +73,12 @@ public class SponsorService {
 	public Sponsor save(final Sponsor sponsor) {
 		Assert.notNull(sponsor);
 
+		if (!sponsor.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + sponsor.getPhone();
+			sponsor.setPhone(newphone);
+		}
+
 		final Sponsor saved2;
 		//For new actors, generate the default system folders.
 		if (sponsor.getId() != 0) {
@@ -93,7 +103,8 @@ public class SponsorService {
 		Assert.notNull(sponsor);
 
 		//Assertion that the user deleting this sponsor has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == sponsor.getId());
+		final Sponsor validator = this.findOne(sponsor.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getId());
 
 		this.sponsorRepository.delete(sponsor);
 	}

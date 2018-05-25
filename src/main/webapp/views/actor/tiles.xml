@@ -16,7 +16,7 @@
 	</definition>
 	
 	<definition name="actor/list" extends="master.page">
-		<put-attribute name="title" value="Participants" />
+		<put-attribute name="title" value="Actor list" />
 		<put-attribute name="body" value="/views/actor/list.jsp" />
 	</definition>
 	

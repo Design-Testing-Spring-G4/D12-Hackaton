@@ -15,6 +15,7 @@ import org.springframework.validation.Validator;
 import repositories.ManagerRepository;
 import security.Authority;
 import security.UserAccount;
+import domain.Configuration;
 import domain.Folder;
 import domain.Manager;
 import domain.Participation;
@@ -29,18 +30,21 @@ public class ManagerService {
 	//Managed repository
 
 	@Autowired
-	private ManagerRepository	managerRepository;
+	private ManagerRepository		managerRepository;
 
 	//Supporting services
 
 	@Autowired
-	private FolderService		folderService;
+	private FolderService			folderService;
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private Validator			validator;
+	private Validator				validator;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	//Simple CRUD Methods
@@ -75,6 +79,12 @@ public class ManagerService {
 	public Manager save(final Manager manager) {
 		Assert.notNull(manager);
 
+		if (!manager.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + manager.getPhone();
+			manager.setPhone(newphone);
+		}
+
 		final Manager saved2;
 		//For new actors, generate the default system folders.
 		if (manager.getId() != 0) {
@@ -99,7 +109,8 @@ public class ManagerService {
 		Assert.notNull(manager);
 
 		//Assertion that the user deleting this manager has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == manager.getId());
+		final Manager validator = this.findOne(manager.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getId());
 
 		this.managerRepository.delete(manager);
 	}

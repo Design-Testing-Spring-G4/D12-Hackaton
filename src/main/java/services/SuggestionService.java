@@ -75,7 +75,8 @@ public class SuggestionService {
 		Assert.notNull(suggestion);
 
 		//Assertion that the user deleting this miscellaneous record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == suggestion.getActor().getId());
+		final Suggestion validator = this.findOne(suggestion.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getActor().getId());
 
 		this.suggestionRepository.delete(suggestion);
 	}

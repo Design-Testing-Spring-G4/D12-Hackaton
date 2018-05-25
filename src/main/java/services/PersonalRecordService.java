@@ -33,12 +33,12 @@ public class PersonalRecordService {
 	//Simple CRUD methods
 
 	public PersonalRecord create(final int curriculumId) {
-		final PersonalRecord pr = new PersonalRecord();
+		final PersonalRecord personalRecord = new PersonalRecord();
 
 		final Curriculum c = this.curriculumService.findOne(curriculumId);
-		pr.setCurriculum(c);
+		personalRecord.setCurriculum(c);
 
-		return pr;
+		return personalRecord;
 	}
 
 	public PersonalRecord findOne(final int id) {
@@ -51,13 +51,13 @@ public class PersonalRecordService {
 		return this.personalRecordRepository.findAll();
 	}
 
-	public PersonalRecord save(final PersonalRecord pr) {
-		Assert.notNull(pr);
+	public PersonalRecord save(final PersonalRecord personalRecord) {
+		Assert.notNull(personalRecord);
 
 		//Assertion that the user modifying this personal record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == pr.getCurriculum().getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == personalRecord.getCurriculum().getInstructor().getId());
 
-		final PersonalRecord saved = this.personalRecordRepository.save(pr);
+		final PersonalRecord saved = this.personalRecordRepository.save(personalRecord);
 
 		this.actorService.isSpam(saved.getEmail());
 		this.actorService.isSpam(saved.getName());
@@ -68,13 +68,14 @@ public class PersonalRecordService {
 		return saved;
 	}
 
-	public void delete(final PersonalRecord pr) {
-		Assert.notNull(pr);
+	public void delete(final PersonalRecord personalRecord) {
+		Assert.notNull(personalRecord);
 
 		//Assertion that the user deleting this personal record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == pr.getCurriculum().getInstructor().getId());
+		final PersonalRecord validator = this.findOne(personalRecord.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getCurriculum().getInstructor().getId());
 
-		this.personalRecordRepository.delete(pr);
+		this.personalRecordRepository.delete(personalRecord);
 	}
 
 }

@@ -60,6 +60,15 @@
 		<security:intercept-url pattern="/socialIdentity/actor/*" access="isAuthenticated()" />
 		<security:intercept-url pattern="/suggestion/actor/*" access="isAuthenticated()" />
 		
+		<security:intercept-url pattern="/resort/manager/*" access="hasRole('MANAGER')" />
+		<security:intercept-url pattern="/reservation/manager/*" access="hasRole('MANAGER')" />
+		<security:intercept-url pattern="/activity/manager/*" access="hasRole('MANAGER')" />
+		<security:intercept-url pattern="/note/manager/*" access="hasRole('MANAGER')" />
+		
+		<security:intercept-url pattern="/reservation/user/*" access="hasRole('USER')" />
+		
+		<security:intercept-url pattern="/lesson/instructor/*" access="hasRole('INSTRUCTOR')" />
+		
 		<security:intercept-url pattern="/mailMessage/administrator/*" access="hasRole('ADMIN')" />
 		
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />

@@ -15,6 +15,7 @@ import security.Authority;
 import security.UserAccount;
 import domain.Audit;
 import domain.Auditor;
+import domain.Configuration;
 import domain.Folder;
 import domain.Note;
 import domain.Participation;
@@ -27,15 +28,18 @@ public class AuditorService {
 	//Managed repository
 
 	@Autowired
-	private AuditorRepository	auditorRepository;
+	private AuditorRepository		auditorRepository;
 
 	//Supporting services
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private FolderService		folderService;
+	private FolderService			folderService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	//Simple CRUD Methods
@@ -71,6 +75,12 @@ public class AuditorService {
 	public Auditor save(final Auditor auditor) {
 		Assert.notNull(auditor);
 
+		if (!auditor.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + auditor.getPhone();
+			auditor.setPhone(newphone);
+		}
+
 		final Auditor saved2;
 		//For new actors, generate the default system folders.
 		if (auditor.getId() != 0) {
@@ -95,7 +105,8 @@ public class AuditorService {
 		Assert.notNull(auditor);
 
 		//Assertion that the user deleting this auditor has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == auditor.getId());
+		final Auditor validator = this.findOne(auditor.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getId());
 
 		this.auditorRepository.delete(auditor);
 	}

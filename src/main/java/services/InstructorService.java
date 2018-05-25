@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import repositories.InstructorRepository;
 import security.Authority;
 import security.UserAccount;
+import domain.Configuration;
 import domain.Folder;
 import domain.Instructor;
 import domain.Participation;
@@ -35,6 +36,9 @@ public class InstructorService {
 
 	@Autowired
 	private ActorService			actorService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	//Simple CRUD Methods
@@ -69,6 +73,12 @@ public class InstructorService {
 	public Instructor save(final Instructor instructor) {
 		Assert.notNull(instructor);
 
+		if (!instructor.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + instructor.getPhone();
+			instructor.setPhone(newphone);
+		}
+
 		final Instructor saved2;
 		//For new actors, generate the default system folders.
 		if (instructor.getId() != 0) {
@@ -89,11 +99,19 @@ public class InstructorService {
 		return saved2;
 	}
 
+	//Save for internal operations such as cross-authorized modifications.
+	public Instructor saveInternal(final Instructor instructor) {
+		Assert.notNull(instructor);
+		final Instructor saved = this.instructorRepository.save(instructor);
+		return saved;
+	}
+
 	public void delete(final Instructor instructor) {
 		Assert.notNull(instructor);
 
 		//Assertion that the user deleting this instructor has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == instructor.getId());
+		final Instructor validator = this.findOne(instructor.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getId());
 
 		this.instructorRepository.delete(instructor);
 	}
@@ -110,5 +128,9 @@ public class InstructorService {
 
 	public Double ratioSuspiciousInstructors() {
 		return this.instructorRepository.ratioSuspiciousInstructors();
+	}
+
+	public Collection<Instructor> instructorsWithResort(final Resort resort) {
+		return this.instructorRepository.instructorsWithResort(resort);
 	}
 }

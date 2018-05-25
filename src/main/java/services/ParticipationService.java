@@ -71,7 +71,8 @@ public class ParticipationService {
 		Assert.notNull(participation);
 
 		//Assertion that the user deleting this miscellaneous record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == participation.getActor().getId());
+		final Participation validator = this.findOne(participation.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getActor().getId());
 
 		this.participationRepository.delete(participation);
 	}

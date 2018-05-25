@@ -39,6 +39,8 @@
 		<value>/views/folder/messages</value>
 		<value>/views/mailMessage/messages</value>
 		<value>/views/suggestion/messages</value>
+		<value>/views/reservation/messages</value>
+		<value>/views/note/messages</value>
 	</util:list>
 
 </beans>

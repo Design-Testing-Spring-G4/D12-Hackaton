@@ -14,6 +14,7 @@ import repositories.AdministratorRepository;
 import security.Authority;
 import security.UserAccount;
 import domain.Administrator;
+import domain.Configuration;
 import domain.Folder;
 import domain.Participation;
 import domain.SocialIdentity;
@@ -34,6 +35,9 @@ public class AdministratorService {
 
 	@Autowired
 	private ActorService			actorService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	//Simple CRUD Methods
@@ -67,6 +71,12 @@ public class AdministratorService {
 	public Administrator save(final Administrator administrator) {
 		Assert.notNull(administrator);
 
+		if (!administrator.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + administrator.getPhone();
+			administrator.setPhone(newphone);
+		}
+
 		final Administrator saved2;
 		//For new actors, generate the default system folders.
 		if (administrator.getId() != 0) {
@@ -91,7 +101,8 @@ public class AdministratorService {
 		Assert.notNull(administrator);
 
 		//Assertion that the user deleting this administrator has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == administrator.getId());
+		final Administrator validator = this.findOne(administrator.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getId());
 
 		this.administratorRepository.delete(administrator);
 	}

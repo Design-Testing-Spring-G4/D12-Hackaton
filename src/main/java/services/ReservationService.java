@@ -69,7 +69,7 @@ public class ReservationService {
 	public Reservation save(final Reservation reservation) {
 		Assert.notNull(reservation);
 
-		//Assertion that the user modifying this miscellaneous record has the correct privilege.
+		//Assertion that the user modifying this reservation has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == reservation.getUser().getId());
 
 		//Business rule: the end date must be after the start date.
@@ -77,6 +77,9 @@ public class ReservationService {
 		//Business rule: the reservation period must be contained in the resort's activity period.
 		Assert.isTrue(reservation.getStartDate().after(reservation.getResort().getStartDate()));
 		Assert.isTrue(reservation.getEndDate().before(reservation.getResort().getEndDate()));
+
+		if (reservation.getStatus() == Status.DUE && reservation.getCreditCard() != null)
+			reservation.setStatus(Status.ACCEPTED);
 
 		reservation.setPrice(this.computePrice(reservation, TimeUnit.DAYS));
 
@@ -89,12 +92,26 @@ public class ReservationService {
 		return saved;
 	}
 
+	//Save for internal operations such as cross-authorized requests.
+	public Reservation saveInternal(final Reservation reservation) {
+		Assert.notNull(reservation);
+		final Reservation saved = this.reservationRepository.save(reservation);
+		return saved;
+	}
+
 	public void delete(final Reservation reservation) {
 		Assert.notNull(reservation);
 
-		//Assertion that the user deleting this miscellaneous record has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == reservation.getUser().getId());
+		//Assertion that the user deleting this reservation has the correct privilege.
+		final Reservation validator = this.findOne(reservation.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getUser().getId());
 
+		this.reservationRepository.delete(reservation);
+	}
+
+	//Deletion for internal operations such as cross-authorized requests.
+	public void deleteInternal(final Reservation reservation) {
+		Assert.notNull(reservation);
 		this.reservationRepository.delete(reservation);
 	}
 

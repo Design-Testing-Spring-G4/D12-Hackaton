@@ -78,6 +78,14 @@ public class CategoryService {
 
 		return saved;
 	}
+
+	//Save for internal operations such as cross-authorized requests.
+	public Category saveInternal(final Category category) {
+		Assert.notNull(category);
+		final Category saved = this.categoryRepository.save(category);
+		return saved;
+	}
+
 	public void delete(final Category category) {
 		Assert.notNull(category);
 

@@ -36,20 +36,28 @@
 
 		<%-- Attributes --%>
 
-		<display:column property="actor.userAccount.username" title="${username}" sortable="true" />
+		<display:column property="userAccount.username" title="${username}" sortable="true" />
 		
-		<display:column property="actor.name" title="${name}" sortable="true" />
+		<display:column property="name" title="${name}" sortable="true" />
 		
-		<display:column property="actor.surname" title="${surname}" sortable="true" />
+		<display:column property="surname" title="${surname}" sortable="true" />
 		
-		<display:column property="actor.email" title="${email}" sortable="true" />
+		<display:column property="email" title="${email}" sortable="true" />
+		
+		<%-- Links towards display, edition and others --%>
+		
+		<jstl:if test="${requestURI == 'activity/manager/manage.do'}">
+			<acme:link code="actor.activity.manage" url="activity/manager/set.do" id="${row.id}" />
+		</jstl:if>
 
 	</display:table>
 	
-	<spring:url var="returnUtl" value="competition/list.do">
-		<spring:param name="varId" value="${varId}" />
-	</spring:url>
+	<jstl:if test="${requestURI != 'activity/manager/manage.do'}">
+		<spring:url var="returnUtl" value="competition/list.do">
+			<spring:param name="varId" value="${varId}" />
+		</spring:url>
+		
+		<acme:cancel code="actor.return" url="${returnUrl}" />
+	</jstl:if>
 	
-	<acme:cancel code="actor.return" url="${returnUrl}" />
-
 </security:authorize>

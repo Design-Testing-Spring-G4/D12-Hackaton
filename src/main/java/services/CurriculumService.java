@@ -77,43 +77,44 @@ public class CurriculumService {
 		return this.curriculumRepository.findAll();
 	}
 
-	public Curriculum save(final Curriculum c) {
-		Assert.notNull(c);
+	public Curriculum save(final Curriculum curriculum) {
+		Assert.notNull(curriculum);
 
 		//Assertion that the user modifying this curriculum has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == c.getInstructor().getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == curriculum.getInstructor().getId());
 
-		final Curriculum saved = this.curriculumRepository.save(c);
+		final Curriculum saved = this.curriculumRepository.save(curriculum);
 
 		return saved;
 	}
 
-	public void delete(final Curriculum c) {
-		Assert.notNull(c);
+	public void delete(final Curriculum curriculum) {
+		Assert.notNull(curriculum);
 
 		//Assertion that the user deleting this curriculum has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == c.getInstructor().getId());
+		final Curriculum validator = this.findOne(curriculum.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getInstructor().getId());
 
-		if (c.getPersonalRecord().getName() != null)
-			this.personalRecordService.delete(c.getPersonalRecord());
+		if (curriculum.getPersonalRecord().getName() != null)
+			this.personalRecordService.delete(curriculum.getPersonalRecord());
 
-		if (!(c.getEducationRecord().isEmpty()))
-			for (final EducationRecord er : c.getEducationRecord())
+		if (!(curriculum.getEducationRecord().isEmpty()))
+			for (final EducationRecord er : curriculum.getEducationRecord())
 				this.educationRecordService.delete(er);
 
-		if (!(c.getEndorserRecord().isEmpty()))
-			for (final EndorserRecord er : c.getEndorserRecord())
+		if (!(curriculum.getEndorserRecord().isEmpty()))
+			for (final EndorserRecord er : curriculum.getEndorserRecord())
 				this.endorserRecordService.delete(er);
 
-		if (!(c.getProfessionalRecord().isEmpty()))
-			for (final ProfessionalRecord pr : c.getProfessionalRecord())
+		if (!(curriculum.getProfessionalRecord().isEmpty()))
+			for (final ProfessionalRecord pr : curriculum.getProfessionalRecord())
 				this.professionalRecordService.delete(pr);
 
-		if (!(c.getMiscellaneousRecord().isEmpty()))
-			for (final MiscellaneousRecord mr : c.getMiscellaneousRecord())
+		if (!(curriculum.getMiscellaneousRecord().isEmpty()))
+			for (final MiscellaneousRecord mr : curriculum.getMiscellaneousRecord())
 				this.miscellaneousRecordService.delete(mr);
 
-		this.curriculumRepository.delete(c);
+		this.curriculumRepository.delete(curriculum);
 	}
 
 	//Other methods

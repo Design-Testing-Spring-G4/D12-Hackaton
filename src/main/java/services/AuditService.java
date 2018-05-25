@@ -85,8 +85,15 @@ public class AuditService {
 		//Draft/final mode assertion is done via controller.
 
 		//Assertion that the user deleting this audit has the correct privilege.
-		Assert.isTrue(this.actorService.findByPrincipal().getId() == audit.getAuditor().getId());
+		final Audit validator = this.findOne(audit.getId());
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getAuditor().getId());
 
+		this.auditRepository.delete(audit);
+	}
+
+	//Deletion for internal operations such as cross-authorized requests.
+	public void deleteInternal(final Audit audit) {
+		Assert.notNull(audit);
 		this.auditRepository.delete(audit);
 	}
 

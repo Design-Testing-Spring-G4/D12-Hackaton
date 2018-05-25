@@ -134,7 +134,6 @@ public class FolderController extends AbstractController {
 					result = new ModelAndView("redirect:/folder/list.do");
 				}
 			} catch (final Throwable oops) {
-				oops.printStackTrace();
 				result = this.createEditModelAndView(folder, "folder.commit.error");
 			}
 		return result;

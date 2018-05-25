@@ -33,6 +33,10 @@
 <spring:message code="activity.price" var="price" />
 <spring:message code="activity.instructor" var="instructor" />
 <spring:message code="activity.negative" var="negative" />
+<spring:message code="activity.edit" var="edit" />
+<spring:message code="activity.create" var="create" />
+<spring:message code="activity.assign" var="assign" />
+<spring:message code="activity.request" var="request" />
 
 	<%-- Listing grid --%>
 	
@@ -54,7 +58,7 @@
 		<jstl:choose>
 			<jstl:when test="${row.instructor != null}">
 				<spring:url var="instructorDisplay" value="actor/display.do">
-						<spring:param name="varId" value="${row.instructor.id}" />
+					<spring:param name="varId" value="${row.instructor.id}" />
 				</spring:url>
 	
 				<display:column title="${instructor}">
@@ -68,8 +72,59 @@
 			</jstl:otherwise>
 		</jstl:choose>
 		
-		<acme:cancel code="activity.return" url="resort/list.do" />
+		<security:authorize access="hasRole('MANAGER')">
+			<jstl:if test="${requestURI == 'activity/manager/list.do'}">
+				<acme:link code="activity.notes" url="note/manager/list.do" id="${row.id}" />
+				
+				<spring:url var="editUrl" value="activity/manager/edit.do">
+					<spring:param name="varId" value="${row.id}" />
+				</spring:url>
+				
+				<display:column>
+					<a href="${editUrl}"><jstl:out value="${edit}" /></a>
+				</display:column>
+
+				<display:column>
+					<jstl:if test="${row.category == 'SPORT'}">
+						<spring:url var="manageUrl" value="activity/manager/manage.do">
+							<spring:param name="varId" value="${row.id}" />
+						</spring:url>
+						
+						<a href="${manageUrl}"><jstl:out value="${assign}"/></a>
+					</jstl:if>
+				</display:column>
+				
+				<display:column>
+					<jstl:if test="${row.category == 'SPORT'}">
+						<acme:link code="activity.unset" url="activity/manager/unset.do" id="${row.id}" />
+					</jstl:if>
+				</display:column>
+			</jstl:if>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('USER')">
+			<display:column>
+				<spring:url var="requestUrl" value="reservation/user/request.do">
+					<spring:param name="varId" value="${row.id}" />
+					<spring:param name="varId2" value="${varId}" />
+				</spring:url>
+
+				<a href="${requestUrl}"><jstl:out value="${request}"/></a>
+			</display:column>
+		</security:authorize>
 		
 	</display:table>
+	
+	<jstl:if test="${requestURI == 'activity/manager/list.do'}">
+		<security:authorize access="hasRole('MANAGER')">
+			<spring:url var="createUrl" value="activity/manager/create.do" />
+				
+			<a href="${createUrl}"><jstl:out value="${create}" /></a>
+		</security:authorize>
+	</jstl:if>
+	
+	<jstl:if test="${requestURI == 'activity/list.do'}">
+		<acme:cancel code="activity.return" url="resort/list.do" />
+	</jstl:if>
 
 </security:authorize>
