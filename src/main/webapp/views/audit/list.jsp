@@ -49,10 +49,18 @@
 
 		<%-- Links towards edition, display and others --%>
 		
-		<acme:link code="audit.display" url="audit/display.do" id="${row.id}" />
+		<acme:link code="audit.display" url="audit/display.do" id="${row.id}" column="true" />
+		
+		<security:authorize access="hasRole('AUDITOR')">
+			<jstl:if test="${row.finalMode eq false}">
+				<acme:link code="audit.edit" url="audit/auditor/edit.do" id="${row.id}" column="true" />
+			</jstl:if>
+		</security:authorize>
 
 	</display:table>
 	
-	<acme:cancel code="audit.return" url="resort/list.do" />
+	<security:authorize access="!hasRole('AUDITOR')">
+		<acme:cancel code="audit.return" url="resort/list.do" />
+	</security:authorize>
 
 </security:authorize>

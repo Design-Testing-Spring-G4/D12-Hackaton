@@ -44,9 +44,6 @@
 <spring:message code="reservation.status" var="status" />
 <spring:message code="reservation.comments" var="comments" />
 <spring:message code="reservation.reason" var="reason" />
-<spring:message code="reservation.pay" var="pay" />
-<spring:message code="reservation.cancel" var="cancel" />
-<spring:message code="reservation.request" var="request" />
 <spring:message code="reservation.dateInt" var="formatDate" />
 
 <jsp:useBean id="now" class="java.util.Date"/>
@@ -85,42 +82,30 @@
 		<%-- Links towards edition, display and others --%>
 		
 		<jstl:if test="${requestURI == 'reservation/manager/list.do' && row.status == 'PENDING'}">
-			<acme:link code="reservation.edit" url="reservation/manager/edit.do" id="${row.id}" />
+			<acme:link code="reservation.edit" url="reservation/manager/edit.do" id="${row.id}" column="true" />
 		</jstl:if>
 		
 		<jstl:if test="${requestURI == 'reservation/user/list.do'}">
-			<acme:link code="reservation.display" url="reservation/user/display.do" id="${row.id}" />
+			<acme:link code="reservation.display" url="reservation/user/display.do" id="${row.id}" column="true" />
 		
-			<acme:link code="reservation.resort" url="resort/display.do" id="${row.resort.id}" />
+			<acme:link code="reservation.resort" url="resort/display.do" id="${row.resort.id}" column="true" />
 		</jstl:if>
 		
 		<display:column>
 			<jstl:if test="${requestURI == 'reservation/user/list.do' && row.status == 'DUE'}">
-				<spring:url var="payUrl" value="reservation/user/edit.do">
-					<spring:param name="varId" value="${row.id}" />
-				</spring:url>
-				
-				<a href="${payUrl}"><jstl:out value="${pay}" /></a>
+				<acme:link code="reservation.pay" url="reservation/user/edit.do" id="${row.id}" column="false" />
 			</jstl:if>
 		</display:column>
 		
 		<display:column>
 			<jstl:if test="${requestURI == 'reservation/user/list.do' && row.status == 'ACCEPTED' && row.startDate > now}">
-				<spring:url var="cancelUrl" value="reservation/user/cancel.do">
-					<spring:param name="varId" value="${row.id}" />
-				</spring:url>
-				
-				<a href="${cancelUrl}"><jstl:out value="${cancel}" /></a>
+				<acme:link code="reservation.cancel" url="reservation/user/cancel.do" id="${row.id}" column="false" />
 			</jstl:if>
 		</display:column>
 		
 		<display:column>
 			<jstl:if test="${requestURI == 'reservation/user/list.do' && row.status == 'ACCEPTED'}">
-				<spring:url var="requestUrl" value="reservation/user/activities.do">
-					<spring:param name="varId" value="${row.id}" />
-				</spring:url>
-				
-				<a href="${requestUrl}"><jstl:out value="${request}" /></a>
+				<acme:link code="reservation.request" url="reservation/user/activities.do" id="${row.id}" column="false" />
 			</jstl:if>
 		</display:column>
 		

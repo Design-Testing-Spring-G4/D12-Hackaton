@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.PersonalRecordRepository;
+import domain.Configuration;
 import domain.Curriculum;
 import domain.PersonalRecord;
 
@@ -29,6 +32,12 @@ public class PersonalRecordService {
 	@Autowired
 	private ActorService				actorService;
 
+	@Autowired
+	private Validator					validator;
+
+	@Autowired
+	private ConfigurationService		configurationService;
+
 
 	//Simple CRUD methods
 
@@ -37,6 +46,11 @@ public class PersonalRecordService {
 
 		final Curriculum c = this.curriculumService.findOne(curriculumId);
 		personalRecord.setCurriculum(c);
+		personalRecord.setEmail("");
+		personalRecord.setName("");
+		personalRecord.setPhone("");
+		personalRecord.setPhoto("");
+		personalRecord.setProfile("");
 
 		return personalRecord;
 	}
@@ -53,6 +67,12 @@ public class PersonalRecordService {
 
 	public PersonalRecord save(final PersonalRecord personalRecord) {
 		Assert.notNull(personalRecord);
+
+		if (!personalRecord.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + personalRecord.getPhone();
+			personalRecord.setPhone(newphone);
+		}
 
 		//Assertion that the user modifying this personal record has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == personalRecord.getCurriculum().getInstructor().getId());
@@ -78,4 +98,29 @@ public class PersonalRecordService {
 		this.personalRecordRepository.delete(personalRecord);
 	}
 
+	//Other methods
+
+	public PersonalRecord reconstruct(final PersonalRecord personalRecord, final BindingResult binding) {
+		PersonalRecord result;
+
+		if (personalRecord.getId() == 0) {
+			result = this.create(personalRecord.getCurriculum().getId());
+			result.setEmail(personalRecord.getEmail());
+			result.setName(personalRecord.getName());
+			result.setPhone(personalRecord.getPhone());
+			result.setPhoto(personalRecord.getPhoto());
+			result.setProfile(personalRecord.getProfile());
+		} else {
+			result = this.findOne(personalRecord.getId());
+			result.setEmail(personalRecord.getEmail());
+			result.setName(personalRecord.getName());
+			result.setPhone(personalRecord.getPhone());
+			result.setPhoto(personalRecord.getPhoto());
+			result.setProfile(personalRecord.getProfile());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
+	}
 }

@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.EndorserRecordRepository;
+import domain.Configuration;
 import domain.Curriculum;
 import domain.EndorserRecord;
 
@@ -25,8 +28,15 @@ public class EndorserRecordService {
 
 	@Autowired
 	private CurriculumService			curriculumService;
+
 	@Autowired
 	private ActorService				actorService;
+
+	@Autowired
+	private Validator					validator;
+
+	@Autowired
+	private ConfigurationService		configurationService;
 
 
 	//Simple CRUD methods
@@ -53,6 +63,12 @@ public class EndorserRecordService {
 	public EndorserRecord save(final EndorserRecord endorserRecord) {
 		Assert.notNull(endorserRecord);
 
+		if (!endorserRecord.getPhone().startsWith("+")) {
+			final Configuration configuration = this.configurationService.findAll().iterator().next();
+			final String newphone = configuration.getCountryCode() + " " + endorserRecord.getPhone();
+			endorserRecord.setPhone(newphone);
+		}
+
 		//Assertion that the user modifying this endorser record has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == endorserRecord.getCurriculum().getInstructor().getId());
 
@@ -77,4 +93,29 @@ public class EndorserRecordService {
 		this.endorserRecordRepository.delete(endorserRecord);
 	}
 
+	//Other methods
+
+	public EndorserRecord reconstruct(final EndorserRecord endorserRecord, final BindingResult binding) {
+		EndorserRecord result;
+
+		if (endorserRecord.getId() == 0) {
+			result = this.create(endorserRecord.getCurriculum().getId());
+			result.setComments(endorserRecord.getComments());
+			result.setEmail(endorserRecord.getEmail());
+			result.setName(endorserRecord.getName());
+			result.setPhone(endorserRecord.getPhone());
+			result.setProfile(endorserRecord.getProfile());
+		} else {
+			result = this.findOne(endorserRecord.getId());
+			result.setComments(endorserRecord.getComments());
+			result.setEmail(endorserRecord.getEmail());
+			result.setName(endorserRecord.getName());
+			result.setPhone(endorserRecord.getPhone());
+			result.setProfile(endorserRecord.getProfile());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
+	}
 }

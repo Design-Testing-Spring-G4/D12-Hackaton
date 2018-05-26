@@ -25,6 +25,10 @@
 <%-- Stored message variables --%>
 
 <spring:message code="legalText.registered" var="registered" />
+
+<%-- Stored message variables --%>
+
+<spring:message code="legalText.registered" var="registered" />
 <spring:message code="legalText.dateInt" var="formatDate" />
 
 <%-- For the selected legal text received as model, display the following information: --%>

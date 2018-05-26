@@ -41,6 +41,11 @@
 		<value>/views/suggestion/messages</value>
 		<value>/views/reservation/messages</value>
 		<value>/views/note/messages</value>
+		<value>/views/personalRecord/messages</value>
+		<value>/views/educationRecord/messages</value>
+		<value>/views/professionalRecord/messages</value>
+		<value>/views/endorserRecord/messages</value>
+		<value>/views/miscellaneousRecord/messages</value>
 	</util:list>
 
 </beans>

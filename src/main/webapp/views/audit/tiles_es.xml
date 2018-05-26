@@ -19,5 +19,10 @@
 		<put-attribute name="title" value="Mostrar auditoría" />
 		<put-attribute name="body" value="/views/audit/display.jsp" />
 	</definition>
+	
+	<definition name="audit/edit" extends="master.page">
+		<put-attribute name="title" value="Datos de la auditoría" />
+		<put-attribute name="body" value="/views/audit/edit.jsp" />
+	</definition>
 
 </tiles-definitions>

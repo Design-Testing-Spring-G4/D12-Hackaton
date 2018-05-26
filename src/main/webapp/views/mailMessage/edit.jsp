@@ -33,7 +33,7 @@
 
 	<%-- Links towards display, apply, edit and cancel views --%>
 	
-	<acme:link code="mailMessage.move" url="mailMessage/move.do" id="${row.id}"/>
+	<acme:link code="mailMessage.move" url="mailMessage/move.do" id="${row.id}" column="true" />
 	
 </display:table>
 

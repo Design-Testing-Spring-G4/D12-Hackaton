@@ -41,6 +41,11 @@
 		<value>/views/suggestion/tiles.xml</value>
 		<value>/views/reservation/tiles.xml</value>
 		<value>/views/note/tiles.xml</value>
+		<value>/views/personalRecord/tiles.xml</value>
+		<value>/views/educationRecord/tiles.xml</value>
+		<value>/views/professionalRecord/tiles.xml</value>
+		<value>/views/endorserRecord/tiles.xml</value>
+		<value>/views/miscellaneousRecord/tiles.xml</value>
 	</util:list>
 
 </beans>

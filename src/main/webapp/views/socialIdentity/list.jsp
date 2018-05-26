@@ -31,7 +31,6 @@
 <spring:message code="socialIdentity.network" var="network" />
 <spring:message code="socialIdentity.profile" var="profile" />
 <spring:message code="socialIdentity.photo" var="photo" />
-<spring:message code="socialIdentity.create" var="create" />
 
 	<%-- Listing grid --%>
 
@@ -54,12 +53,11 @@
 			</jstl:if>
 		</display:column>
 		
-		<acme:link code="socialIdentity.edit" url="socialIdentity/actor/edit.do" id="${row.id}"/>
+		<acme:link code="socialIdentity.edit" url="socialIdentity/actor/edit.do" id="${row.id}" column="true" />
 
 	</display:table>
 	
-	<spring:url var="createUrl" value="socialIdentity/actor/create.do" />
-	<a href="${createUrl}"><jstl:out value="${create}"/></a>
+	<acme:link code="socialIdentity.create" url="socialIdentity/actor/create.do" column="false" />
 	
 	<jstl:if test="${requestURI == 'socialIdentity/list.do'}">
 		<spring:url var="returnUrl" value="actor/display.do">

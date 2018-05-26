@@ -29,7 +29,7 @@
 <spring:message code="competition.endDate" var="endDate" />
 <spring:message code="competition.dateInt" var="formatDate" />
 
-	<%-- For the selected audit received as model, display the following information: --%>
+	<%-- For the selected competition received as model, display the following information: --%>
 	
 	<jstl:if test="${fn:length(competition.banner) != 0}">
 	<a href="${competition.link}" target="_blank">
@@ -61,10 +61,16 @@
 	<acme:displayField code="competition.sponsor" path="${competition.sponsor.name} ${competition.sponsor.surname}" />
 	<br/>
 
-	<spring:url var="returnUrl" value="competition/list.do">
-		<spring:param name="varId" value="${varId}" />
-	</spring:url>
+	<security:authorize access="!hasRole('SPONSOR')">
+		<spring:url var="returnUrl" value="competition/list.do">
+			<spring:param name="varId" value="${varId}" />
+		</spring:url>
+		
+		<acme:cancel code="competition.return" url="${returnUrl}"/>
+	</security:authorize>
 	
-	<acme:cancel code="competition.return" url="${returnUrl}"/>
+	<security:authorize access="hasRole('SPONSOR')">
+		<acme:cancel code="competition.return" url="competition/sponsor/list.do" />
+	</security:authorize>
 
 </security:authorize>

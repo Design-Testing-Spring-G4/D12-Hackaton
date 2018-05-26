@@ -50,26 +50,32 @@
 		
 		<%-- Links towards edition, display and others --%>
 		
+		<jstl:if test="${requestURI == 'lesson/instructor/list.do'}">
+			<acme:link code="lesson.notes" url="note/instructor/list.do" id="${row.id}" column="true"/>
+		</jstl:if>
+		
 		<spring:url var="instructorDisplay" value="actor/display.do">
 			<spring:param name="varId" value="${row.instructor.id}" />
 		</spring:url>
 		
-		<acme:link code="lesson.instructor.display" url="${instructorDisplay}" />
+		<acme:link code="lesson.instructor.display" url="${instructorDisplay}" column="true" />
 		
 		<security:authorize access="hasRole('INSTRUCTOR')">
 			<jstl:if test="${requestURI == 'lesson/instructor/list.do'}">
-				<acme:link code="lesson.edit" url="lesson/instructor/edit.do" id="${row.id}" />
+				<acme:link code="lesson.edit" url="lesson/instructor/edit.do" id="${row.id}" column="true" />
 			</jstl:if>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('AUDITOR')">
+			<acme:link code="lesson.note.create" url="note/auditor/create.do" id="${row.id}" id2="1" column="true" />
 		</security:authorize>
 		
 	</display:table>
 	
 	<security:authorize access="hasRole('INSTRUCTOR')">
-		<jstl:if test="${requestURI == 'lesson/instructor/list.do'}">
-			<spring:url var="createUrl" value="lesson/instructor/create.do" />
+		<spring:url var="createUrl" value="lesson/instructor/create.do" />
 			
-			<a href="${createUrl}"><jstl:out value="${create}"/></a>
-		</jstl:if>
+		<a href="${createUrl}"><jstl:out value="${create}"/></a>
 	</security:authorize>
 	
 	<jstl:if test="${requestURI == 'lesson/list.do'}">

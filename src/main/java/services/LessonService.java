@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -71,10 +73,22 @@ public class LessonService {
 		return saved;
 	}
 
+	//Save for internal operations such as a cross-authorized requests.
+	public Lesson saveInternal(final Lesson lesson) {
+		Assert.notNull(lesson);
+
+		//Assertion that the user modifying this lesson has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("AUDITOR"));
+
+		final Lesson saved = this.lessonRepository.save(lesson);
+		return saved;
+	}
+
 	public void delete(final Lesson lesson) {
 		Assert.notNull(lesson);
 
-		//Assertion that the user deleting this miscellaneous record has the correct privilege.
+		//Assertion that the user deleting this lesson has the correct privilege.
 		final Lesson validator = this.findOne(lesson.getId());
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getInstructor().getId());
 

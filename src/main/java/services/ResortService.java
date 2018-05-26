@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -97,6 +99,15 @@ public class ResortService {
 		this.actorService.isSpam(saved.getName());
 		this.actorService.isSpam(saved.getPicture());
 
+		return saved;
+	}
+
+	public Resort saveInternal(final Resort resort) {
+		Assert.notNull(resort);
+		//Assertion that the user modifying this resort has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("SPONSOR"));
+		final Resort saved = this.resortRepository.save(resort);
 		return saved;
 	}
 
@@ -202,5 +213,9 @@ public class ResortService {
 
 	public Double ratioResortsWithAudit() {
 		return this.resortRepository.ratioResortsWithAudit();
+	}
+
+	public Resort resortWithCompetition(final Competition competition) {
+		return this.resortRepository.resortWithCompetition(competition);
 	}
 }

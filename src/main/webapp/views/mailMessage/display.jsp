@@ -23,20 +23,14 @@
 
 <%-- Stored message variables --%>
 
-<spring:message code="mailMessage.sent" var="sent" />
-
-
-<spring:message code="mailMessage.priority" var="priority" />
-<spring:message code="mailMessage.subject" var="subject" />
-<spring:message code="mailMessage.body" var="body" />
-<spring:message code="mailMessage.return" var="returnMsg" />
+<spring:message code="mailMessage.dateInt" var="sent" />
 
 <security:authorize access="isAuthenticated()">
 
 	<%-- For the selected message, display the following information: --%>
 	
 	<jstl:out value="${sent}" />:
-	<fmt:formatDate value="${mailMessage.sent}" type="BOTH"/>
+	<fmt:formatDate value="${mailMessage.sent}" pattern="${formatDate}" />
 	<br />
 	<acme:displayField path="mailMessage.sender.name" code="mailMessage.sender"/>
 	<br/>
@@ -49,12 +43,6 @@
 	<acme:displayField path="mailMessage.body" code="mailMessage.body"/>
 	<br/>
 
-	<spring:url var="returnUrl"
-		value="mailMessage/list.do">
-		<spring:param name="varId"
-			value="${mailMessage.folder.id}"/>
-	</spring:url>
-	
-	<a href="${returnUrl}"><jstl:out value="${returnMsg}" /></a>
+	<acme:link code="mailMessage.return" url="mailMessage.list.do" id="${mailMessage.folder.id}" column="false" />
 
 </security:authorize>

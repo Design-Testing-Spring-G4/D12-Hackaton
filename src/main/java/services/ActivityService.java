@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -71,6 +73,18 @@ public class ActivityService {
 		this.actorService.isSpam(saved.getDescription());
 		this.actorService.isSpam(saved.getTitle());
 
+		return saved;
+	}
+
+	//Save for internal operations such as a cross-authorized requests.
+	public Activity saveInternal(final Activity activity) {
+		Assert.notNull(activity);
+
+		//Assertion that the user modifying this activity has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("AUDITOR"));
+
+		final Activity saved = this.activityRepository.save(activity);
 		return saved;
 	}
 

@@ -25,8 +25,8 @@
 
 <%-- Stored message variables --%>
 
-<spring:message code="audit.moment" var="moment" />
 <spring:message code="audit.negative" var="negative" />
+<spring:message code="audit.moment" var="moment" />
 <spring:message code="audit.dateInt" var="formatDate" />
 
 	<%-- For the selected audit received as model, display the following information: --%>

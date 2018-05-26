@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.MiscellaneousRecordRepository;
 import domain.Curriculum;
@@ -27,6 +29,9 @@ public class MiscellaneousRecordService {
 
 	@Autowired
 	private ActorService					actorService;
+
+	@Autowired
+	private Validator						validator;
 
 
 	//Simple CRUD methods
@@ -76,4 +81,25 @@ public class MiscellaneousRecordService {
 		this.miscellaneousRecordRepository.delete(miscellaneousRecord);
 	}
 
+	//Other methods
+
+	public MiscellaneousRecord reconstruct(final MiscellaneousRecord miscellaneousRecord, final BindingResult binding) {
+		MiscellaneousRecord result;
+
+		if (miscellaneousRecord.getId() == 0) {
+			result = this.create(miscellaneousRecord.getCurriculum().getId());
+			result.setComments(miscellaneousRecord.getComments());
+			result.setLink(miscellaneousRecord.getLink());
+			result.setTitle(miscellaneousRecord.getTitle());
+		} else {
+			result = this.findOne(miscellaneousRecord.getId());
+			result.setComments(miscellaneousRecord.getComments());
+			result.setLink(miscellaneousRecord.getLink());
+			result.setTitle(miscellaneousRecord.getTitle());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
+	}
 }

@@ -18,7 +18,7 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@taglib prefix="security"	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
-<%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
+<%@taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
 <security:authorize access="permitAll()">
 
@@ -59,6 +59,12 @@
 	<br/>
 	<acme:displayField code="curriculum.profile" path="${curriculum.personalRecord.profile}" />
 	<br/>
+	
+	<security:authorize access="hasRole('INSTRUCTOR')">
+		<acme:link code="curriculum.personal.edit" url="personalRecord/instructor/edit.do" id="${curriculum.id}" column="false" />
+		<br/>
+		<br/>
+	</security:authorize>
 
 	<jstl:out value="${educationRecords}" />
 	<br/>
@@ -81,7 +87,15 @@
 		
 		<display:column property="comments" title="${comments}" sortable="true" />
 		
+		<acme:link code="curriculum.edit" url="educationRecord/instructor/edit.do" id="${row.id}" column="true" />
+		
 	</display:table>
+	
+	<security:authorize access="hasRole('INSTRUCTOR')">
+		<acme:link code="curriculum.education.create" url="educationRecord/instructor/create.do" id="${curriculum.id}" column="false" />
+		<br/>
+		<br/>
+	</security:authorize>
 	
 	<jstl:out value="${professionalRecords}" />
 	<br/>
@@ -104,7 +118,15 @@
 		
 		<display:column property="comments" title="${comments}" sortable="true" />
 		
+		<acme:link code="curriculum.edit" url="professionalRecord/instructor/edit.do" id="${row.id}" column="true" />
+		
 	</display:table>
+	
+	<security:authorize access="hasRole('INSTRUCTOR')">
+		<acme:link code="curriculum.professional.create" url="professionalRecord/instructor/create.do" id="${curriculum.id}" column="false" />
+		<br/>
+		<br/>
+	</security:authorize>
 	
 	<jstl:out value="${endorserRecords}" />
 	<br/>
@@ -121,7 +143,15 @@
 		
 		<display:column property="comments" title="${comments}" sortable="true" />
 		
+		<acme:link code="curriculum.edit" url="endorserRecord/instructor/edit.do" id="${row.id}" column="true" />
+		
 	</display:table>
+	
+	<security:authorize access="hasRole('INSTRUCTOR')">
+		<acme:link code="curriculum.endorser.create" url="endorserRecord/instructor/create.do" id="${curriculum.id}" column="false" />
+		<br/>
+		<br/>
+	</security:authorize>
 	
 	<jstl:out value="${miscellaneousRecords}" />
 	<br/>
@@ -134,8 +164,18 @@
 		
 		<display:column property="comments" title="${comments}" sortable="true" />
 		
+		<acme:link code="curriculum.edit" url="miscellaneousRecord/instructor/edit.do" id="${row.id}" column="true" />
+		
 	</display:table>
 	
-	<acme:cancel code="curriculum.return" url="instructor/list.do" />
+	<security:authorize access="hasRole('INSTRUCTOR')">
+		<acme:link code="curriculum.miscellaneous.create" url="miscellaneousRecord/instructor/create.do" id="${curriculum.id}" column="false" />
+		<br/>
+		<br/>
+	</security:authorize>
+	
+	<security:authorize access="!hasRole('INSTRUCTOR')">
+		<acme:cancel code="curriculum.return" url="instructor/list.do" />
+	</security:authorize>
 
 </security:authorize>

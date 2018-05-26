@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import domain.Competition;
 import domain.Resort;
 
 @Repository
@@ -35,4 +36,7 @@ public interface ResortRepository extends JpaRepository<Resort, Integer> {
 	//The ratio of resorts with an audit record.
 	@Query("select (select count(r) from Resort r where r.audits.size > 0)*1.0/count(r) from Resort r")
 	Double ratioResortsWithAudit();
+
+	@Query("select r from Resort r where ?1 member of r.competitions")
+	Resort resortWithCompetition(Competition competition);
 }

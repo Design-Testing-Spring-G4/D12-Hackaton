@@ -46,7 +46,17 @@
 					</security:authorize>
 					
 					<security:authorize access="hasRole('INSTRUCTOR')">
+						<li><a href="curriculum/instructor/display.do"><spring:message code="master.page.curriculum.instructor" /> </a></li>
 						<li><a href="lesson/instructor/list.do"><spring:message code="master.page.lesson.instructor" /> </a></li>
+					</security:authorize>
+					
+					<security:authorize access="hasRole('AUDITOR')">
+						<li><a href="note/auditor/list.do"><spring:message code="master.page.note.auditor" /> </a></li>
+						<li><a href="audit/auditor/list.do"><spring:message code="master.page.audit.auditor" /> </a></li>
+					</security:authorize>
+					
+					<security:authorize access="hasRole('SPONSOR')">
+						<li><a href="competition/sponsor/list.do"><spring:message code="master.page.competition.sponsor" /> </a></li>
 					</security:authorize>
 					
 					<li><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>

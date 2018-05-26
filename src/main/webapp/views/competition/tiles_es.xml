@@ -19,5 +19,10 @@
 		<put-attribute name="title" value="Mostrar competición" />
 		<put-attribute name="body" value="/views/competition/display.jsp" />
 	</definition>
+	
+	<definition name="competition/edit" extends="master.page">
+		<put-attribute name="title" value="Datos de competición" />
+		<put-attribute name="body" value="/views/competition/edit.jsp" />
+	</definition>
 
 </tiles-definitions>

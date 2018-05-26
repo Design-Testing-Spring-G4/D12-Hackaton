@@ -26,9 +26,6 @@
 
 <spring:message code="folder.name" var="name" />
 <spring:message code="folder.parent" var="parent" />
-<spring:message code="folder.create" var="create" />
-<spring:message code="mailMessage.create" var="createMailMessage" />
-<spring:message code="mailMessage.broadcast" var="broadcast" />
 
 <security:authorize access="isAuthenticated()">
 
@@ -45,27 +42,24 @@
 
 	<%-- Links towards display, apply, edit and cancel views --%>
 	
-	<acme:link code="folder.mailMessage.text" url="mailMessage/list.do" id="${row.id}" />
+	<acme:link code="folder.mailMessage.text" url="mailMessage/list.do" id="${row.id}" column="true" />
 	
-	<acme:link code="folder.children" url="folder/childrenList.do" id="${row.id}" />
+	<acme:link code="folder.children" url="folder/childrenList.do" id="${row.id}" column="true" />
 
 	<display:column>
-	<jstl:if test="${row.system eq false}">
-		<acme:link code="folder.edit" url="folder/edit.do" id="${row.id}" />
-	</jstl:if>
+		<jstl:if test="${row.system eq false}">
+			<acme:link code="folder.edit" url="folder/edit.do" id="${row.id}" column="false" />
+		</jstl:if>
 	</display:column>
 	
 </display:table>
 
-<spring:url var="createUrl" value="folder/create.do"/>
-	<a href="${createUrl}"><jstl:out value="${create}"/></a>
+<acme:link code="folder.create" url="folder/create.do" column="false" />
 
-<spring:url var="createMailMessageUrl" value="mailMessage/create.do"/>
-	<a href="${createMailMessageUrl}"><jstl:out value="${createMailMessage}"/></a>
-	
+<acme:link code="mailMessage.create" url="mailMessage/create.do" column="false" />
+
 <security:authorize access="hasRole('ADMIN')">
-	<spring:url var="broadcastUrl" value="mailMessage/administrator/create.do"/>
-		<a href="${broadcastUrl}"><jstl:out value="${broadcast}"/></a>
+	<acme:link code="mailMessage.broadcast" url="mailMessage/administrator/create.do" column="false" />
 </security:authorize>
 	
 </security:authorize>

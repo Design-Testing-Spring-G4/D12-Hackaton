@@ -32,8 +32,9 @@
 <spring:message code="competition.startDate" var="startDate" />
 <spring:message code="competition.endDate" var="endDate" />
 <spring:message code="competition.maxParticipants" var="maxParticipants" />
-<spring:message code="competition.display" var="display" />
 <spring:message code="competition.dateInt" var="formatDate" />
+
+<jsp:useBean id="now" class="java.util.Date"/>
 
 	<%-- Listing grid --%>
 
@@ -57,24 +58,27 @@
 		<display:column property="maxParticipants" title="${maxParticipants}" sortable="true" />
 
 		<%-- Links towards edition, display and others --%>
+
+		<acme:link code="competition.display" url="competition/display.do" id="${row.id}" id2="${varId}" column="true" />
 		
-		<spring:url var="displayUrl" value="competition/display.do">
-			<spring:param name="varId" value="${row.id}" />
-			<spring:param name="varId2" value="${varId}" />
-		</spring:url>
+		<acme:link code="competition.participants" url="actor/list.do" id="${row.id}" column="true"/>
 		
-		<display:column>
-			<a href="${displayUrl}"><jstl:out value="${display}" /></a>
-		</display:column>
+		<security:authorize access="hasRole('SPONSOR')">
+			<jstl:if test="${row.startDate > now}">
+				<acme:link code="competition.edit" url="competition/sponsor/edit.do" id="${row.id}" column="true" />
+			</jstl:if>
+			
+			<acme:link code="competition.suggestions" url="suggestion/sponsor/list.do" id="${row.id}" column="true" />
+		</security:authorize>
 		
-		<acme:link code="competition.participants" url="actor/list.do" id="${row.id}" />
-		
-		<security:authorize access="isAuthenticated()">
-			<acme:link code="competition.suggestion" url="suggestion/actor/create.do" id="${row.id}"/>
+		<security:authorize access="isAuthenticated() && !hasRole('SPONSOR')">
+			<acme:link code="competition.suggestion" url="suggestion/actor/create.do" id="${row.id}" column="true" />
 		</security:authorize>
 		
 	</display:table>
 	
-	<acme:cancel code="competition.return" url="resort/list.do" />
-
+	<security:authorize access="!hasRole('SPONSOR')">
+		<acme:cancel code="competition.return" url="resort/list.do" />
+	</security:authorize>
+	
 </security:authorize>

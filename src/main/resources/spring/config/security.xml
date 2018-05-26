@@ -68,6 +68,19 @@
 		<security:intercept-url pattern="/reservation/user/*" access="hasRole('USER')" />
 		
 		<security:intercept-url pattern="/lesson/instructor/*" access="hasRole('INSTRUCTOR')" />
+		<security:intercept-url pattern="/curriculum/instructor/*" access="hasRole('INSTRUCTOR')" />
+		<security:intercept-url pattern="/personalRecord/instructor/*" access="hasRole('INSTRUCTOR')" />
+		<security:intercept-url pattern="/educationRecord/instructor/*" access="hasRole('INSTRUCTOR')" />
+		<security:intercept-url pattern="/professionalRecord/instructor/*" access="hasRole('INSTRUCTOR')" />
+		<security:intercept-url pattern="/endorserRecord/instructor/*" access="hasRole('INSTRUCTOR')" />
+		<security:intercept-url pattern="/miscellaneousRecord/instructor/*" access="hasRole('INSTRUCTOR')" />
+		<security:intercept-url pattern="/note/instructor/*" access="hasRole('INSTRUCTOR')" />
+		
+		<security:intercept-url pattern="/note/auditor/*" access="hasRole('AUDITOR')" />
+		<security:intercept-url pattern="/audit/auditor/*" access="hasRole('AUDITOR')" />
+		
+		<security:intercept-url pattern="/competition/sponsor/*" access="hasRole('SPONSOR')" />
+		<security:intercept-url pattern="/suggestion/sponsor/*" access="hasRole('SPONSOR')" />
 		
 		<security:intercept-url pattern="/mailMessage/administrator/*" access="hasRole('ADMIN')" />
 		

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.ProfessionalRecordRepository;
 import domain.Curriculum;
@@ -28,6 +30,9 @@ public class ProfessionalRecordService {
 
 	@Autowired
 	private ActorService					actorService;
+
+	@Autowired
+	private Validator						validator;
 
 
 	//Simple CRUD methods
@@ -74,9 +79,37 @@ public class ProfessionalRecordService {
 		Assert.notNull(professionalRecord);
 
 		//Assertion that the user deleting this professional record has the correct privilege.
-		final ProfessionalRecord validator = this.findOne(professionalRecord.getId());
+		final ProfessionalRecord validator = this.professionalRecordRepository.findOne(professionalRecord.getId());
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getCurriculum().getInstructor().getId());
 
 		this.professionalRecordRepository.delete(professionalRecord);
+	}
+
+	//Other methods
+
+	public ProfessionalRecord reconstruct(final ProfessionalRecord professionalRecord, final BindingResult binding) {
+		ProfessionalRecord result;
+
+		if (professionalRecord.getId() == 0) {
+			result = this.create(professionalRecord.getCurriculum().getId());
+			result.setAttachment(professionalRecord.getAttachment());
+			result.setComments(professionalRecord.getComments());
+			result.setCompany(professionalRecord.getCompany());
+			result.setPeriodEnd(professionalRecord.getPeriodEnd());
+			result.setPeriodStart(professionalRecord.getPeriodStart());
+			result.setRole(professionalRecord.getRole());
+		} else {
+			result = this.findOne(professionalRecord.getId());
+			result.setAttachment(professionalRecord.getAttachment());
+			result.setComments(professionalRecord.getComments());
+			result.setCompany(professionalRecord.getCompany());
+			result.setPeriodEnd(professionalRecord.getPeriodEnd());
+			result.setPeriodStart(professionalRecord.getPeriodStart());
+			result.setRole(professionalRecord.getRole());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
 	}
 }

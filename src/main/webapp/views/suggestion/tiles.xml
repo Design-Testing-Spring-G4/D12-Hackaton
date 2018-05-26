@@ -14,5 +14,10 @@
 		<put-attribute name="title" value="New suggestion" />
 		<put-attribute name="body" value="/views/suggestion/edit.jsp" />
 	</definition>
+	
+	<definition name="suggestion/list" extends="master.page">
+		<put-attribute name="title" value="Suggestion box" />
+		<put-attribute name="body" value="/views/suggestion/list.jsp" />
+	</definition>
 
 </tiles-definitions>

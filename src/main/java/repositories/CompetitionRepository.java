@@ -1,6 +1,7 @@
 
 package repositories;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -20,4 +21,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Intege
 	//The top five competitions by maximum number of participants allowed.
 	@Query("select c from Competition c order by c.maxParticipants desc")
 	List<Competition> topFiveCompetitionsMaxParticipants(Pageable pageable);
+
+	@Query("select c from Competition c where c.banner != ''")
+	Collection<Competition> competitionsWithBanner();
 }

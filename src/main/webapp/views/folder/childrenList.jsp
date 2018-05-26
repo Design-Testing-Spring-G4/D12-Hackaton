@@ -21,8 +21,6 @@
 
 <spring:message code="folder.name" var="name" />
 <spring:message code="folder.parent" var="parent" />
-<spring:message code="folder.create" var="create" />
-<spring:message code="folder.return" var="msgReturn"/>
 
 <%-- Listing grid --%>
 
@@ -39,18 +37,17 @@
 
 	<%-- Links towards display, apply, edit and cancel views --%>
 	
-	<acme:link code="folder.mailMessage.text" url="mailMessage/list.do" id="${row.id}" />
+	<acme:link code="folder.mailMessage.text" url="mailMessage/list.do" id="${row.id}" column="true" />
 	
-	<acme:link code="folder.children" url="folder/childrenList.do" id="${row.id}" />
+	<acme:link code="folder.children" url="folder/childrenList.do" id="${row.id}" column="true" />
 	
-	<acme:link code="folder.edit" url="folder/edit.do" id="${row.id}" />
+	<acme:link code="folder.edit" url="folder/edit.do" id="${row.id}" column="true" />
 
 </display:table>
 
-<spring:url var="createUrl" value="folder/create.do"/>
-<a href="${createUrl}"><jstl:out value="${create}"/></a>
+<acme:link code="folder.create" url="folder/create.do" column="false" />
 <br/>
 
-<a href="folder/list.do"><jstl:out value="${msgReturn}" /></a>
+<acme:cancel code="folder.return" url="folder/list.do" />
 
 </security:authorize>

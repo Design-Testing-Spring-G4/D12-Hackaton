@@ -67,7 +67,7 @@ public class NoteManagerController extends AbstractController {
 		else
 			try {
 				final Note note = this.noteService.reconstruct(n, binding);
-				this.noteService.saveMng(note);
+				this.noteService.saveInternal(note);
 				result = new ModelAndView("redirect:/activity/manager/list.do");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(n, "note.commit.error");

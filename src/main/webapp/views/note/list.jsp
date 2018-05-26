@@ -23,7 +23,23 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<security:authorize access="hasRole('MANAGER')">
+<jstl:choose>
+	<jstl:when test="${requestURI == 'note/manager/list.do'}">
+		<jstl:set var="access" value="hasRole('MANAGER')"/>
+	</jstl:when>
+	<jstl:otherwise>
+		<jstl:choose>
+			<jstl:when test="${requestURI == 'note/auditor/list.do'}" >
+				<jstl:set var="access" value="hasRole('AUDITOR')"/>
+			</jstl:when>
+			<jstl:otherwise>
+				<jstl:set var="access" value="hasRole('INSTRUCTOR')"/>
+			</jstl:otherwise>
+		</jstl:choose>
+			</jstl:otherwise>
+</jstl:choose>
+
+<security:authorize access="${access}">
 
 <%-- Stored message variables --%>
 
@@ -54,10 +70,18 @@
 	
 		<%-- Links towards edition, display and others --%>
 		
-		<acme:link code="note.edit" url="note/manager/edit.do" id="${row.id}" />
+		<security:authorize access="hasRole('MANAGER')">
+			<acme:link code="note.edit" url="${editUrl}" id="note/manager/edit.do" column="true" />
+		</security:authorize>
+		
+		<security:authorize access="hasRole('INSTRUCTOR')">
+			<acme:link code="note.edit" url="${editUrl}" id="note/instructor/edit.do" column="true" />
+		</security:authorize>
 		
 	</display:table>
 	
-	<acme:cancel code="note.return" url="activity/manager/list.do" />
-
+	<security:authorize access="hasRole('MANAGER')">
+		<acme:cancel code="note.return" url="activity/manager/list.do" />
+	</security:authorize>
+	
 </security:authorize>

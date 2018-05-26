@@ -11,6 +11,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.AuditRepository;
 import domain.Audit;
@@ -33,6 +35,9 @@ public class AuditService {
 	@Autowired
 	private ResortService	resortService;
 
+	@Autowired
+	private Validator		validator;
+
 
 	//Simple CRUD methods
 
@@ -43,7 +48,6 @@ public class AuditService {
 		final Auditor a = (Auditor) this.actorService.findByPrincipal();
 		audit.setAuditor(a);
 		audit.setResort(this.resortService.findOne(varId));
-		audit.setMoment(new Date(System.currentTimeMillis() - 1));
 
 		return audit;
 	}
@@ -70,6 +74,8 @@ public class AuditService {
 
 		//Assertion that the user modifying this audit has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == audit.getAuditor().getId());
+
+		audit.setMoment(new Date(System.currentTimeMillis() - 1));
 
 		final Audit saved = this.auditRepository.save(audit);
 
@@ -98,6 +104,28 @@ public class AuditService {
 	}
 
 	//Other methods
+
+	public Audit reconstruct(final Audit audit, final BindingResult binding) {
+		Audit result;
+
+		if (audit.getId() == 0) {
+			result = this.create(audit.getResort().getId());
+			result.setAttachments(audit.getAttachments());
+			result.setDescription(audit.getDescription());
+			result.setFinalMode(audit.isFinalMode());
+			result.setTitle(audit.getTitle());
+		} else {
+			result = this.findOne(audit.getId());
+			result.setAttachments(audit.getAttachments());
+			result.setDescription(audit.getDescription());
+			result.setFinalMode(audit.isFinalMode());
+			result.setTitle(audit.getTitle());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
+	}
 
 	public boolean isValidURLCollection(final String attachments) {
 		boolean result = false;

@@ -30,7 +30,6 @@
 <spring:message code="instructor.name" var="name" />
 <spring:message code="instructor.surname" var="surname" />
 <spring:message code="instructor.email" var="email" />
-<spring:message code="instructor.curriculum" var="curriculum" />
 
 	<%-- Listing grid --%>
 
@@ -47,18 +46,15 @@
 		
 		<%-- Links towards edition, display and others --%>
 		
-		<acme:link code="instructor.display" url="actor/display.do" id="${row.id}" />
+		<acme:link code="instructor.display" url="actor/display.do" id="${row.id}" column="true" />
 		
 		<display:column>
 			<jstl:if test="${row.curriculum != null}">
-				<spring:url var="curriculumDisplay" value="curriculum/display.do">
-					<spring:param name="varId" value="${row.id}" />
-				</spring:url>
-				<a href="${curriculumDisplay}"><jstl:out value="${curriculum}" /></a>
+				<acme:link code="instructor.curriculum" url="curriculum/display.do" id="${row.id}" column="false" />
 			</jstl:if>
 		</display:column>
 		
-		<acme:link code="instructor.lessons" url="lesson/list.do" id="${row.id}" />
+		<acme:link code="instructor.lessons" url="lesson/list.do" id="${row.id}" column="true" />
 
 	</display:table>
 

@@ -22,10 +22,6 @@
 
 <security:authorize access="permitAll()">
 
-<%-- Stored message variables --%>
-
-<spring:message code="actor.socialIdentities" var="socialIdentities" />
-
 <%-- For the selected actor received as model, display the following information: --%>
 
 	<acme:displayField code="actor.name" path="${actor.name}" />
@@ -39,10 +35,7 @@
 	<acme:displayField code="actor.address" path="${actor.address}" />
 	<br/>
 	
-	<spring:url var="listSocId" value="socialIdentity/list.do">
-			<spring:param name="varId" value="${actor.id}" />
-	</spring:url>
-	<a href="${listSocId}"><jstl:out value="${socialIdentities}" /></a>
+	<acme:link code="actor.socialIdentities" url="socialIdentity/list.do" id="${actor.id}" column="false" />
 	<br/>
 
 </security:authorize>

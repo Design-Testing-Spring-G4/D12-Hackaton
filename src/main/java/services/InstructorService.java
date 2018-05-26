@@ -14,6 +14,7 @@ import repositories.InstructorRepository;
 import security.Authority;
 import security.UserAccount;
 import domain.Configuration;
+import domain.Curriculum;
 import domain.Folder;
 import domain.Instructor;
 import domain.Participation;
@@ -39,6 +40,9 @@ public class InstructorService {
 
 	@Autowired
 	private ConfigurationService	configurationService;
+
+	@Autowired
+	private CurriculumService		curriculumService;
 
 
 	//Simple CRUD Methods
@@ -80,13 +84,15 @@ public class InstructorService {
 		}
 
 		final Instructor saved2;
-		//For new actors, generate the default system folders.
+		//For new instructors, generate the curriculum and default system folders.
 		if (instructor.getId() != 0) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == instructor.getId());
 			saved2 = this.instructorRepository.save(instructor);
 		} else {
 			final Instructor saved = this.instructorRepository.save(instructor);
 			saved.setFolders(this.folderService.generateDefaultFolders(saved));
+			final Curriculum curriculum = this.curriculumService.create();
+			saved.setCurriculum(curriculum);
 			saved2 = this.instructorRepository.save(saved);
 		}
 

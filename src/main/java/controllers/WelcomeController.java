@@ -11,7 +11,9 @@
 package controllers;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.CompetitionService;
 import services.ConfigurationService;
+import domain.Competition;
 import domain.Configuration;
 
 @Controller
@@ -38,6 +42,9 @@ public class WelcomeController extends AbstractController {
 	@Autowired
 	private ConfigurationService	configurationService;
 
+	@Autowired
+	private CompetitionService		competitionService;
+
 
 	// Index ------------------------------------------------------------------		
 
@@ -51,10 +58,15 @@ public class WelcomeController extends AbstractController {
 		moment = formatter.format(new Date());
 
 		final Configuration configuration = this.configurationService.findAll().iterator().next();
+		final Collection<Competition> competitions = this.competitionService.competitionsWithBanner();
+		final Random rnd = new Random();
+		final int i = rnd.nextInt(competitions.size());
+		final Competition competition = (Competition) competitions.toArray()[i];
 
 		result = new ModelAndView("welcome/index");
 		result.addObject("name", name);
 		result.addObject("moment", moment);
+		result.addObject("competition", competition);
 		result.addObject("configuration", configuration);
 
 		return result;

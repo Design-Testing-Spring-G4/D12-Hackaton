@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.hibernate.validator.constraints.URL;
@@ -33,31 +32,28 @@ public class PersonalRecord extends DomainEntity {
 
 	//Getters
 
-	@NotBlank
+	@NotNull
 	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getName() {
 		return this.name;
 	}
 
-	@NotBlank
 	@URL
 	public String getPhoto() {
 		return this.photo;
 	}
 
 	@Email
-	@NotBlank
 	public String getEmail() {
 		return this.email;
 	}
 
-	@NotBlank
+	@NotNull
 	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getPhone() {
 		return this.phone;
 	}
 
-	@NotBlank
 	@URL
 	public String getProfile() {
 		return this.profile;

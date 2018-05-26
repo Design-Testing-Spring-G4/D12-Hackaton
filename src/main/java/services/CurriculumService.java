@@ -19,6 +19,7 @@ import domain.EducationRecord;
 import domain.EndorserRecord;
 import domain.Instructor;
 import domain.MiscellaneousRecord;
+import domain.PersonalRecord;
 import domain.ProfessionalRecord;
 
 @Service
@@ -84,8 +85,12 @@ public class CurriculumService {
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == curriculum.getInstructor().getId());
 
 		final Curriculum saved = this.curriculumRepository.save(curriculum);
+		final PersonalRecord personalRecord = this.personalRecordService.create(saved.getId());
+		saved.setPersonalRecord(personalRecord);
 
-		return saved;
+		final Curriculum saved2 = this.curriculumRepository.save(saved);
+
+		return saved2;
 	}
 
 	public void delete(final Curriculum curriculum) {

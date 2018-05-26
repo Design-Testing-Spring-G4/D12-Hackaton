@@ -47,13 +47,13 @@
 		<%-- Links towards display, edition and others --%>
 		
 		<jstl:if test="${requestURI == 'activity/manager/manage.do'}">
-			<acme:link code="actor.activity.manage" url="activity/manager/set.do" id="${row.id}" />
+			<acme:link code="actor.activity.manage" url="activity/manager/set.do" id="${row.id}" column="true"/>
 		</jstl:if>
 
 	</display:table>
 	
 	<jstl:if test="${requestURI != 'activity/manager/manage.do'}">
-		<spring:url var="returnUtl" value="competition/list.do">
+		<spring:url var="returnUrl" value="competition/list.do">
 			<spring:param name="varId" value="${varId}" />
 		</spring:url>
 		

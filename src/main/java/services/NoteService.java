@@ -72,13 +72,14 @@ public class NoteService {
 		return saved;
 	}
 
-	//Specific save for a manager's reply.
-	public Note saveMng(final Note note) {
+	//Specific save for reply.
+	public Note saveInternal(final Note note) {
 		Assert.notNull(note);
 
 		//Assertion that the user modifying this note has the correct privilege.
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("MANAGER"));
+		final String auth = authentication.getAuthorities().toArray()[0].toString();
+		Assert.isTrue(auth.equals("MANAGER") || auth.equals("INSTRUCTOR"));
 
 		note.setReplyMoment(new Date(System.currentTimeMillis() - 1));
 

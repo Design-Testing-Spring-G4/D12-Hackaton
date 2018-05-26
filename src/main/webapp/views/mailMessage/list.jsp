@@ -28,11 +28,6 @@
 <spring:message code="mailMessage.priority" var="priority" />
 <spring:message code="mailMessage.subject" var="subject" />
 
-<spring:message code="mailMessage.display" var="display" />
-<spring:message code="mailMessage.move" var="move" />
-<spring:message code="mailMessage.delete" var="delete" />
-<spring:message code="mailMessage.return" var="returnMsg" />
-
 <security:authorize access="isAuthenticated()">
 
 <%-- Listing grid --%>
@@ -52,13 +47,14 @@
 
 	<%-- Links towards display, apply, edit and cancel views --%>
 
-	<acme:link code="mailMessage.display" url="mailMessage/display.do" id="${row.id}" />
-	<acme:link code="mailMessage.move" url="mailMessage/edit.do" id="${row.id}" />
-	<acme:link code="mailMessage.delete" url="mailMessage/delete.do" id="${row.id}" />
+	<acme:link code="mailMessage.display" url="mailMessage/display.do" id="${row.id}" column="true" />
+	
+	<acme:link code="mailMessage.move" url="mailMessage/edit.do" id="${row.id}" column="true" />
+	
+	<acme:link code="mailMessage.delete" url="mailMessage/delete.do" id="${row.id}" column="true" />
 	
 </display:table>
 
-<spring:url var="returnUrl" value="folder/list.do"/>
-<a href="${returnUrl}"><jstl:out value="${returnMsg}" /></a>
+<acme:cancel code="mailMessage.return" url="folder/list.do" />
 
 </security:authorize>

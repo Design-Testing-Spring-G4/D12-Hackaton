@@ -25,7 +25,9 @@
  
 <%@ attribute name="code" required="true" %>
 <%@ attribute name="url" required="true" %>
+<%@ attribute name="column" required="true" %>
 <%@ attribute name="id" required="false" %>
+<%@ attribute name="id2" required="false" %>
 
 <spring:message code="${code}" var="message"/>
 
@@ -35,9 +37,19 @@
 	<jstl:if test="${id != null}">
 		<spring:param name="varId" value="${id}" />
 	</jstl:if>
+	<jstl:if test="${id2 != null}">
+		<spring:param name="varId2" value="${id2}" />
+	</jstl:if>
 </spring:url>
 
-<display:column>
-	<a href="${link}"><jstl:out value="${message}" /></a>
-</display:column>
+<jstl:choose>
+	<jstl:when test="${column eq true}">
+		<display:column>
+			<a href="${link}"><jstl:out value="${message}" /></a>
+		</display:column>
+	</jstl:when>
+	<jstl:otherwise>
+		<a href="${link}"><jstl:out value="${message}" /></a>
+	</jstl:otherwise>
+</jstl:choose>
 
