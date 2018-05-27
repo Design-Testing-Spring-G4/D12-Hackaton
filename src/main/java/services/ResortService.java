@@ -106,7 +106,8 @@ public class ResortService {
 		Assert.notNull(resort);
 		//Assertion that the user modifying this resort has the correct privilege.
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("SPONSOR"));
+		final String auth = authentication.getAuthorities().toArray()[0].toString();
+		Assert.isTrue(auth.equals("SPONSOR") || auth.equals("ADMIN"));
 		final Resort saved = this.resortRepository.save(resort);
 		return saved;
 	}

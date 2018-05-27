@@ -156,6 +156,30 @@ public class MailMessageService {
 		}
 	}
 
+	//Sends a message to the user and manager associated to a reservation.
+	public void applicationStatusNotification(final int varId, final int varId2) {
+		Assert.notNull(varId);
+		Assert.notNull(varId2);
+
+		final Folder folder = this.folderService.getSystemFolderByName(varId, "Notification box");
+
+		final MailMessage n1 = this.create();
+		n1.setSubject("Application status changed");
+		n1.setBody("The status in one of your applications has changed");
+		n1.setReceiver(this.actorService.findOne(varId));
+		n1.setFolder(folder);
+		this.save(n1);
+
+		final Folder folder2 = this.folderService.getSystemFolderByName(varId2, "Notification box");
+
+		final MailMessage n2 = this.create();
+		n2.setSubject("Application status changed");
+		n2.setBody("The status in one of your applications has changed");
+		n2.setReceiver(this.actorService.findOne(varId2));
+		n2.setFolder(folder2);
+		this.save(n2);
+	}
+
 	public Collection<MailMessage> mailMessagesFromFolder(final int id) {
 		return this.mailMessageRepository.mailMessagesFromFolder(id);
 	}

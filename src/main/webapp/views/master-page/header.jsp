@@ -30,7 +30,7 @@
 			        (<security:authentication property="principal.username" />)
 				</a>
 				<ul>
-					<li class="arrow"></li>				
+					<li class="arrow"></li>			
 					<li><a href="actor/edit.do"><spring:message code="master.page.actor.edit" /> </a></li>
 					<li><a href="socialIdentity/actor/list.do"><spring:message code="master.page.socialIdentity.list" /> </a></li>
 					<li><a href="folder/list.do"><spring:message code="master.page.folder.list" /> </a></li>
@@ -59,21 +59,45 @@
 						<li><a href="competition/sponsor/list.do"><spring:message code="master.page.competition.sponsor" /> </a></li>
 					</security:authorize>
 					
+					<security:authorize access="hasRole('USER') || hasRole('INSTRUCTOR')">
+						<li><a href="participation/actor/list.do"><spring:message code="master.page.participation.actor" /> </a></li>
+					</security:authorize>
+					
+					<security:authorize access="hasRole('ADMIN')">
+						<li><a href="tag/administrator/list.do"><spring:message code="master.page.tag.admin" /> </a></li>
+						<li><a href="legalText/administrator/list.do"><spring:message code="master.page.legalText.admin" /> </a></li>
+						<li><a href="category/administrator/list.do"><spring:message code="master.page.category.admin" /> </a></li>
+						<li><a href="actor/administrator/list.do"><spring:message code="master.page.actor.admin" /> </a></li>
+						<li><a href="administrator/dashboard.do"><spring:message code="master.page.dashboard.admin" /> </a></li>
+					</security:authorize>
+					
 					<li><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
 				</ul>
 			</li>
 		</security:authorize>
 		
-				<security:authorize access="isAnonymous()">
-			<li><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
+		<security:authorize access="isAnonymous() || hasRole('ADMIN')">
+			<security:authorize access="isAnonymous()">
+				<li><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
+			</security:authorize>
 			<li>
 				<a class="fNiv">
 					<spring:message code="master.page.register" />
 				</a>
 				<ul>
 					<li class="arrow"></li>
-					<li><a href="user/create.do"><spring:message code="master.page.register.user" /></a></li>
-					<li><a href="manager/create.do"><spring:message code="master.page.register.manager" /></a></li>
+					
+					<security:authorize access="isAnonymous()">
+						<li><a href="user/create.do"><spring:message code="master.page.register.user" /></a></li>
+					</security:authorize>
+					
+					<security:authorize access="isAnonymous() || hasRole('ADMIN')">
+						<li><a href="manager/create.do"><spring:message code="master.page.register.manager" /></a></li>
+					</security:authorize>
+					
+					<security:authorize access="hasRole('ADMIN')">
+						<li><a href="instructor/create.do"><spring:message code="master.page.register.instructor" /></a></li>
+					</security:authorize>
 				</ul>
 			</li>
 		</security:authorize>

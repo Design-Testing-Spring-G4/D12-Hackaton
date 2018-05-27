@@ -55,7 +55,7 @@
 	
 	<acme:submit name="save" code="resort.save" />
 	
-	<jstl:if test="${folder.id != 0}">
+	<jstl:if test="${resort.id != 0}">
 		<acme:delete code="resort.delete" confirm="resort.confirm.delete"/>
 	</jstl:if>
 	

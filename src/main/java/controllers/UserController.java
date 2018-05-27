@@ -58,7 +58,6 @@ public class UserController extends AbstractController {
 			}
 		return result;
 	}
-
 	//Ancillary methods
 
 	protected ModelAndView createEditModelAndView(final ActorRegisterForm arf) {

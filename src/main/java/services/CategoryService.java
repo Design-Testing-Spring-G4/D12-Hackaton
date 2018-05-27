@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.CategoryRepository;
 import domain.Category;
@@ -28,6 +30,9 @@ public class CategoryService {
 
 	@Autowired
 	private ActorService		actorService;
+
+	@Autowired
+	private Validator			validator;
 
 
 	//Simple CRUD methods
@@ -96,11 +101,34 @@ public class CategoryService {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
-		this.categoryRepository.delete(category);
+		final Category def = this.categoryRepository.defaultCategory();
+		def.getResorts().addAll(category.getResorts());
+		this.categoryRepository.save(def);
 
 		final Category parent = category.getParent();
 		parent.getChildren().remove(category);
 		this.categoryRepository.save(parent);
 
+		this.categoryRepository.delete(category);
+	}
+
+	//Other methods
+
+	public Category reconstruct(final Category category, final BindingResult binding) {
+		Category result;
+
+		if (category.getId() == 0) {
+			result = this.create();
+			result.setName(category.getName());
+			result.setParent(category.getParent());
+		} else {
+			result = this.findOne(category.getId());
+			result.setName(category.getName());
+			result.setParent(category.getParent());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
 	}
 }

@@ -46,6 +46,11 @@
 		<value>/views/professionalRecord/messages</value>
 		<value>/views/endorserRecord/messages</value>
 		<value>/views/miscellaneousRecord/messages</value>
+		<value>/views/participation/messages</value>
+		<value>/views/tag/messages</value>
+		<value>/views/tagValue/messages</value>
+		<value>/views/category/messages</value>
+		<value>/views/administrator/messages</value>
 	</util:list>
 
 </beans>

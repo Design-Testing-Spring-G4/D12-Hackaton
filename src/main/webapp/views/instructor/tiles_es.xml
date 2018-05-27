@@ -14,5 +14,10 @@
 		<put-attribute name="title" value="Instructores" />
 		<put-attribute name="body" value="/views/instructor/list.jsp" />
 	</definition>
+	
+	<definition name="instructor/edit" extends="master.page">
+		<put-attribute name="title" value="Cuenta de instructor" />
+		<put-attribute name="body" value="/views/instructor/edit.jsp" />
+	</definition>
 
 </tiles-definitions>

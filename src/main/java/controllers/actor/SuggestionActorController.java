@@ -44,7 +44,13 @@ public class SuggestionActorController extends AbstractController {
 	public ModelAndView save(final Suggestion s, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (s.getTitle().isEmpty()) {
+			binding.rejectValue("title", "org.hibernate.validator.constraints.NotEmpty.message");
+			result = this.createEditModelAndView(s, "suggestion.commit.error");
+		} else if (s.getComments().isEmpty()) {
+			binding.rejectValue("comments", "org.hibernate.validator.constraints.NotEmpty.message");
+			result = this.createEditModelAndView(s, "suggestion.commit.error");
+		} else if (binding.hasErrors())
 			result = this.createEditModelAndView(s);
 		else
 			try {

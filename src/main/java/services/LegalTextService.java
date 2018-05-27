@@ -87,4 +87,8 @@ public class LegalTextService {
 	public Collection<LegalTextTable> legalTextTable() {
 		return this.legalRepository.legalTextTable();
 	}
+
+	public Collection<LegalText> legalTextsFinalMode() {
+		return this.legalRepository.legalTextsFinalMode();
+	}
 }

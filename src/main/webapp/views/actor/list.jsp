@@ -28,6 +28,8 @@
 <%-- Stored message variables --%>
 
 <spring:message code="actor.username" var="username" />
+<spring:message code="actor.ban" var="msgBan" />
+<spring:message code="actor.unban" var="msgUnban" />
 
 	<%-- Listing grid --%>
 
@@ -50,9 +52,28 @@
 			<acme:link code="actor.activity.manage" url="activity/manager/set.do" id="${row.id}" column="true"/>
 		</jstl:if>
 
+		<security:authorize access="hasRole('ADMIN')">
+			<jstl:if test="${requestURI == 'actor/administrator/list.do'}">
+				<spring:url var="banUrl" value="actor/administrator/ban.do">
+					<spring:param name="varId" value="${row.id}"/>
+				</spring:url>
+	
+				<display:column>
+					<jstl:choose>
+						<jstl:when test="${!row.userAccount.getAuthorities().isEmpty()}">
+							<a href="${banUrl}"><jstl:out value="${msgBan}" /></a>
+						</jstl:when>
+						<jstl:otherwise>
+							<a href="${banUrl}"><jstl:out value="${msgUnban}" /></a>
+						</jstl:otherwise>
+					</jstl:choose>
+				</display:column>
+			</jstl:if>
+		</security:authorize>
+
 	</display:table>
 	
-	<jstl:if test="${requestURI != 'activity/manager/manage.do'}">
+	<jstl:if test="${requestURI != 'activity/manager/manage.do' && requestURI != 'activity/administrator/list.do'}">
 		<spring:url var="returnUrl" value="competition/list.do">
 			<spring:param name="varId" value="${varId}" />
 		</spring:url>

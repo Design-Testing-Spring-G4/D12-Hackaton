@@ -152,7 +152,11 @@
 		<security:authorize access="hasRole('SPONSOR')">
 			<acme:link code="resort.competition" url="competition/sponsor/create.do" column="true" />
 		</security:authorize>
-
+		
+		<security:authorize access="hasRole('ADMIN')">
+			<acme:link code="resort.tags" url="tagValue/administrator/manage.do" id="${row.id}" column="true" />
+		</security:authorize>
+		
 	</display:table>
 	
 	<jstl:if test="${requestURI == 'resort/manager/list.do'}">

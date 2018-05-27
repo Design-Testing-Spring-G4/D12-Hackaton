@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ActivityService;
 import services.ActorService;
+import services.MailMessageService;
 import services.ReservationService;
 import services.ResortService;
 import controllers.AbstractController;
@@ -41,6 +42,9 @@ public class ReservationUserController extends AbstractController {
 
 	@Autowired
 	private ActivityService		activityService;
+
+	@Autowired
+	private MailMessageService	mailMessageService;
 
 
 	//Listing
@@ -112,7 +116,7 @@ public class ReservationUserController extends AbstractController {
 			result = this.createEditModelAndView(r);
 		else
 			try {
-				this.reservationService.save(r);
+				final Reservation saved = this.reservationService.save(r);
 				if (r.getStatus() == Status.ACCEPTED) {
 					final Date current = new Date(System.currentTimeMillis());
 					if (r.getStartDate().before(current))
@@ -121,7 +125,7 @@ public class ReservationUserController extends AbstractController {
 						result = new ModelAndView("redirect:/reservation/user/list.do");
 				} else
 					result = new ModelAndView("redirect:/resort/list.do");
-
+				this.mailMessageService.applicationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(r, "reservation.commit.error");
 			}

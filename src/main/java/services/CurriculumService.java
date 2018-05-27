@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -68,6 +70,24 @@ public class CurriculumService {
 		return curriculum;
 	}
 
+	//Method for admin-based instructor account creation.
+	public Curriculum createInternal(final Instructor instructor) {
+		final Curriculum curriculum = new Curriculum();
+
+		//Assertion that the user creating this account has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
+
+		curriculum.setInstructor(instructor);
+		curriculum.setTicker(this.generateTicker());
+		curriculum.setEducationRecord(new ArrayList<EducationRecord>());
+		curriculum.setEndorserRecord(new ArrayList<EndorserRecord>());
+		curriculum.setMiscellaneousRecord(new ArrayList<MiscellaneousRecord>());
+		curriculum.setProfessionalRecord(new ArrayList<ProfessionalRecord>());
+
+		return curriculum;
+	}
+
 	public Curriculum findOne(final int id) {
 		Assert.notNull(id);
 
@@ -87,6 +107,25 @@ public class CurriculumService {
 		final Curriculum saved = this.curriculumRepository.save(curriculum);
 		final PersonalRecord personalRecord = this.personalRecordService.create(saved.getId());
 		saved.setPersonalRecord(personalRecord);
+		this.personalRecordService.save(personalRecord);
+
+		final Curriculum saved2 = this.curriculumRepository.save(saved);
+
+		return saved2;
+	}
+
+	//Save for admin-based instructor account creation.
+	public Curriculum saveInternal(final Curriculum curriculum) {
+		Assert.notNull(curriculum);
+
+		//Assertion that the user modifying this configuration has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
+
+		final Curriculum saved = this.curriculumRepository.save(curriculum);
+		final PersonalRecord personalRecord = this.personalRecordService.create(saved.getId());
+		final PersonalRecord savedP = this.personalRecordService.saveInternal(personalRecord);
+		saved.setPersonalRecord(savedP);
 
 		final Curriculum saved2 = this.curriculumRepository.save(saved);
 

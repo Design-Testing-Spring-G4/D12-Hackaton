@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.ParticipationRepository;
 import domain.Actor;
@@ -28,6 +30,9 @@ public class ParticipationService {
 	@Autowired
 	private ActorService			actorService;
 
+	@Autowired
+	private Validator				validator;
+
 
 	//Simple CRUD methods
 
@@ -37,7 +42,7 @@ public class ParticipationService {
 
 		final Actor actor = this.actorService.findByPrincipal();
 		participation.setActor(actor);
-		participation.setStatus(Status.PENDING);
+		participation.setStatus(Status.ACCEPTED);
 
 		return participation;
 	}
@@ -75,5 +80,21 @@ public class ParticipationService {
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getActor().getId());
 
 		this.participationRepository.delete(participation);
+	}
+
+	public Participation reconstruct(final Participation participation, final BindingResult binding) {
+		Participation result;
+
+		if (participation.getId() == 0) {
+			result = this.create();
+			result.setComments(participation.getComments());
+		} else {
+			result = this.findOne(participation.getId());
+			result.setComments(participation.getComments());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
 	}
 }

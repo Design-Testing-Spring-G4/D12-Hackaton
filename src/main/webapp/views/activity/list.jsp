@@ -33,6 +33,7 @@
 <spring:message code="activity.price" var="price" />
 <spring:message code="activity.instructor" var="instructor" />
 <spring:message code="activity.negative" var="negative" />
+<spring:message code="activity.free" var="free" />
 
 	<%-- Listing grid --%>
 	
@@ -47,7 +48,16 @@
 	
 		<display:column property="category" title="${category}" sortable="true" />
 		
-		<display:column property="price" title="${price}" sortable="true" />
+		<display:column title="${price}" sortable="true">
+			<jstl:choose>
+				<jstl:when test="${row.price == 0.0}">
+					<jstl:out value="${free}" />
+				</jstl:when>
+				<jstl:otherwise>
+					<jstl:out value="${row.price}" />
+				</jstl:otherwise>
+			</jstl:choose>
+		</display:column>
 	
 		<%-- Links towards edition, display and others --%>
 		

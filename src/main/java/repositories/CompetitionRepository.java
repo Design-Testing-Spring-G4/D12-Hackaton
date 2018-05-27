@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import domain.Competition;
+import domain.Participation;
 
 @Repository
 public interface CompetitionRepository extends JpaRepository<Competition, Integer> {
@@ -24,4 +25,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Intege
 
 	@Query("select c from Competition c where c.banner != ''")
 	Collection<Competition> competitionsWithBanner();
+
+	@Query("select c from Competition c where ?1 member of c.participations")
+	Competition competitionWithParticipation(Participation participation);
 }

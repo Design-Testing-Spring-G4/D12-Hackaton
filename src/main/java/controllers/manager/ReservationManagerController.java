@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import services.ActorService;
+import services.MailMessageService;
 import services.ReservationService;
 import controllers.AbstractController;
 import domain.Manager;
@@ -32,6 +33,9 @@ public class ReservationManagerController extends AbstractController {
 
 	@Autowired
 	private ReservationService	reservationService;
+
+	@Autowired
+	private MailMessageService	mailMessageService;
 
 
 	//Listing
@@ -85,10 +89,12 @@ public class ReservationManagerController extends AbstractController {
 					reservation.setStatus(r.getStatus());
 					if (r.getStatus() == Status.REJECTED)
 						reservation.setReason(r.getReason());
-					this.reservationService.saveInternal(reservation);
+					final Reservation saved = this.reservationService.saveInternal(reservation);
 					result = new ModelAndView("redirect:/reservation/manager/list.do");
+					this.mailMessageService.applicationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
 				}
 			} catch (final Throwable oops) {
+				oops.printStackTrace();
 				result = this.createEditModelAndView(r, "reservation.commit.error");
 			}
 		return result;

@@ -107,4 +107,8 @@ public class ActorService {
 
 		return result;
 	}
+
+	public Collection<Actor> findSuspiciousActors() {
+		return this.actorRepository.findSuspiciousActors();
+	}
 }

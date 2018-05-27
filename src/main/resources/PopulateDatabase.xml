@@ -636,7 +636,9 @@
 			<list></list>
 		</property>
 		<property name="participations">
-			<list></list>
+			<list>
+				<ref bean="participation1" />
+			</list>
 		</property>
 	</bean>
 	
@@ -759,7 +761,7 @@
 	
 	<bean id="participation2" class="domain.Participation">
 		<property name="moment" value="03/03/2018 15:29" />
-		<property name="status" value="PENDING" />
+		<property name="status" value="ACCEPTED" />
 		<property name="comments" value="" />
 		<property name="actor" ref="user2" />
 	</bean>

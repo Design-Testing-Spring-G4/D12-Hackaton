@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.TagValueRepository;
 import domain.Resort;
@@ -34,6 +36,9 @@ public class TagValueService {
 
 	@Autowired
 	private ActorService		actorService;
+
+	@Autowired
+	private Validator			validator;
 
 
 	//Simple CRUD methods
@@ -77,6 +82,10 @@ public class TagValueService {
 	//Save for internal operations such as cross-authorized requests.
 	public TagValue saveInternal(final TagValue tagValue) {
 		Assert.notNull(tagValue);
+		//Assertion that the user modifying this tag has the correct privilege.
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
+
 		final TagValue saved = this.valueRepository.save(tagValue);
 		return saved;
 	}
@@ -96,5 +105,23 @@ public class TagValueService {
 		}
 
 		this.valueRepository.delete(tagValue);
+	}
+
+	//Other methods
+
+	public TagValue reconstruct(final TagValue tagValue, final Integer varId, final BindingResult binding) {
+		TagValue result;
+
+		if (tagValue.getId() == 0) {
+			result = this.create(varId);
+			result.setValue(tagValue.getValue());
+		} else {
+			result = this.findOne(tagValue.getId());
+			result.setValue(tagValue.getValue());
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
 	}
 }

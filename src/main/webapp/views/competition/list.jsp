@@ -75,6 +75,10 @@
 			<acme:link code="competition.suggestion" url="suggestion/actor/create.do" id="${row.id}" column="true" />
 		</security:authorize>
 		
+		<security:authorize access="hasRole('USER') || hasRole('INSTRUCTOR')">
+			<acme:link code="competition.participation" url="participation/actor/create.do" id="${row.id}" column="true" />
+		</security:authorize>
+		
 	</display:table>
 	
 	<security:authorize access="!hasRole('SPONSOR')">

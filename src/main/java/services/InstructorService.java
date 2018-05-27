@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.InstructorRepository;
 import security.Authority;
@@ -20,6 +22,7 @@ import domain.Instructor;
 import domain.Participation;
 import domain.Resort;
 import domain.SocialIdentity;
+import forms.ActorRegisterForm;
 
 @Service
 @Transactional
@@ -43,6 +46,9 @@ public class InstructorService {
 
 	@Autowired
 	private CurriculumService		curriculumService;
+
+	@Autowired
+	private Validator				validator;
 
 
 	//Simple CRUD Methods
@@ -91,8 +97,9 @@ public class InstructorService {
 		} else {
 			final Instructor saved = this.instructorRepository.save(instructor);
 			saved.setFolders(this.folderService.generateDefaultFolders(saved));
-			final Curriculum curriculum = this.curriculumService.create();
-			saved.setCurriculum(curriculum);
+			final Curriculum curriculum = this.curriculumService.createInternal(saved);
+			final Curriculum savedC = this.curriculumService.saveInternal(curriculum);
+			saved.setCurriculum(savedC);
 			saved2 = this.instructorRepository.save(saved);
 		}
 
@@ -123,6 +130,25 @@ public class InstructorService {
 	}
 
 	//Other methods
+
+	public Instructor reconstruct(final ActorRegisterForm arf, final BindingResult binding) {
+		Instructor instructor;
+		Assert.isTrue(arf.isAcceptedTerms());
+		Assert.isTrue(arf.getPassword().equals(arf.getRepeatPassword()));
+
+		instructor = this.create();
+		instructor.getUserAccount().setUsername(arf.getUsername());
+		instructor.getUserAccount().setPassword(arf.getPassword());
+		instructor.setName(arf.getName());
+		instructor.setSurname(arf.getSurname());
+		instructor.setEmail(arf.getEmail());
+		instructor.setPhone(arf.getPhone());
+		instructor.setAddress(arf.getAddress());
+
+		this.validator.validate(instructor, binding);
+
+		return instructor;
+	}
 
 	public Double ratioInstructorsWithCurriculum() {
 		return this.instructorRepository.ratioInstructorsWithCurriculum();

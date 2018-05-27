@@ -14,5 +14,15 @@
 		<put-attribute name="title" value="Display legal text" />
 		<put-attribute name="body" value="/views/legalText/display.jsp" />
 	</definition>
+	
+	<definition name="legalText/list" extends="master.page">
+		<put-attribute name="title" value="Legal texts" />
+		<put-attribute name="body" value="/views/legalText/list.jsp" />
+	</definition>
+	
+	<definition name="legalText/edit" extends="master.page">
+		<put-attribute name="title" value="Edit text" />
+		<put-attribute name="body" value="/views/legalText/edit.jsp" />
+	</definition>
 
 </tiles-definitions>

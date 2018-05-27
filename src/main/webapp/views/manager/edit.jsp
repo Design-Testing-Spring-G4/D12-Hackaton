@@ -18,7 +18,7 @@
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<security:authorize access="isAnonymous()">
+<security:authorize access="isAnonymous() || hasRole('ADMIN')">
 
 	<%-- Stored message variables --%>
 	

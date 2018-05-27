@@ -93,7 +93,10 @@ public class FolderController extends AbstractController {
 	public ModelAndView save(final Folder f, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (f.getName().isEmpty()) {
+			binding.rejectValue("name", "org.hibernate.validator.constraints.NotEmpty.message");
+			result = this.createEditModelAndView(f, "folder.commit.error");
+		} else if (binding.hasErrors())
 			result = this.createEditModelAndView(f);
 		else
 			try {
@@ -112,7 +115,6 @@ public class FolderController extends AbstractController {
 			}
 		return result;
 	}
-
 	//Deletion
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")
@@ -151,7 +153,8 @@ public class FolderController extends AbstractController {
 
 	protected ModelAndView createEditModelAndView(final Folder folder, final String messageCode) {
 		ModelAndView result;
-		final Collection<Folder> folders = folder.getActor().getFolders();
+		final Actor actor = this.actorService.findByPrincipal();
+		final Collection<Folder> folders = actor.getFolders();
 		if (folders.contains(folder))
 			folders.remove(folder);
 

@@ -72,10 +72,10 @@ public class ManagerController extends AbstractController {
 	protected ModelAndView createEditModelAndView(final ActorRegisterForm arf, final String messageCode) {
 		ModelAndView result;
 
-		result = new ModelAndView("user/edit");
+		result = new ModelAndView("manager/edit");
 		result.addObject("arf", arf);
 		result.addObject("message", messageCode);
-		result.addObject("requestURI", "user/edit.do");
+		result.addObject("requestURI", "manager/edit.do");
 
 		return result;
 	}

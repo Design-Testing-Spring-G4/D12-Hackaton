@@ -54,29 +54,48 @@
 		name="reservations" requestURI="${requestURI}" id="row">
 
 		<%-- Attributes --%>
+		
+		<jstl:if test="${row.status.name == 'PENDING'}">
+			<jstl:set var="colorValue" value="yellow"/>
+		</jstl:if>
+		<jstl:if test="${row.status.name == 'REJECTED'}">
+			<jstl:set var="colorValue" value="grey"/>
+		</jstl:if>
+		<jstl:if test="${row.status.name == 'DUE'}">
+			<jstl:set var="colorValue" value="cyan"/>
+		</jstl:if>
+		<jstl:if test="${row.status.name == 'ACCEPTED'}">
+			<jstl:set var="colorValue" value="green"/>
+		</jstl:if>
+		<jstl:if test="${row.status.name == 'ACCEPTED' && fn:length(row.activities) > 0 && fn:length(row.lessons) > 0}">
+			<jstl:set var="colorValue" value="purple"/>
+		</jstl:if>
+		<jstl:if test="${row.status.name == 'CANCELLED'}">
+			<jstl:set var="colorValue" value="red"/>
+		</jstl:if>
 
-		<display:column property="adults" title="${adults}" sortable="true" />
+		<display:column property="adults" title="${adults}" sortable="true" style="background-color:${colorValue}" />
 
-		<display:column property="children" title="${children}" sortable="true" />
+		<display:column property="children" title="${children}" sortable="true" style="background-color:${colorValue}" />
 
-		<display:column title="${startDate}" sortable="true">
+		<display:column title="${startDate}" sortable="true" style="background-color:${colorValue}">
 			<fmt:formatDate value="${row.startDate}" pattern="${formatDate}" />
 		</display:column>
 		
-		<display:column title="${endDate}" sortable="true">
+		<display:column title="${endDate}" sortable="true" style="background-color:${colorValue}">
 			<fmt:formatDate value="${row.endDate}" pattern="${formatDate}" />
 		</display:column>
 		
 		<jstl:if test="${requestURI == 'reservation/user/list.do'}">
-			<display:column property="price" title="${price}" sortable="true" />
+			<display:column property="price" title="${price}" sortable="true" style="background-color:${colorValue}" />
 		</jstl:if>
 		
-		<display:column property="status" title="${status}" />
+		<display:column property="status" title="${status}" style="background-color:${colorValue}" />
 		
-		<display:column property="comments" title="${comments}" />
+		<display:column property="comments" title="${comments}" style="background-color:${colorValue}" />
 		
 		<jstl:if test="${requestURI == 'reservation/user/list.do'}">
-			<display:column property="reason" title="${reason}" sortable="true" />
+			<display:column property="reason" title="${reason}" sortable="true" style="background-color:${colorValue}" />
 		</jstl:if>
 
 		<%-- Links towards edition, display and others --%>
