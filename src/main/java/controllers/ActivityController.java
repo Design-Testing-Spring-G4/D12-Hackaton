@@ -29,12 +29,18 @@ public class ActivityController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Resort resort = this.resortService.findOne(varId);
-		final Collection<Activity> activities = resort.getActivities();
+		Resort resort = null;
 
-		result = new ModelAndView("activity/list");
-		result.addObject("activities", activities);
-		result.addObject("requestURI", "activity/list.do");
+		if (this.resortService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			resort = this.resortService.findOne(varId);
+			final Collection<Activity> activities = resort.getActivities();
+
+			result = new ModelAndView("activity/list");
+			result.addObject("activities", activities);
+			result.addObject("requestURI", "activity/list.do");
+		}
 
 		return result;
 	}

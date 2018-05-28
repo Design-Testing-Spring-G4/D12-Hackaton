@@ -30,12 +30,18 @@ public class SuggestionSponsorController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Competition competition = this.competitionService.findOne(varId);
-		final Collection<Suggestion> suggestions = competition.getSuggestions();
+		Competition competition = null;
 
-		result = new ModelAndView("suggestion/list");
-		result.addObject("suggestions", suggestions);
-		result.addObject("requestURI", "suggestion/sponsor/list.do");
+		if (this.competitionService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			competition = this.competitionService.findOne(varId);
+			final Collection<Suggestion> suggestions = competition.getSuggestions();
+
+			result = new ModelAndView("suggestion/list");
+			result.addObject("suggestions", suggestions);
+			result.addObject("requestURI", "suggestion/sponsor/list.do");
+		}
 
 		return result;
 	}

@@ -110,10 +110,16 @@ public class MailMessageController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam final int varId) {
 		final ModelAndView result;
-		final MailMessage mailMessage = this.mailMessageService.findOne(varId);
-		this.setCurrentMsg(mailMessage);
+		MailMessage mailMessage = null;
 
-		result = this.createEditModelAndView(mailMessage);
+		if (this.mailMessageService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/folder/list.do");
+		else {
+			mailMessage = this.mailMessageService.findOne(varId);
+			this.setCurrentMsg(mailMessage);
+
+			result = this.createEditModelAndView(mailMessage);
+		}
 
 		return result;
 	}
@@ -121,15 +127,20 @@ public class MailMessageController extends AbstractController {
 	@RequestMapping(value = "/move", method = RequestMethod.GET)
 	public ModelAndView move(@RequestParam final int varId) {
 		ModelAndView result;
-		final Folder folder = this.folderService.findOne(varId);
+		Folder folder = null;
 
-		try {
-			final MailMessage currentMsg = this.getCurrentMsg();
-			currentMsg.setFolder(folder);
-			this.mailMessageService.save(currentMsg);
+		if (this.folderService.findOne(varId) == null)
 			result = new ModelAndView("redirect:/folder/list.do");
-		} catch (final Throwable oops) {
-			result = new ModelAndView("redirect:/folder/list.do");
+		else {
+			folder = this.folderService.findOne(varId);
+			try {
+				final MailMessage currentMsg = this.getCurrentMsg();
+				currentMsg.setFolder(folder);
+				this.mailMessageService.save(currentMsg);
+				result = new ModelAndView("redirect:/folder/list.do");
+			} catch (final Throwable oops) {
+				result = new ModelAndView("redirect:/folder/list.do");
+			}
 		}
 
 		return result;

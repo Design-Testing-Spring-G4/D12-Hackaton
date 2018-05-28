@@ -93,6 +93,12 @@ public class ResortManagerController extends AbstractController {
 			binding.rejectValue("endDate", "javax.validation.constraints.NotNull.message");
 		if (r.getId() != 0 && !r.getLocation().getGpsCoordinates().matches("^[-+]?\\d{1,2}\\.\\d{1,2}\\,\\ [-+]?\\d{1,2}\\.\\d{1,2}$"))
 			binding.rejectValue("location.gpsCoordinates", "javax.validation.constraints.Pattern.message");
+		if (r.getId() != 0 && r.getSpots() < 0)
+			binding.rejectValue("spots", "javax.validation.constraints.Min2.message");
+		if (r.getId() != 0 && r.getPriceAdult() < 0)
+			binding.rejectValue("priceAdult", "javax.validation.constraints.Min2.message");
+		if (r.getId() != 0 && r.getPriceChild() < 0)
+			binding.rejectValue("priceChild", "javax.validation.constraints.Min2.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(r);
 		else

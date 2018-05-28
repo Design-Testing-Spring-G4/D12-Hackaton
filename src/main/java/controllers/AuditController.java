@@ -33,12 +33,19 @@ public class AuditController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Resort resort = this.resortService.findOne(varId);
-		final Collection<Audit> audits = resort.getAudits();
+		Resort resort = null;
 
-		result = new ModelAndView("audit/list");
-		result.addObject("audits", audits);
-		result.addObject("requestURI", "audit/list.do");
+		if (this.resortService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			resort = this.resortService.findOne(varId);
+			final Collection<Audit> audits = resort.getAudits();
+
+			result = new ModelAndView("audit/list");
+			result.addObject("audits", audits);
+			result.addObject("requestURI", "audit/list.do");
+
+		}
 
 		return result;
 	}
@@ -48,11 +55,17 @@ public class AuditController extends AbstractController {
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Audit audit = this.auditService.findOne(varId);
+		Audit audit = null;
 
-		result = new ModelAndView("audit/display");
-		result.addObject("audit", audit);
-		result.addObject("requestURI", "audit/display.do");
+		if (this.auditService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			audit = this.auditService.findOne(varId);
+
+			result = new ModelAndView("audit/display");
+			result.addObject("audit", audit);
+			result.addObject("requestURI", "audit/display.do");
+		}
 
 		return result;
 	}

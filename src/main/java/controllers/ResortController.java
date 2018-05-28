@@ -47,10 +47,10 @@ public class ResortController extends AbstractController {
 	public ModelAndView listCategory(@RequestParam final int varId) {
 		final ModelAndView result;
 		final Collection<Resort> resorts;
-		final Category category;
+		Category category = null;
 		final Collection<Category> children = new ArrayList<Category>();
 
-		if (varId == 0)
+		if (varId == 0 || this.categoryService.findOne(varId) == null)
 			category = this.categoryService.findAll().iterator().next();
 		else
 			category = this.categoryService.findOne(varId);
@@ -68,17 +68,22 @@ public class ResortController extends AbstractController {
 
 		return result;
 	}
-
 	//Display
 
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Resort resort = this.resortService.findOne(varId);
+		Resort resort = null;
 
-		result = new ModelAndView("resort/display");
-		result.addObject("resort", resort);
-		result.addObject("requestURI", "resort/display.do");
+		if (this.resortService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			resort = this.resortService.findOne(varId);
+
+			result = new ModelAndView("resort/display");
+			result.addObject("resort", resort);
+			result.addObject("requestURI", "resort/display.do");
+		}
 
 		return result;
 	}

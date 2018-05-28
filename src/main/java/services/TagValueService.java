@@ -70,7 +70,7 @@ public class TagValueService {
 		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		//Business rule: a tag can only be modified if no resort is using it.
-		Assert.isTrue(!tagValue.getResorts().isEmpty());
+		Assert.isTrue(tagValue.getResorts().isEmpty());
 
 		final TagValue saved = this.valueRepository.save(tagValue);
 
@@ -84,12 +84,12 @@ public class TagValueService {
 		Assert.notNull(tagValue);
 		//Assertion that the user modifying this tag has the correct privilege.
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
+		final String auth = authentication.getAuthorities().toArray()[0].toString();
+		Assert.isTrue(auth.equals("ADMIN") || auth.equals("MANAGER"));
 
 		final TagValue saved = this.valueRepository.save(tagValue);
 		return saved;
 	}
-
 	public void delete(final TagValue tagValue) {
 		Assert.notNull(tagValue);
 

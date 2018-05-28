@@ -64,9 +64,7 @@
 		<acme:link code="competition.participants" url="actor/list.do" id="${row.id}" column="true"/>
 		
 		<security:authorize access="hasRole('SPONSOR')">
-			<jstl:if test="${row.startDate > now}">
-				<acme:link code="competition.edit" url="competition/sponsor/edit.do" id="${row.id}" column="true" />
-			</jstl:if>
+			<acme:link code="competition.edit" url="competition/sponsor/edit.do" id="${row.id}" column="true" />
 			
 			<acme:link code="competition.suggestions" url="suggestion/sponsor/list.do" id="${row.id}" column="true" />
 		</security:authorize>

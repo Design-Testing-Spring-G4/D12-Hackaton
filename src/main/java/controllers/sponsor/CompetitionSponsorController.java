@@ -100,7 +100,7 @@ public class CompetitionSponsorController extends AbstractController {
 			try {
 				final Date currentDate = new Date(System.currentTimeMillis());
 				if (competition.getStartDate().before(currentDate) && competition.getEndDate().after(currentDate))
-					result = this.createEditModelAndView(competition, "competition.date.error");
+					result = this.createEditModelAndView(competition, "competition.delete.error");
 				else {
 					this.competitionService.delete(competition);
 					result = new ModelAndView("redirect:/competition/sponsor/list.do");

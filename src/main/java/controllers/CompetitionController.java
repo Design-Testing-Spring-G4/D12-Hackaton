@@ -33,13 +33,19 @@ public class CompetitionController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Resort resort = this.resortService.findOne(varId);
-		final Collection<Competition> competitions = resort.getCompetitions();
+		Resort resort = null;
 
-		result = new ModelAndView("competition/list");
-		result.addObject("competitions", competitions);
-		result.addObject("varId", varId);
-		result.addObject("requestURI", "competition/list.do");
+		if (this.resortService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			resort = this.resortService.findOne(varId);
+			final Collection<Competition> competitions = resort.getCompetitions();
+
+			result = new ModelAndView("competition/list");
+			result.addObject("competitions", competitions);
+			result.addObject("varId", varId);
+			result.addObject("requestURI", "competition/list.do");
+		}
 
 		return result;
 	}
@@ -49,12 +55,18 @@ public class CompetitionController extends AbstractController {
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int varId, final int varId2) {
 		final ModelAndView result;
-		final Competition competition = this.competitionService.findOne(varId);
+		Competition competition = null;
 
-		result = new ModelAndView("competition/display");
-		result.addObject("competition", competition);
-		result.addObject("varId", varId2);
-		result.addObject("requestURI", "competition/display.do");
+		if (this.competitionService.findOne(varId) == null || this.resortService.findOne(varId2) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			competition = this.competitionService.findOne(varId);
+
+			result = new ModelAndView("competition/display");
+			result.addObject("competition", competition);
+			result.addObject("varId", varId2);
+			result.addObject("requestURI", "competition/display.do");
+		}
 
 		return result;
 	}

@@ -57,7 +57,9 @@
 
 	</display:table>
 	
-	<acme:link code="socialIdentity.create" url="socialIdentity/actor/create.do" column="false" />
+	<security:authorize access="isAuthenticated()">
+		<acme:link code="socialIdentity.create" url="socialIdentity/actor/create.do" column="false" />
+	</security:authorize>
 	
 	<jstl:if test="${requestURI == 'socialIdentity/list.do'}">
 		<spring:url var="returnUrl" value="actor/display.do">

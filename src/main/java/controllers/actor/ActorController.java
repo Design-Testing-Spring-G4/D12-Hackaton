@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import services.ActorService;
 import services.CompetitionService;
 import controllers.AbstractController;
+import controllers.WelcomeController;
 import domain.Actor;
 import domain.Competition;
 import domain.Participation;
@@ -33,17 +34,26 @@ public class ActorController extends AbstractController {
 	@Autowired
 	private CompetitionService	competitionService;
 
+	@Autowired
+	private WelcomeController	welcomeController;
+
 
 	//Display
 
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Actor actor = this.actorService.findOne(varId);
+		Actor actor = null;
 
-		result = new ModelAndView("actor/display");
-		result.addObject("actor", actor);
-		result.addObject("requestURI", "actor/display.do");
+		if (this.actorService.findOne(varId) == null)
+			result = this.welcomeController.index(null);
+		else {
+			actor = this.actorService.findOne(varId);
+
+			result = new ModelAndView("actor/display");
+			result.addObject("actor", actor);
+			result.addObject("requestURI", "actor/display.do");
+		}
 
 		return result;
 	}
@@ -53,16 +63,22 @@ public class ActorController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Competition competition = this.competitionService.findOne(varId);
-		final Collection<Actor> participants = new ArrayList<Actor>();
-		for (final Participation p : competition.getParticipations())
-			if (p.getStatus() == Status.ACCEPTED)
-				participants.add(p.getActor());
+		Competition competition = null;
 
-		result = new ModelAndView("actor/list");
-		result.addObject("participants", participants);
-		result.addObject("varId", varId);
-		result.addObject("requestURI", "actor/list.do");
+		if (this.competitionService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
+		else {
+			competition = this.competitionService.findOne(varId);
+			final Collection<Actor> participants = new ArrayList<Actor>();
+			for (final Participation p : competition.getParticipations())
+				if (p.getStatus() == Status.ACCEPTED)
+					participants.add(p.getActor());
+
+			result = new ModelAndView("actor/list");
+			result.addObject("participants", participants);
+			result.addObject("varId", varId);
+			result.addObject("requestURI", "actor/list.do");
+		}
 
 		return result;
 	}

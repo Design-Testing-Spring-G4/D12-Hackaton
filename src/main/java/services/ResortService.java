@@ -56,6 +56,9 @@ public class ResortService {
 	@Autowired
 	private TagValueService		tagValueService;
 
+	@Autowired
+	private ActivityService		activityService;
+
 
 	//Simple CRUD Methods
 
@@ -140,6 +143,9 @@ public class ResortService {
 				tv.getResorts().remove(resort);
 				this.tagValueService.saveInternal(tv);
 			}
+		for (final Activity a : this.activityService.findAll())
+			if (a.getResort().equals(resort))
+				this.activityService.delete(a);
 
 		this.resortRepository.delete(resort);
 	}

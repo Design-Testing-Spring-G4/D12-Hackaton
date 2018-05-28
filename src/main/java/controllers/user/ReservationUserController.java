@@ -67,14 +67,21 @@ public class ReservationUserController extends AbstractController {
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Reservation reservation = this.reservationService.findOne(varId);
-		final User user = (User) this.actorService.findByPrincipal();
-		if (reservation.getUser() != user)
-			result = new ModelAndView("redirect:/reservation/user/list.do");
+		Reservation reservation = null;
+
+		if (this.reservationService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
 		else {
-			result = new ModelAndView("reservation/display");
-			result.addObject("reservation", reservation);
-			result.addObject("requestURI", "reservation/user/display.do");
+			reservation = this.reservationService.findOne(varId);
+			final User user = (User) this.actorService.findByPrincipal();
+
+			if (reservation.getUser() != user)
+				result = new ModelAndView("redirect:/reservation/user/list.do");
+			else {
+				result = new ModelAndView("reservation/display");
+				result.addObject("reservation", reservation);
+				result.addObject("requestURI", "reservation/user/display.do");
+			}
 		}
 
 		return result;
@@ -143,7 +150,6 @@ public class ReservationUserController extends AbstractController {
 					result = new ModelAndView("redirect:/resort/list.do");
 				this.mailMessageService.applicationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
 			} catch (final Throwable oops) {
-				oops.printStackTrace();
 				result = this.createEditModelAndView(r, "reservation.commit.error");
 			}
 		return result;

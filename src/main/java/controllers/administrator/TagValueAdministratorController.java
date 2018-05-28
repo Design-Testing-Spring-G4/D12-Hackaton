@@ -114,7 +114,6 @@ public class TagValueAdministratorController extends AbstractController {
 				this.tagValueService.delete(tv);
 				result = new ModelAndView("redirect:/tag/administrator/list.do");
 			} catch (final Throwable oops) {
-				oops.printStackTrace();
 				result = this.createEditModelAndView(tagValue, "tagValue.commit.error");
 			}
 		return result;

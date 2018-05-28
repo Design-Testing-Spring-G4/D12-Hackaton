@@ -30,7 +30,7 @@
 <br/>
 <br/>
 
-<p><spring:message code="welcome.greeting.competition" /> ${moment}</p>
+<p><spring:message code="welcome.greeting.competition" /></p>
 <br/>
 <a href="${competition.link}" target="_blank">
 	<img src="${competition.banner}" width="468" height="100">

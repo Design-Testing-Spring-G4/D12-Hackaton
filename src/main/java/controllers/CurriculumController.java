@@ -27,16 +27,21 @@ public class CurriculumController extends AbstractController {
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int varId) {
 		final ModelAndView result;
-		final Instructor instructor = this.instructorService.findOne(varId);
-		final Curriculum curriculum = instructor.getCurriculum();
+		Instructor instructor = null;
 
-		if (instructor.getCurriculum() == null)
-			result = new ModelAndView("redirect:/instructor/list.do");
+		if (this.instructorService.findOne(varId) == null)
+			result = new ModelAndView("redirect:/welcome/index.do");
 		else {
-			result = new ModelAndView("curriculum/display");
-			result.addObject("curriculum", curriculum);
-			result.addObject("varId", varId);
-			result.addObject("requestURI", "curriculum/display.do");
+			instructor = this.instructorService.findOne(varId);
+			final Curriculum curriculum = instructor.getCurriculum();
+			if (instructor.getCurriculum() == null)
+				result = new ModelAndView("redirect:/instructor/list.do");
+			else {
+				result = new ModelAndView("curriculum/display");
+				result.addObject("curriculum", curriculum);
+				result.addObject("varId", varId);
+				result.addObject("requestURI", "curriculum/display.do");
+			}
 		}
 
 		return result;
