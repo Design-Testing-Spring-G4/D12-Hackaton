@@ -75,6 +75,10 @@ public class AuditAuditorController extends AbstractController {
 	public ModelAndView save(final Audit a, final BindingResult binding) {
 		ModelAndView result;
 
+		if (a.getTitle().isEmpty())
+			binding.rejectValue("title", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (a.getDescription().isEmpty())
+			binding.rejectValue("description", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(a);
 		else

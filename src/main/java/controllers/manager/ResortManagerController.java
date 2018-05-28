@@ -78,37 +78,22 @@ public class ResortManagerController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(final Resort r, final BindingResult binding) {
 		ModelAndView result;
-		if (r.getId() != 0) {
-			if (r.getName().isEmpty()) {
-				binding.rejectValue("name", "org.hibernate.validator.constraints.NotBlank.message");
-				result = this.createEditModelAndView(r, "resort.commit.error");
-			} else if (r.getDescription().isEmpty()) {
-				binding.rejectValue("description", "org.hibernate.validator.constraints.NotBlank.message");
-				result = this.createEditModelAndView(r, "resort.commit.error");
-			} else if (r.getLocation().getLocation().isEmpty()) {
-				binding.rejectValue("location.location", "org.hibernate.validator.constraints.NotBlank.message");
-				result = this.createEditModelAndView(r, "resort.commit.error");
-			} else if (r.getFeatures().isEmpty()) {
-				binding.rejectValue("features", "org.hibernate.validator.constraints.NotBlank.message");
-				result = this.createEditModelAndView(r, "resort.commit.error");
-			} else if (r.getStartDate() == null) {
-				binding.rejectValue("startDate", "javax.validation.constraints.NotNull.message");
-				result = this.createEditModelAndView(r, "resort.commit.error");
-			} else if (r.getEndDate() == null) {
-				binding.rejectValue("endDate", "javax.validation.constraints.NotNull.message");
-				result = this.createEditModelAndView(r, "resort.commit.error");
-			} else if (!r.getLocation().getGpsCoordinates().matches("^[-+]?\\d{1,2}\\.\\d{1,2}\\,\\ [-+]?\\d{1,2}\\.\\d{1,2}$")) {
-				binding.rejectValue("location.gpsCoordinates", "javax.validation.constraints.Pattern.message");
-				result = this.createEditModelAndView(r, "resort.commit.error");
-			} else
-				try {
-					final Resort resort = this.resortService.reconstruct(r, binding);
-					this.resortService.save(resort);
-					result = new ModelAndView("redirect:/resort/manager/list.do");
-				} catch (final Throwable oops) {
-					result = this.createEditModelAndView(r, "resort.commit.error");
-				}
-		} else if (binding.hasErrors())
+
+		if (r.getId() != 0 && r.getName().isEmpty())
+			binding.rejectValue("name", "org.hibernate.validator.constraints.NotBlank.message");
+		if (r.getId() != 0 && r.getDescription().isEmpty())
+			binding.rejectValue("description", "org.hibernate.validator.constraints.NotBlank.message");
+		if (r.getId() != 0 && r.getLocation().getLocation().isEmpty())
+			binding.rejectValue("location.location", "org.hibernate.validator.constraints.NotBlank.message");
+		if (r.getId() != 0 && r.getFeatures().isEmpty())
+			binding.rejectValue("features", "org.hibernate.validator.constraints.NotBlank.message");
+		if (r.getId() != 0 && r.getStartDate() == null)
+			binding.rejectValue("startDate", "javax.validation.constraints.NotNull.message");
+		if (r.getId() != 0 && r.getEndDate() == null)
+			binding.rejectValue("endDate", "javax.validation.constraints.NotNull.message");
+		if (r.getId() != 0 && !r.getLocation().getGpsCoordinates().matches("^[-+]?\\d{1,2}\\.\\d{1,2}\\,\\ [-+]?\\d{1,2}\\.\\d{1,2}$"))
+			binding.rejectValue("location.gpsCoordinates", "javax.validation.constraints.Pattern.message");
+		if (binding.hasErrors())
 			result = this.createEditModelAndView(r);
 		else
 			try {

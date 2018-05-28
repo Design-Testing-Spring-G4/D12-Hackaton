@@ -31,7 +31,7 @@ public class Reservation extends DomainEntity {
 	//Attributes
 
 	private int						adults;
-	private int						children;
+	private Integer					children;
 	private Date					startDate;
 	private Date					endDate;
 	private double					price;
@@ -56,16 +56,18 @@ public class Reservation extends DomainEntity {
 	}
 
 	@Min(0)
-	public int getChildren() {
+	public Integer getChildren() {
 		return this.children;
 	}
 
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	public Date getStartDate() {
 		return this.startDate;
 	}
 
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	public Date getEndDate() {
@@ -132,7 +134,7 @@ public class Reservation extends DomainEntity {
 		this.adults = adults;
 	}
 
-	public void setChildren(final int children) {
+	public void setChildren(final Integer children) {
 		this.children = children;
 	}
 

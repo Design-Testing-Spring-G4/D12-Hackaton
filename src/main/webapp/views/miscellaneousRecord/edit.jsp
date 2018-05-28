@@ -39,7 +39,7 @@
 		
 		<acme:submit name="save" code="miscellaneousRecord.save" />
 		
-		<jstl:if test="${educationRecord.id!=0}">
+		<jstl:if test="${miscellaneousRecord.id!=0}">
 			<acme:delete code="miscellaneousRecord.delete" confirm="miscellaneousRecord.confirm.delete" />
 		</jstl:if>
 	

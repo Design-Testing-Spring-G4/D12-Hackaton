@@ -43,7 +43,7 @@
 		
 		<acme:submit name="save" code="endorserRecord.save" />
 		
-		<jstl:if test="${educationRecord.id!=0}">
+		<jstl:if test="${endorserRecord.id!=0}">
 			<acme:delete code="endorserRecord.delete" confirm="endorserRecord.confirm.delete" />
 		</jstl:if>
 	

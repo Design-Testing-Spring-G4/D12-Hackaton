@@ -87,6 +87,12 @@ public class ActivityManagerController extends AbstractController {
 	public ModelAndView save(final Activity a, final BindingResult binding) {
 		ModelAndView result;
 
+		if (a.getId() != 0 && a.getResort() == null)
+			binding.rejectValue("resort", "javax.validation.constraints.NotNull.message");
+		if (a.getId() != 0 && a.getTitle().isEmpty())
+			binding.rejectValue("title", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (a.getId() != 0 && a.getDescription().isEmpty())
+			binding.rejectValue("description", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(a);
 		else

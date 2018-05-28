@@ -112,8 +112,24 @@ public class ReservationUserController extends AbstractController {
 	public ModelAndView save(final Reservation r, final BindingResult binding) {
 		ModelAndView result;
 
+		if (r.getAdults() < 1)
+			binding.rejectValue("adults", "javax.validation.constraints.Min2.message");
+		if (r.getChildren() == null)
+			binding.rejectValue("children", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (r.getId() != 0 && r.getCreditCard().getBrand().isEmpty())
+			binding.rejectValue("creditCard.brand", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (r.getId() != 0 && r.getCreditCard().getHolder().isEmpty())
+			binding.rejectValue("creditCard.holder", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (r.getId() != 0 && r.getCreditCard().getNumber().isEmpty())
+			binding.rejectValue("creditCard.number", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (r.getId() != 0 && r.getCreditCard().getExpMonth() == null)
+			binding.rejectValue("creditCard.expMonth", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (r.getId() != 0 && r.getCreditCard().getExpYear() == null)
+			binding.rejectValue("creditCard.expYear", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (r.getId() != 0 && r.getCreditCard().getCvv() == null)
+			binding.rejectValue("creditCard.cvv", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
-			result = this.createEditModelAndView(r);
+			result = this.createEditModelAndView(r, "reservation.commit.error");
 		else
 			try {
 				final Reservation saved = this.reservationService.save(r);
@@ -127,6 +143,7 @@ public class ReservationUserController extends AbstractController {
 					result = new ModelAndView("redirect:/resort/list.do");
 				this.mailMessageService.applicationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
 			} catch (final Throwable oops) {
+				oops.printStackTrace();
 				result = this.createEditModelAndView(r, "reservation.commit.error");
 			}
 		return result;

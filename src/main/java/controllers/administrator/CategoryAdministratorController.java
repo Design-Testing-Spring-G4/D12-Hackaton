@@ -85,6 +85,8 @@ public class CategoryAdministratorController extends AbstractController {
 	public ModelAndView save(final Category c, final BindingResult binding) {
 		ModelAndView result;
 
+		if (c.getId() != 0 && c.getName().isEmpty())
+			binding.rejectValue("name", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(c);
 		else

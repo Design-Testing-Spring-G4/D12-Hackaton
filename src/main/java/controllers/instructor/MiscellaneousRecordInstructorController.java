@@ -53,6 +53,8 @@ public class MiscellaneousRecordInstructorController extends AbstractController 
 	public ModelAndView save(final MiscellaneousRecord mr, final BindingResult binding) {
 		ModelAndView result;
 
+		if (mr.getTitle().isEmpty())
+			binding.rejectValue("title", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(mr);
 		else

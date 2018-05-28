@@ -53,6 +53,10 @@ public class EducationRecordInstructorController extends AbstractController {
 	public ModelAndView save(final EducationRecord er, final BindingResult binding) {
 		ModelAndView result;
 
+		if (er.getDiploma().isEmpty())
+			binding.rejectValue("diploma", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (er.getInstitution().isEmpty())
+			binding.rejectValue("institution", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(er);
 		else

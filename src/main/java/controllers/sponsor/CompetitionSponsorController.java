@@ -74,6 +74,8 @@ public class CompetitionSponsorController extends AbstractController {
 	public ModelAndView save(final Competition c, final BindingResult binding) {
 		ModelAndView result;
 
+		if (c.getId() != 0 && c.getMaxParticipants() < 2)
+			binding.rejectValue("maxParticipants", "javax.validation.constraints.Min2.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(c);
 		else
@@ -86,7 +88,6 @@ public class CompetitionSponsorController extends AbstractController {
 			}
 		return result;
 	}
-
 	//Deletion
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")

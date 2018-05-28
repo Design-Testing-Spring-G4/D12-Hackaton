@@ -45,7 +45,7 @@
 		
 		<acme:submit name="save" code="professionalRecord.save" />
 		
-		<jstl:if test="${educationRecord.id!=0}">
+		<jstl:if test="${professionalRecord.id!=0}">
 			<acme:delete code="professionalRecord.delete" confirm="professionalRecord.confirm.delete" />
 		</jstl:if>
 	

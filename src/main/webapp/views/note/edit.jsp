@@ -44,7 +44,7 @@
 <%-- Reply form --%>
 
 <jstl:choose>
-	<jstl:when test="${requestURI == 'note/manager/list.do'}">
+	<jstl:when test="${requestURI == 'note/manager/edit.do'}">
 		<jstl:set var="access" value="hasRole('MANAGER')"/>
 	</jstl:when>
 	<jstl:otherwise>

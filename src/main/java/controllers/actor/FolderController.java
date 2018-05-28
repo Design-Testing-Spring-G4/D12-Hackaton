@@ -93,10 +93,9 @@ public class FolderController extends AbstractController {
 	public ModelAndView save(final Folder f, final BindingResult binding) {
 		ModelAndView result;
 
-		if (f.getName().isEmpty()) {
+		if (f.getName().isEmpty())
 			binding.rejectValue("name", "org.hibernate.validator.constraints.NotEmpty.message");
-			result = this.createEditModelAndView(f, "folder.commit.error");
-		} else if (binding.hasErrors())
+		if (binding.hasErrors())
 			result = this.createEditModelAndView(f);
 		else
 			try {

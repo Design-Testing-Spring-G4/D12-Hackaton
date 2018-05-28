@@ -53,6 +53,12 @@ public class EndorserRecordInstructorController extends AbstractController {
 	public ModelAndView save(final EndorserRecord er, final BindingResult binding) {
 		ModelAndView result;
 
+		if (er.getName().isEmpty())
+			binding.rejectValue("name", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (er.getProfile().isEmpty())
+			binding.rejectValue("profile", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (er.getEmail().isEmpty())
+			binding.rejectValue("email", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(er);
 		else

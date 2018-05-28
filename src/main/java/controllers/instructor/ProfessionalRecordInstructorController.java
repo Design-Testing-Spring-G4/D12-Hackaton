@@ -51,6 +51,14 @@ public class ProfessionalRecordInstructorController extends AbstractController {
 	public ModelAndView save(final ProfessionalRecord pr, final BindingResult binding) {
 		ModelAndView result;
 
+		if (pr.getId() != 0 && pr.getPeriodStart() == null)
+			binding.rejectValue("periodStart", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (pr.getId() != 0 && pr.getPeriodEnd() == null)
+			binding.rejectValue("periodEnd", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (pr.getId() != 0 && pr.getRole().isEmpty())
+			binding.rejectValue("role", "org.hibernate.validator.constraints.NotEmpty.message");
+		if (pr.getId() != 0 && pr.getCompany().isEmpty())
+			binding.rejectValue("company", "org.hibernate.validator.constraints.NotEmpty.message");
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(pr);
 		else

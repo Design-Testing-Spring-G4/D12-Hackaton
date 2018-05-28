@@ -71,11 +71,11 @@
 		<%-- Links towards edition, display and others --%>
 		
 		<security:authorize access="hasRole('MANAGER')">
-			<acme:link code="note.edit" url="${editUrl}" id="note/manager/edit.do" column="true" />
+			<acme:link code="note.edit" url="note/manager/edit.do" id="${row.id}" column="true" />
 		</security:authorize>
 		
 		<security:authorize access="hasRole('INSTRUCTOR')">
-			<acme:link code="note.edit" url="${editUrl}" id="note/instructor/edit.do" column="true" />
+			<acme:link code="note.edit" url="note/instructor/edit.do" id="${row.id}" column="true" />
 		</security:authorize>
 		
 	</display:table>
