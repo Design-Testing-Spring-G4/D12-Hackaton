@@ -27,10 +27,10 @@
 
 <spring:message code="reservation.startDate" var="startDate" />
 <spring:message code="reservation.endDate" var="endDate" />
-<spring:message code="activity.title" var="actTitle" />
-<spring:message code="activity.description" var="actDescription" />
-<spring:message code="activity.category" var="actCategory" />
-<spring:message code="activity.price" var="actPrice" />
+<spring:message code="reservation.title" var="actTitle" />
+<spring:message code="reservation.description" var="actDescription" />
+<spring:message code="reservation.category" var="actCategory" />
+<spring:message code="reservation.price" var="actPrice" />
 <spring:message code="reservation.dateInt" var="formatDate" />
 
 	<%-- For the selected reservation received as model, display the following information: --%>
