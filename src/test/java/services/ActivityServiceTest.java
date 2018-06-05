@@ -45,7 +45,6 @@ public class ActivityServiceTest extends AbstractTest {
 			this.authenticate(username);
 
 			//Creation
-
 			final Activity activity = this.activityService.create();
 			activity.setCategory(category);
 			activity.setDescription(description);
@@ -56,7 +55,7 @@ public class ActivityServiceTest extends AbstractTest {
 			final Activity saved = this.activityService.save(activity);
 
 			//Listing
-			Collection<Activity> cl = this.activityService.findAll();
+			final Collection<Activity> cl = this.activityService.findAll();
 			Assert.isTrue(cl.contains(saved));
 			Assert.notNull(this.activityService.findOne(saved.getId()));
 
@@ -66,8 +65,7 @@ public class ActivityServiceTest extends AbstractTest {
 
 			//Deletion
 			this.activityService.delete(saved2);
-			cl = this.activityService.findAll();
-			Assert.isTrue(!cl.contains(saved));
+			Assert.isNull(this.activityService.findOne(saved2.getId()));
 
 			this.unauthenticate();
 

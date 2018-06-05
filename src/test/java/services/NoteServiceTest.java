@@ -3,6 +3,8 @@ package services;
 
 import java.util.Collection;
 
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
-import domain.Administrator;
+import domain.Note;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -24,50 +26,40 @@ public class NoteServiceTest extends AbstractTest {
 	//Service under test
 
 	@Autowired
-	private AdministratorService	administratorService;
+	private NoteService	noteService;
 
 
 	//Test template
 
-	protected void Template(final String username, final String address, final String email, final String name, final String surname, final String phone, final String address2, final String email2, final String name2, final String surname2,
-		final String phone2, final String username2, final Class<?> expected) {
+	protected void Template(final String username, final String username2, final String remark, final String reply, final Class<?> expected) {
 		Class<?> caught = null;
 
 		try {
 			this.authenticate(username);
 
 			//Creation
-
-			final Administrator administrator = this.administratorService.create();
-			administrator.setAddress(address);
-			administrator.setEmail(email);
-			administrator.setName(name);
-			administrator.setSurname(surname);
-			administrator.setPhone(phone);
-			administrator.getUserAccount().setUsername(username2);
-			administrator.getUserAccount().setPassword(username2);
-			final Administrator saved = this.administratorService.save(administrator);
+			final Note note = this.noteService.create();
+			note.setRemark(remark);
+			final Note saved = this.noteService.save(note);
 
 			this.unauthenticate();
 			this.authenticate(username2);
 
 			//Listing
-			Collection<Administrator> cl = this.administratorService.findAll();
+			final Collection<Note> cl = this.noteService.findAll();
 			Assert.isTrue(cl.contains(saved));
-			Assert.notNull(this.administratorService.findOne(saved.getId()));
+			Assert.notNull(this.noteService.findOne(saved.getId()));
 
 			//Edition
-			saved.setAddress(address2);
-			saved.setEmail(email2);
-			saved.setName(name2);
-			saved.setSurname(surname2);
-			saved.setPhone(phone2);
-			final Administrator saved2 = this.administratorService.save(saved);
+			saved.setReply(reply);
+			final Note saved2 = this.noteService.saveInternal(saved);
+
+			this.unauthenticate();
+			this.authenticate(username);
 
 			//Deletion
-			this.administratorService.delete(saved2);
-			cl = this.administratorService.findAll();
-			Assert.isTrue(!cl.contains(saved));
+			this.noteService.delete(saved2);
+			Assert.isNull(this.noteService.findOne(saved2.getId()));
 
 			this.unauthenticate();
 
@@ -88,26 +80,22 @@ public class NoteServiceTest extends AbstractTest {
 
 			//Test #01: Correct execution of test. Expected true.
 			{
-				"admin", "testAddress", "testemail@alum.com", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", "admin9", null
-
+				"auditor1", "manager1", "testRemark", "testReply", null
 			},
 
-			//Test #02: Attempt to save an administrator without proper credentials. Expected false.
+			//Test #02: Attempt to save a note with a null reply. Expected false.
 			{
-				"admin", "testAddress", "testemail@alum.com", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", null, IllegalArgumentException.class
-
+				"auditor1", "manager1", "<h1>hack</h1>", "testReply", ConstraintViolationException.class
 			},
 
-			//Test #03: Attempt to create an administrator without email. Expected false.
+			//Test #03: Attempt to create a note without remark. Expected false.
 			{
-				"admin", "testAddress", "", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", null, IllegalArgumentException.class
-
+				"auditor1", "manager1", "", "testReply", ConstraintViolationException.class
 			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.Template((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
-				(String) testingData[i][8], (String) testingData[i][9], (String) testingData[i][10], (String) testingData[i][11], (Class<?>) testingData[i][12]);
+			this.Template((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (Class<?>) testingData[i][4]);
 	}
 }

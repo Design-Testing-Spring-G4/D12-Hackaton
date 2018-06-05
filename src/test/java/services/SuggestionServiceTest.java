@@ -3,6 +3,8 @@ package services;
 
 import java.util.Collection;
 
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
-import domain.Administrator;
+import domain.Competition;
+import domain.Suggestion;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -24,50 +27,40 @@ public class SuggestionServiceTest extends AbstractTest {
 	//Service under test
 
 	@Autowired
-	private AdministratorService	administratorService;
+	private SuggestionService	suggestionService;
+
+	@Autowired
+	private CompetitionService	competitionService;
 
 
 	//Test template
 
-	protected void Template(final String username, final String address, final String email, final String name, final String surname, final String phone, final String address2, final String email2, final String name2, final String surname2,
-		final String phone2, final String username2, final Class<?> expected) {
+	protected void Template(final String username, final String comments, final String title, final String comments2, final Class<?> expected) {
 		Class<?> caught = null;
 
 		try {
 			this.authenticate(username);
 
 			//Creation
-
-			final Administrator administrator = this.administratorService.create();
-			administrator.setAddress(address);
-			administrator.setEmail(email);
-			administrator.setName(name);
-			administrator.setSurname(surname);
-			administrator.setPhone(phone);
-			administrator.getUserAccount().setUsername(username2);
-			administrator.getUserAccount().setPassword(username2);
-			final Administrator saved = this.administratorService.save(administrator);
-
-			this.unauthenticate();
-			this.authenticate(username2);
+			final Competition competition = this.competitionService.findOne(this.getEntityId("competition1"));
+			final Suggestion suggestion = this.suggestionService.create(competition);
+			suggestion.setAttachments("");
+			suggestion.setComments(comments);
+			suggestion.setTitle(title);
+			final Suggestion saved = this.suggestionService.save(suggestion);
 
 			//Listing
-			Collection<Administrator> cl = this.administratorService.findAll();
+			final Collection<Suggestion> cl = this.suggestionService.findAll();
 			Assert.isTrue(cl.contains(saved));
-			Assert.notNull(this.administratorService.findOne(saved.getId()));
+			Assert.notNull(this.suggestionService.findOne(saved.getId()));
 
 			//Edition
-			saved.setAddress(address2);
-			saved.setEmail(email2);
-			saved.setName(name2);
-			saved.setSurname(surname2);
-			saved.setPhone(phone2);
-			final Administrator saved2 = this.administratorService.save(saved);
+			saved.setComments(comments2);
+			final Suggestion saved2 = this.suggestionService.save(saved);
 
 			//Deletion
-			this.administratorService.delete(saved2);
-			cl = this.administratorService.findAll();
-			Assert.isTrue(!cl.contains(saved));
+			this.suggestionService.delete(saved2);
+			Assert.isNull(this.suggestionService.findOne(saved2.getId()));
 
 			this.unauthenticate();
 
@@ -88,26 +81,22 @@ public class SuggestionServiceTest extends AbstractTest {
 
 			//Test #01: Correct execution of test. Expected true.
 			{
-				"admin", "testAddress", "testemail@alum.com", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", "admin9", null
-
+				"user1", "testComments", "testTitle", "editComments", null
 			},
 
-			//Test #02: Attempt to save an administrator without proper credentials. Expected false.
+			//Test #02: Attempt to save a suggestion without proper credentials. Expected false.
 			{
-				"admin", "testAddress", "testemail@alum.com", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", null, IllegalArgumentException.class
-
+				"null", "testComments", "testTitle", "editComments", IllegalArgumentException.class
 			},
 
-			//Test #03: Attempt to create an administrator without email. Expected false.
+			//Test #03: Attempt to inject HTML code when creating a suggestion. Expected false.
 			{
-				"admin", "testAddress", "", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", null, IllegalArgumentException.class
-
+				"user1", "<h1>hack</h1>", "testTitle", "editComments", ConstraintViolationException.class
 			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.Template((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
-				(String) testingData[i][8], (String) testingData[i][9], (String) testingData[i][10], (String) testingData[i][11], (Class<?>) testingData[i][12]);
+			this.Template((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (Class<?>) testingData[i][4]);
 	}
 }

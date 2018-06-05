@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -75,11 +73,6 @@ public class NoteService {
 	//Specific save for reply.
 	public Note saveInternal(final Note note) {
 		Assert.notNull(note);
-
-		//Assertion that the user modifying this note has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		final String auth = authentication.getAuthorities().toArray()[0].toString();
-		Assert.isTrue(auth.equals("MANAGER") || auth.equals("INSTRUCTOR"));
 
 		note.setReplyMoment(new Date(System.currentTimeMillis() - 1));
 

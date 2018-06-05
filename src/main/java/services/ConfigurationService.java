@@ -4,8 +4,6 @@ package services;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -33,12 +31,12 @@ public class ConfigurationService {
 	public Configuration create() {
 
 		final Configuration c = new Configuration();
-		c.setBanner("http://creek-tours.com/wp-content/uploads/Kenya-Tanzania-Family-Safari-banner.jpg");
+		c.setBanner("https://www.publicdomainpictures.net/pictures/20000/velka/june-lake-valley-california-usa-26291294194420kDo.jpg");
 		c.setCountryCode("+34");
 		c.setVat(21.00);
-		c.setSpamWords("viagra,cialis,sex,jes extender");
-		c.setWelcomeEN("Tanzanika is an adventure company that makes your explorer's dreams true.");
-		c.setWelcomeES("Tanzanika es la empresa de aventuras que hará tus sueños de explorador realidad.");
+		c.setSpamWords("viagra,cialis,sex,love");
+		c.setWelcomeEN("Welcome to the place to plan your ideal holidays.");
+		c.setWelcomeES("Bienvenido al lugar donde planear tus vacaciones ideales.");
 
 		return c;
 	}
@@ -56,10 +54,6 @@ public class ConfigurationService {
 	public Configuration save(final Configuration configuration) {
 		Assert.notNull(configuration);
 
-		//Assertion that the user modifying this configuration has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
-
 		final Configuration saved = this.configurationRepository.save(configuration);
 
 		this.actorService.isSpam(saved.getBanner());
@@ -72,10 +66,6 @@ public class ConfigurationService {
 
 	public void delete(final Configuration configuration) {
 		Assert.notNull(configuration);
-
-		//Assertion that the user modifying this configuration has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		this.configurationRepository.delete(configuration);
 	}

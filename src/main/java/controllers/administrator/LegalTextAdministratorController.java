@@ -6,6 +6,8 @@ import java.util.Collection;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -77,6 +79,9 @@ public class LegalTextAdministratorController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@Valid final LegalText legalText, final BindingResult binding) {
 		ModelAndView result;
+
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(legalText);

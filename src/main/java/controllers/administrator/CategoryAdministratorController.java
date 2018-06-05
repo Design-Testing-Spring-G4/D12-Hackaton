@@ -4,6 +4,8 @@ package controllers.administrator;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -84,6 +86,9 @@ public class CategoryAdministratorController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(final Category c, final BindingResult binding) {
 		ModelAndView result;
+
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		if (c.getId() != 0 && c.getName().isEmpty())
 			binding.rejectValue("name", "org.hibernate.validator.constraints.NotEmpty.message");

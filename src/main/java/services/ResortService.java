@@ -118,7 +118,7 @@ public class ResortService {
 	public void delete(final Resort resort) {
 		Assert.notNull(resort);
 
-		//Assertion that the user modifying this miscellaneous record has the correct privilege.
+		//Assertion that the user modifying this resort has the correct privilege.
 		final Resort validator = this.findOne(resort.getId());
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getManager().getId());
 

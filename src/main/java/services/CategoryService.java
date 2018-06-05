@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -67,10 +65,6 @@ public class CategoryService {
 			for (final Category a : this.findAll())
 				Assert.isTrue(!(a.getParent() == (category.getParent()) && a.getName().equals(category.getName())));
 
-		//Assertion that the user modifying this category has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
-
 		final Category saved = this.categoryRepository.save(category);
 
 		if (category.getId() == 0) {
@@ -96,10 +90,6 @@ public class CategoryService {
 
 		//The root category should not be deleted.
 		Assert.isTrue(!(category.getParent() == null));
-
-		//Assertion that the user modifying this category has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		final Category def = this.categoryRepository.defaultCategory();
 		def.getResorts().addAll(category.getResorts());

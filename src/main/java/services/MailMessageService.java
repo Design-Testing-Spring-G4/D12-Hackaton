@@ -75,6 +75,7 @@ public class MailMessageService {
 
 		return saved;
 	}
+
 	public void delete(final MailMessage mailMessage) {
 		Assert.notNull(mailMessage);
 

@@ -88,6 +88,7 @@ public class CompetitionSponsorController extends AbstractController {
 			}
 		return result;
 	}
+
 	//Deletion
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")

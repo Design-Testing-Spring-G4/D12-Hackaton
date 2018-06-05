@@ -65,10 +65,6 @@ public class TagValueService {
 	public TagValue save(final TagValue tagValue) {
 		Assert.notNull(tagValue);
 
-		//Assertion that the user modifying this tag has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
-
 		//Business rule: a tag can only be modified if no resort is using it.
 		Assert.isTrue(tagValue.getResorts().isEmpty());
 
@@ -82,6 +78,7 @@ public class TagValueService {
 	//Save for internal operations such as cross-authorized requests.
 	public TagValue saveInternal(final TagValue tagValue) {
 		Assert.notNull(tagValue);
+
 		//Assertion that the user modifying this tag has the correct privilege.
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		final String auth = authentication.getAuthorities().toArray()[0].toString();
@@ -90,12 +87,9 @@ public class TagValueService {
 		final TagValue saved = this.valueRepository.save(tagValue);
 		return saved;
 	}
+
 	public void delete(final TagValue tagValue) {
 		Assert.notNull(tagValue);
-
-		//Assertion that the user modifying this tag has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		for (final Resort r : tagValue.getResorts()) {
 			final Collection<TagValue> tags = r.getTags();

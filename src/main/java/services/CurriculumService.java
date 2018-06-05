@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -74,10 +72,6 @@ public class CurriculumService {
 	public Curriculum createInternal(final Instructor instructor) {
 		final Curriculum curriculum = new Curriculum();
 
-		//Assertion that the user creating this account has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
-
 		curriculum.setInstructor(instructor);
 		curriculum.setTicker(this.generateTicker());
 		curriculum.setEducationRecord(new ArrayList<EducationRecord>());
@@ -100,27 +94,25 @@ public class CurriculumService {
 
 	public Curriculum save(final Curriculum curriculum) {
 		Assert.notNull(curriculum);
+		Curriculum saved2 = null;
 
 		//Assertion that the user modifying this curriculum has the correct privilege.
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == curriculum.getInstructor().getId());
 
-		final Curriculum saved = this.curriculumRepository.save(curriculum);
-		final PersonalRecord personalRecord = this.personalRecordService.create(saved.getId());
-		saved.setPersonalRecord(personalRecord);
-		this.personalRecordService.save(personalRecord);
-
-		final Curriculum saved2 = this.curriculumRepository.save(saved);
+		if (curriculum.getId() == 0) {
+			final Curriculum saved = this.curriculumRepository.save(curriculum);
+			final PersonalRecord personalRecord = this.personalRecordService.create(saved.getId());
+			final PersonalRecord savedRecord = this.personalRecordService.saveInternal(personalRecord);
+			saved.setPersonalRecord(savedRecord);
+			saved2 = this.curriculumRepository.save(saved);
+		} else
+			saved2 = this.curriculumRepository.save(curriculum);
 
 		return saved2;
 	}
-
 	//Save for admin-based instructor account creation.
 	public Curriculum saveInternal(final Curriculum curriculum) {
 		Assert.notNull(curriculum);
-
-		//Assertion that the user modifying this configuration has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		final Curriculum saved = this.curriculumRepository.save(curriculum);
 		final PersonalRecord personalRecord = this.personalRecordService.create(saved.getId());

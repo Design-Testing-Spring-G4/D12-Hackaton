@@ -1,8 +1,6 @@
 
 package services;
 
-import java.util.Collection;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
-import domain.Administrator;
+import domain.PersonalRecord;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -24,50 +22,28 @@ public class PersonalRecordServiceTest extends AbstractTest {
 	//Service under test
 
 	@Autowired
-	private AdministratorService	administratorService;
+	private PersonalRecordService	personalRecordService;
 
 
 	//Test template
 
-	protected void Template(final String username, final String address, final String email, final String name, final String surname, final String phone, final String address2, final String email2, final String name2, final String surname2,
-		final String phone2, final String username2, final Class<?> expected) {
+	protected void Template(final String username, final String email, final Class<?> expected) {
 		Class<?> caught = null;
 
 		try {
 			this.authenticate(username);
 
-			//Creation
-
-			final Administrator administrator = this.administratorService.create();
-			administrator.setAddress(address);
-			administrator.setEmail(email);
-			administrator.setName(name);
-			administrator.setSurname(surname);
-			administrator.setPhone(phone);
-			administrator.getUserAccount().setUsername(username2);
-			administrator.getUserAccount().setPassword(username2);
-			final Administrator saved = this.administratorService.save(administrator);
-
-			this.unauthenticate();
-			this.authenticate(username2);
-
 			//Listing
-			Collection<Administrator> cl = this.administratorService.findAll();
-			Assert.isTrue(cl.contains(saved));
-			Assert.notNull(this.administratorService.findOne(saved.getId()));
+			final PersonalRecord personalRecord = this.personalRecordService.findOne(this.getEntityId("personalRecord1"));
+			Assert.notNull(personalRecord);
 
 			//Edition
-			saved.setAddress(address2);
-			saved.setEmail(email2);
-			saved.setName(name2);
-			saved.setSurname(surname2);
-			saved.setPhone(phone2);
-			final Administrator saved2 = this.administratorService.save(saved);
+			personalRecord.setEmail(email);
+			final PersonalRecord saved2 = this.personalRecordService.save(personalRecord);
 
 			//Deletion
-			this.administratorService.delete(saved2);
-			cl = this.administratorService.findAll();
-			Assert.isTrue(!cl.contains(saved));
+			this.personalRecordService.delete(saved2);
+			Assert.isNull(this.personalRecordService.findOne(saved2.getId()));
 
 			this.unauthenticate();
 
@@ -78,7 +54,6 @@ public class PersonalRecordServiceTest extends AbstractTest {
 
 		this.checkExceptions(expected, caught);
 	}
-
 	//Driver for multiple tests under the same template.
 
 	@Test
@@ -88,26 +63,22 @@ public class PersonalRecordServiceTest extends AbstractTest {
 
 			//Test #01: Correct execution of test. Expected true.
 			{
-				"admin", "testAddress", "testemail@alum.com", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", "admin9", null
-
+				"instructor1", "edit@mail.com", null
 			},
 
-			//Test #02: Attempt to save an administrator without proper credentials. Expected false.
+			//Test #02: Attempt to save a personal record without proper credentials. Expected false.
 			{
-				"admin", "testAddress", "testemail@alum.com", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", null, IllegalArgumentException.class
-
+				"admin", "edit@mail.com", IllegalArgumentException.class
 			},
 
-			//Test #03: Attempt to create an administrator without email. Expected false.
+			//Test #03: Attempt to edit a personal record without email. Expected false.
 			{
-				"admin", "testAddress", "", "testAdministrator", "testSurname", "+648456571", "editAddress", "editemail@alum.com", "editAdministrator", "editSurname", "+648456521", null, IllegalArgumentException.class
-
+				"instructor1", "", IllegalArgumentException.class
 			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.Template((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
-				(String) testingData[i][8], (String) testingData[i][9], (String) testingData[i][10], (String) testingData[i][11], (Class<?>) testingData[i][12]);
+			this.Template((String) testingData[i][0], (String) testingData[i][1], (Class<?>) testingData[i][2]);
 	}
 }

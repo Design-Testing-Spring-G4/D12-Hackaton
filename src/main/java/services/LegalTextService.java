@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -54,10 +52,6 @@ public class LegalTextService {
 		Assert.notNull(legalText);
 		//Draft/final mode assertion is done via controller.
 
-		//Assertion that the user modifying this text has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
-
 		legalText.setRegistered(new Date(System.currentTimeMillis() - 1));
 
 		final LegalText saved = this.legalRepository.save(legalText);
@@ -73,10 +67,6 @@ public class LegalTextService {
 		Assert.notNull(legalText);
 		//A legal text cannot be deleted outside of draft mode.
 		Assert.isTrue(!legalText.isFinalMode());
-
-		//Assertion that the user modifying this text has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		this.legalRepository.delete(legalText);
 	}

@@ -8,8 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -93,11 +91,6 @@ public class CompetitionService {
 	public Competition saveInternal(final Competition competition) {
 		Assert.notNull(competition);
 
-		//Assertion that the user modifying this miscellaneous record has the correct privilege.
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		final String auth = authentication.getAuthorities().toArray()[0].toString();
-		Assert.isTrue(auth.equals("USER") || auth.equals("INSTRUCTOR"));
-
 		final Competition saved = this.competitionRepository.save(competition);
 		return saved;
 	}
@@ -110,8 +103,10 @@ public class CompetitionService {
 		Assert.isTrue(this.actorService.findByPrincipal().getId() == validator.getSponsor().getId());
 
 		final Resort resort = this.resortService.resortWithCompetition(competition);
-		resort.getCompetitions().remove(competition);
-		this.resortService.saveInternal(resort);
+		if (resort != null) {
+			resort.getCompetitions().remove(competition);
+			this.resortService.saveInternal(resort);
+		}
 
 		this.competitionRepository.delete(competition);
 	}
