@@ -75,6 +75,20 @@ public class FolderService {
 		return saved;
 	}
 
+	//Save for internal operations such as moving messages between folders.
+	public Folder saveInternal(final Folder folder) {
+		Assert.notNull(folder);
+
+		//Assertion that the user modifying this folder has the correct privilege.
+		Assert.isTrue(this.actorService.findByPrincipal().getId() == folder.getActor().getId());
+
+		final Folder saved = this.folderRepository.save(folder);
+
+		this.actorService.isSpam(saved.getName());
+
+		return saved;
+	}
+
 	public void delete(final Folder folder) {
 		Assert.notNull(folder);
 

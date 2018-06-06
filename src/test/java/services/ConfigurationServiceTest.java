@@ -46,6 +46,10 @@ public class ConfigurationServiceTest extends AbstractTest {
 			Assert.isTrue(cl.contains(saved));
 			Assert.notNull(this.configurationService.findOne(saved.getId()));
 
+			//Retrieving the list of words to flag spam text
+			final String[] words = this.configurationService.getAllWords();
+			Assert.noNullElements(words);
+
 			//Edition
 			saved.setVat(vat);
 			saved.setBanner(banner);
@@ -64,7 +68,6 @@ public class ConfigurationServiceTest extends AbstractTest {
 
 		this.checkExceptions(expected, caught);
 	}
-
 	//Driver for multiple tests under the same template.
 
 	@Test

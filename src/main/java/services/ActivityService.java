@@ -97,6 +97,7 @@ public class ActivityService {
 
 		this.activityRepository.delete(activity);
 	}
+
 	//Other methods
 
 	public Activity reconstruct(final Activity activity, final BindingResult binding) {
@@ -122,6 +123,7 @@ public class ActivityService {
 
 		return result;
 	}
+
 	public Double ratioEntertainmentActivities() {
 		return this.activityRepository.ratioEntertainmentActivities();
 	}

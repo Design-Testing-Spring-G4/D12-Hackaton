@@ -31,6 +31,9 @@ public class ReservationServiceTest extends AbstractTest {
 	@Autowired
 	private ReservationService	reservationService;
 
+	@Autowired
+	private MailMessageService	mailMessageService;
+
 
 	//Test template
 
@@ -61,6 +64,9 @@ public class ReservationServiceTest extends AbstractTest {
 			//Manager confirmation of reservation
 			saved.setStatus(Status.DUE);
 			final Reservation saved2 = this.reservationService.saveInternal(saved);
+
+			//Send a notification of reservation status change
+			this.mailMessageService.reservationStatusNotification(this.getEntityId(username), this.getEntityId(username2));
 
 			this.unauthenticate();
 			this.authenticate(username);

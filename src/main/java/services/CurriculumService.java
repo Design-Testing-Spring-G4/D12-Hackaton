@@ -110,6 +110,7 @@ public class CurriculumService {
 
 		return saved2;
 	}
+
 	//Save for admin-based instructor account creation.
 	public Curriculum saveInternal(final Curriculum curriculum) {
 		Assert.notNull(curriculum);

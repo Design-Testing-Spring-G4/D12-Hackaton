@@ -149,6 +149,7 @@ public class ResortService {
 
 		this.resortRepository.delete(resort);
 	}
+
 	//Other methods
 
 	public Resort reconstruct(final Resort resort, final BindingResult binding) {

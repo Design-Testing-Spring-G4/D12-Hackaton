@@ -132,11 +132,11 @@ public class MailMessageService {
 		Assert.notNull(newOne);
 		final Folder folder = message.getFolder();
 		folder.getMailMessage().remove(message);
-		this.folderService.save(folder);
+		this.folderService.saveInternal(folder);
 		newOne.getMailMessage().add(message);
 		message.setFolder(newOne);
 		this.save(message);
-		this.folderService.save(newOne);
+		this.folderService.saveInternal(newOne);
 	}
 
 	//Sends a message to every notification box in the system.
@@ -158,7 +158,7 @@ public class MailMessageService {
 	}
 
 	//Sends a message to the user and manager associated to a reservation.
-	public void applicationStatusNotification(final int varId, final int varId2) {
+	public void reservationStatusNotification(final int varId, final int varId2) {
 		Assert.notNull(varId);
 		Assert.notNull(varId2);
 

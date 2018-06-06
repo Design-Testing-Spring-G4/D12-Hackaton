@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -76,6 +78,9 @@ public class ReservationManagerController extends AbstractController {
 	public ModelAndView save(final Reservation r, final BindingResult binding) {
 		ModelAndView result;
 
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("MANAGER"));
+
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(r);
 		else
@@ -91,7 +96,7 @@ public class ReservationManagerController extends AbstractController {
 						reservation.setReason(r.getReason());
 					final Reservation saved = this.reservationService.saveInternal(reservation);
 					result = new ModelAndView("redirect:/reservation/manager/list.do");
-					this.mailMessageService.applicationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
+					this.mailMessageService.reservationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
 				}
 			} catch (final Throwable oops) {
 				oops.printStackTrace();

@@ -4,6 +4,8 @@ package controllers.instructor;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -61,6 +63,9 @@ public class NoteInstructorController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(final Note n, final BindingResult binding) {
 		ModelAndView result;
+
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("INSTRUCTOR"));
 
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(n);

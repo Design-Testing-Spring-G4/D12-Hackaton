@@ -50,6 +50,9 @@ public class CurriculumServiceTest extends AbstractTest {
 
 			//Creation
 			final Curriculum curriculum = this.curriculumService.create();
+
+			//Assertion that unique ticker generates automatically
+			Assert.notNull(curriculum.getTicker());
 			final Curriculum saved = this.curriculumService.save(curriculum);
 
 			//Listing

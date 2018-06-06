@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -119,6 +121,9 @@ public class ReservationUserController extends AbstractController {
 	public ModelAndView save(final Reservation r, final BindingResult binding) {
 		ModelAndView result;
 
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("USER"));
+
 		if (r.getAdults() < 1)
 			binding.rejectValue("adults", "javax.validation.constraints.Min2.message");
 		if (r.getChildren() == null)
@@ -148,7 +153,7 @@ public class ReservationUserController extends AbstractController {
 						result = new ModelAndView("redirect:/reservation/user/list.do");
 				} else
 					result = new ModelAndView("redirect:/resort/list.do");
-				this.mailMessageService.applicationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
+				this.mailMessageService.reservationStatusNotification(saved.getUser().getId(), saved.getResort().getManager().getId());
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(r, "reservation.commit.error");
 			}

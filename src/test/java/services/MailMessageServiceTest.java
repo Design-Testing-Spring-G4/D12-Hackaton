@@ -66,11 +66,27 @@ public class MailMessageServiceTest extends AbstractTest {
 
 			//Edition
 			saved.setSubject(subject2);
-			this.mailMessageService.save(saved);
+			final MailMessage saved2 = this.mailMessageService.save(saved);
+
+			//Moving a message to another folder
+			final Folder newOne = this.folderService.getSystemFolderByName(this.getEntityId("user1"), "Spam box");
+			this.mailMessageService.move(saved2, newOne);
 
 			//Deletion
-			this.mailMessageService.delete(saved);
-			Assert.isNull(this.mailMessageService.findOne(saved.getId()));
+			this.mailMessageService.delete(saved2);
+			Assert.isNull(this.mailMessageService.findOne(saved2.getId()));
+
+			this.unauthenticate();
+
+			//As administrator, broadcast a notification to all users
+			this.authenticate("admin");
+
+			final MailMessage broadcastMessage = this.mailMessageService.create();
+			broadcastMessage.setBody("testBroadcast");
+			broadcastMessage.setSubject("testSubject");
+			final Folder broadcastFolder = this.folderService.getSystemFolderByName(this.getEntityId("admin1"), "Out box");
+			broadcastMessage.setFolder(broadcastFolder);
+			this.mailMessageService.broadcastNotification(broadcastMessage);
 
 			this.unauthenticate();
 

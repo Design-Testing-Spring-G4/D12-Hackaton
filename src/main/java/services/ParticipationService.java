@@ -82,6 +82,8 @@ public class ParticipationService {
 		this.participationRepository.delete(participation);
 	}
 
+	//Other methods
+
 	public Participation reconstruct(final Participation participation, final BindingResult binding) {
 		Participation result;
 

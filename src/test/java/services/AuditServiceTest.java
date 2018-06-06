@@ -43,6 +43,8 @@ public class AuditServiceTest extends AbstractTest {
 			audit.setDescription(description);
 			audit.setFinalMode(finalMode);
 			audit.setTitle(title);
+
+			//The service checks that the attachments are URLs
 			final Audit saved = this.auditService.save(audit);
 
 			//Listing
@@ -77,12 +79,12 @@ public class AuditServiceTest extends AbstractTest {
 
 			//Test #01: Correct execution of test. Expected true.
 			{
-				"auditor1", "", "testDescription", "testTitle", false, true, null
+				"auditor1", "http://attachment.com,https://www.google.es", "testDescription", "testTitle", false, true, null
 			},
 
 			//Test #02: Attempt to create an audit with incorrect credentials. Expected false.
 			{
-				"user1", "", "testDescription", "testTitle", false, true, ClassCastException.class
+				"user1", "http://attachment.com,https://www.google.es", "testDescription", "testTitle", false, true, ClassCastException.class
 			},
 
 			//Test #03: Attempt to save an audit with blank fields. Expected false.

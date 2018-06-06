@@ -7,7 +7,10 @@ import java.util.Collection;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +55,9 @@ public class MailMessageAdministratorController extends AbstractController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, params = "broadcast")
 	public ModelAndView broadcast(@Valid final MailMessage mailMessage, final BindingResult binding) {
 		ModelAndView result;
+
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Assert.isTrue(authentication.getAuthorities().toArray()[0].toString().equals("ADMIN"));
 
 		try {
 			this.mailMessageService.broadcastNotification(mailMessage);

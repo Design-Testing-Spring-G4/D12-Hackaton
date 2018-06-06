@@ -105,6 +105,7 @@ public class UserService {
 
 		return saved2;
 	}
+
 	public void delete(final User user) {
 		Assert.notNull(user);
 

@@ -35,7 +35,7 @@
 	<br/>
 	<acme:textarea path="description" code="audit.description" />
 	<br/>
-	<acme:textarea path="attachments" code="audit.attachments" />
+	<acme:textarea path="attachments" code="audit.attachments.comma" />
 	<br/>
 	<form:label path="finalMode">
 		<jstl:out value="${finalMode}" />
